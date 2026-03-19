@@ -1,0 +1,10 @@
+@import "tailwindcss";
+
+.progress-bar-orange {
+    @apply [&&::-webkit-progress-bar]:bg-amber-500 [&&::-webkit-progress-bar]:rounded-2xl [&&::-moz-progress-bar]:bg-amber-500 [&&::-moz-progress-bar]:rounded-2xl
+}
+
+.progress-bar-green {
+    @apply [&&::-webkit-progress-bar]:bg-green-500 [&&::-webkit-progress-bar]:rounded-2xl [&&::-moz-progress-bar]:bg-green-500 [&&::-moz-progress-bar]:rounded-2xl
+}
+

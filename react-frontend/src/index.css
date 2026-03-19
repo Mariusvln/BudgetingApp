@@ -2,3 +2,7 @@
 
 @import "preline/variants.css";
 @source "../node_modules/preline/dist/*.js";
+
+button {
+    @apply cursor-pointer
+}
