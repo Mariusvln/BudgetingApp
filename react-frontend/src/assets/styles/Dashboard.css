@@ -1,0 +1,141 @@
+@import "tailwindcss";
+
+.progress-bar-orange {
+  @apply [&&::-webkit-progress-bar]:bg-amber-500 [&&::-webkit-progress-bar]:rounded-2xl [&&::-moz-progress-bar]:bg-amber-500 [&&::-moz-progress-bar]:rounded-2xl;
+}
+
+.progress-bar-green {
+  @apply [&&::-webkit-progress-bar]:bg-green-500 [&&::-webkit-progress-bar]:rounded-2xl [&&::-moz-progress-bar]:bg-green-500 [&&::-moz-progress-bar]:rounded-2xl;
+}
+
+.CircularProgressbar-path {
+  stroke: #00c950;
+}
+
+.CircularProgressbar-trail {
+  stroke: #f3f4f6;
+  stroke-linecap: round;
+}
+
+.CircularProgressbar-background {
+  fill: #f3f4f6;
+}
+
+.income-cards_grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+  gap: 1.5rem;
+}
+
+.income-card {
+  display: flex;
+  padding: 1rem;
+  flex-direction: column;
+  gap: 0.75rem;
+  justify-content: center;
+  border-radius: 1rem;
+  background-color: #ffffff;
+}
+
+.income-card-paragraph {
+  font-weight: 600;
+  color: #6b7280;
+}
+
+.income-card_title {
+  margin-bottom: 0.5rem;
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+  font-weight: 700;
+}
+
+.income-card_prog-bar {
+  border-radius: 0.75rem;
+  height: 0.25rem;
+}
+
+.circular-prog-card {
+  display: flex;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  gap: 2rem;
+  justify-content: center;
+  align-items: center;
+  border-radius: 1rem;
+  background-color: #ffffff;
+}
+
+.circular-prog-card_title {
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+  font-weight: 700;
+}
+
+.circular-prog-bar {
+    height: 3.75rem;
+    width: 3.75rem;
+}
+
+.saving-goals {
+  display: flex;
+  padding: 1rem;
+  flex-direction: column;
+  gap: 1rem;
+  justify-content: space-between;
+  border-radius: 1rem;
+  background-color: #ffffff;
+}
+
+.h4_style {
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+  font-weight: 700;
+}
+
+.add-button {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  padding-bottom: 0.25rem;
+  background-color: #f3f4f6;
+  border-radius: 2rem;
+}
+
+.add-button:hover {
+  background-color: #e5e7eb;
+}
+
+.saving-goal {
+  display: flex;
+  justify-content: space-between;
+}
+
+.saving-goal_bar {
+  border-radius: 0.75rem;
+  height: 0.5rem;
+  border-radius: 0.75rem;
+  width: 25rem;
+}
+
+.saving-goal_amount {
+    color: #6B7280; 
+}
+
+.view-goals {
+  padding: 0.5rem;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  border-radius: 0.75rem;
+  font-weight: 700;
+  color: #ffffff;
+  background-color: #00a63e;
+  border-radius: 0.75rem;
+}
+
+.view-goals:hover {
+  background-color: #008235;
+}
