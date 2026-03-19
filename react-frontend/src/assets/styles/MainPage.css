@@ -1,10 +1,8 @@
-@import "tailwindcss";
-
-.progress-bar-orange {
-    @apply [&&::-webkit-progress-bar]:bg-amber-500 [&&::-webkit-progress-bar]:rounded-2xl [&&::-moz-progress-bar]:bg-amber-500 [&&::-moz-progress-bar]:rounded-2xl
+.main_layout {
+  display: flex;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  gap: 1.5rem;
+  justify-content: center;
+  background-color: #f3f4f6;
 }
-
-.progress-bar-green {
-    @apply [&&::-webkit-progress-bar]:bg-green-500 [&&::-webkit-progress-bar]:rounded-2xl [&&::-moz-progress-bar]:bg-green-500 [&&::-moz-progress-bar]:rounded-2xl
-}
-
