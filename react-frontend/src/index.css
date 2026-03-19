@@ -1,3 +1,11 @@
+@import "tailwindcss";
+
+@import "preline/variants.css";
+/* @source "../node_modules/preline"; */
+@import 'preline/dist/preline.css';
+
+@import "preline/css/themes/theme.css";
+
 :root {
   --text: #6b6375;
   --text-h: #08060d;
