@@ -8,6 +8,6 @@ export default defineConfig({
   plugins: [
     react(),
     babel({ presets: [reactCompilerPreset()] }),
-    tailwindcss(),require('preline/plugin')
+    tailwindcss()
   ],
 })
