@@ -1,6 +1,8 @@
 import './App.css'
 import HeroMaster from './components/HeroMaster'
 import MainPage from './pages/MainPage'
+import TransactionNav from './components/TransactionNav'
+import TransactionRecentTable from './components/TransactionRecentTable'
 
 function App() {
   
@@ -8,6 +10,8 @@ function App() {
     <>
       
       <HeroMaster/>
+      {/* <TransactionNav/>
+      <TransactionRecentTable/> */}
     </>
   )
 }
