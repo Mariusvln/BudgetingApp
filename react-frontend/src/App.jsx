@@ -1,13 +1,15 @@
 import './App.css'
 import HeroMaster from './components/HeroMaster'
-import MainPage from './pages/MainPage'
+import LoginPage from './pages/LoginPage'
 
 function App() {
   
   return (
     <>
+      {/* <MainPage/> */}
+      {/* <LoginPage/> */}
       
-      <HeroMaster/>
+      <LoginPage/>
     </>
   )
 }
