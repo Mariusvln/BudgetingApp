@@ -9,9 +9,9 @@ function App() {
   return (
     <>
       
-      <HeroMaster/>
-      {/* <TransactionNav/>
-      <TransactionRecentTable/> */}
+      {/* <HeroMaster/> */}
+      {/* <TransactionNav/> */}
+      <TransactionRecentTable/>
     </>
   )
 }

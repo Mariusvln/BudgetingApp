@@ -70,19 +70,18 @@ function TransactionNav() {
                 <span class="">Settings</span>
               </a>
             </li>
-
-            <li>
-              <a href="#" className="border-t-2 rounded-t-none">
-                <span class="size-10">
-                  <img src="./src/assets/avatar-icon.svg" alt="settings-icon" />
-                </span>
-                <span class="">
-                  <p className="font-bold">user.name</p>
-                  <p className="text-[#64748B]">user.email</p>
-                </span>
-              </a>
-            </li>
           </ul>
+          <div className="flex justify-stretch">
+            <a href="#" className="border-t-2 rounded-t-none flex absolute bottom-0">
+              <span class="size-10">
+                <img src="./src/assets/avatar-icon.svg" alt="settings-icon" />
+              </span>
+              <span class="">
+                <p className="font-bold">user.name</p>
+                <p className="text-[#64748B]">user.email</p>
+              </span>
+            </a>
+          </div>
         </div>
       </aside>
     </>
