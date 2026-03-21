@@ -34,7 +34,7 @@ function TransactionAddPanel() {
               <option>Salary</option>
             </select>
 
-            <button className="btn bg-green-500 text-white hover:bg-green-600">
+            <button className="btn bg-linear-to-r from-[#13EC6D] to-[#0BB855] hover:bg-linear-to-r hover:from-[#0BB855] hover:via-[#13EC6D] hover:to-[#0BB855] text-white">
               Save Transaction
             </button>
 
@@ -42,7 +42,7 @@ function TransactionAddPanel() {
           </div>
 
           
-          <div className="mt-6 bg-green-500 text-white p-4 rounded-xl">
+          <div className="mt-6 bg-linear-to-r from-[#13EC6D] to-[#0BB855] text-white p-4 rounded-xl">
             <p className="text-sm">
               You've spent 15% less on Food & Drink compared to last week.
             </p>

@@ -10,7 +10,7 @@ function TransactionHeader() {
       </div>
 
       <div className="flex items-center gap-3 ml-4">
-        <button className="btn bg-green-500 hover:bg-green-600 text-white">
+        <button className="btn bg-linear-to-r from-[#13EC6D] to-[#0BB855] hover:bg-linear-to-r hover:from-[#0BB855] hover:via-[#13EC6D] hover:to-[#0BB855] text-white">
           + Add Transaction
         </button>
       </div>

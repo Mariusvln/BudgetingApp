@@ -3,7 +3,7 @@ function TransactionNav() {
     <aside className="w-64 min-h-screen border-r border-base-200 bg-white flex flex-col">
       
       <div className="p-4">
-        <h1 className="text-3xl font-bold text-green-500">FinVue</h1>
+        <h1 className="text-3xl font-bold bg-linear-to-r from-[#22C55E] to-[#15803D] bg-clip-text text-transparent">FinVue</h1>
       </div>
 
       
