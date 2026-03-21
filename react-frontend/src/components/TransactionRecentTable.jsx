@@ -39,7 +39,7 @@ function TransactionRecentTable() {
   return (
     <div className="card bg-base-100 border border-base-200">
       <div className="card-body">
-        {/* Header */}
+        
         <div className="flex justify-between items-center mb-4">
           <div>
             <h2 className="text-xl font-semibold">Recent Transactions</h2>
@@ -55,7 +55,7 @@ function TransactionRecentTable() {
           </div>
         </div>
 
-        {/* Table */}
+        
         <div className="overflow-x-auto">
           <table className="table">
             <thead className="text-gray-500 text-sm">
@@ -106,7 +106,7 @@ function TransactionRecentTable() {
           </table>
         </div>
 
-        {/* Footer */}
+        
         <div className="flex justify-between items-center mt-4">
           <p className="text-sm text-gray-500">
             Showing 1 to 6 of 128 results

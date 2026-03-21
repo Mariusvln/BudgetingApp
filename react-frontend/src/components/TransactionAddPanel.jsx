@@ -41,7 +41,7 @@ function TransactionAddPanel() {
             <button className="btn btn-ghost">Clear Fields</button>
           </div>
 
-          {/* Tip */}
+          
           <div className="mt-6 bg-green-500 text-white p-4 rounded-xl">
             <p className="text-sm">
               You've spent 15% less on Food & Drink compared to last week.

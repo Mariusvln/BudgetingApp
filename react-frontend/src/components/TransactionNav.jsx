@@ -1,12 +1,12 @@
 function TransactionNav() {
   return (
     <aside className="w-64 min-h-screen border-r border-base-200 bg-white flex flex-col">
-      {/* Logo */}
+      
       <div className="p-4">
         <h1 className="text-3xl font-bold text-green-500">FinVue</h1>
       </div>
 
-      {/* Menu */}
+      
       <ul className="menu px-2 flex-1">
         <li>
           <a>
@@ -46,7 +46,7 @@ function TransactionNav() {
         </li>
       </ul>
 
-      {/* User */}
+      
       <div className="p-4 border-t flex items-center gap-3">
         <img
           src="./src/assets/avatar-icon.svg"
