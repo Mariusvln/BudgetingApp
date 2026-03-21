@@ -1,90 +1,63 @@
 function TransactionNav() {
   return (
-    <>
-      <aside
-        id="collapsible-mini-sidebar"
-        class="sm:shadow-none overlay-open:translate-x-0 drawer drawer-start w-66 sm:absolute sm:z-0 sm:flex sm:translate-x-0 border-e border-base-content/20 bg-white"
-      >
-        <div class="drawer-header   py-2 w-full flex items-center justify-between gap-3">
-          <h1 class="text-4xl bg-gradient-to-r from-[#22C55E] to-[#15803D] bg-clip-text text-transparent font-bold">
-            FinVue
-          </h1>
-        </div>
+    <aside className="w-64 min-h-screen border-r border-base-200 bg-white flex flex-col">
+      {/* Logo */}
+      <div className="p-4">
+        <h1 className="text-3xl font-bold text-green-500">FinVue</h1>
+      </div>
 
-        <div class="drawer-body px-2 pt-4">
-          <ul class="menu p-0">
-            <li>
-              <a href="#">
-                <span class="size-5">
-                  <img src="./src/assets/home-icon.svg" alt="home-icon" />
-                </span>
-                <span>Home</span>
-              </a>
-            </li>
-            <li>
-              <a href="#">
-                <span class="size-5">
-                  <img
-                    src="./src/assets/transaction-icon.svg"
-                    alt="transaction-icon"
-                  />
-                </span>
-                <span class="">Transactions</span>
-              </a>
-            </li>
-            <li>
-              <a href="#">
-                <span class="size-5">
-                  <img src="./src/assets/budgets-icon.svg" alt="budgets-icon" />
-                </span>
-                <span class="">Budgets</span>
-              </a>
-            </li>
-            <li>
-              <a href="#">
-                <span class="size-5">
-                  <img
-                    src="./src/assets/analytics-icon.svg"
-                    alt="analytics-icon"
-                  />
-                </span>
-                <span class="">Analytics</span>
-              </a>
-            </li>
-            <li>
-              <a href="#">
-                <span class="size-5">
-                  <img src="./src/assets/user-icon.svg" alt="user-icon" />
-                </span>
-                <span class="">Profile</span>
-              </a>
-            </li>
-            <li>
-              <a href="#">
-                <span class="size-5">
-                  <img
-                    src="./src/assets/settings-icon.svg"
-                    alt="settings-icon"
-                  />
-                </span>
-                <span class="">Settings</span>
-              </a>
-            </li>
-          </ul>
-          <div className="flex justify-stretch">
-            <a href="#" className="border-t-2 rounded-t-none flex absolute bottom-0">
-              <span class="size-10">
-                <img src="./src/assets/avatar-icon.svg" alt="settings-icon" />
-              </span>
-              <span class="">
-                <p className="font-bold">user.name</p>
-                <p className="text-[#64748B]">user.email</p>
-              </span>
-            </a>
-          </div>
+      {/* Menu */}
+      <ul className="menu px-2 flex-1">
+        <li>
+          <a>
+            <img src="./src/assets/home-icon.svg" className="w-5" />
+            Home
+          </a>
+        </li>
+        <li>
+          <a className="active">
+            <img src="./src/assets/transaction-icon.svg" className="w-5" />
+            Transactions
+          </a>
+        </li>
+        <li>
+          <a>
+            <img src="./src/assets/budgets-icon.svg" className="w-5" />
+            Budgets
+          </a>
+        </li>
+        <li>
+          <a>
+            <img src="./src/assets/analytics-icon.svg" className="w-5" />
+            Analytics
+          </a>
+        </li>
+        <li>
+          <a>
+            <img src="./src/assets/user-icon.svg" className="w-5" />
+            Profile
+          </a>
+        </li>
+        <li>
+          <a>
+            <img src="./src/assets/settings-icon.svg" className="w-5" />
+            Settings
+          </a>
+        </li>
+      </ul>
+
+      {/* User */}
+      <div className="p-4 border-t flex items-center gap-3">
+        <img
+          src="./src/assets/avatar-icon.svg"
+          className="w-10 h-10 rounded-full"
+        />
+        <div>
+          <p className="font-semibold text-sm">user.name</p>
+          <p className="text-xs text-gray-500">user.email</p>
         </div>
-      </aside>
-    </>
+      </div>
+    </aside>
   );
 }
 
