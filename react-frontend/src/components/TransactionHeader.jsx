@@ -1,7 +1,7 @@
 function TransactionHeader() {
   return (
     <div className="flex items-center justify-between mb-6">
-      <div className="w-full max-w-xl">
+      <div className="w-full max-w-2xl">
         <input
           type="text"
           placeholder="Search transactions, merchants, or categories..."
