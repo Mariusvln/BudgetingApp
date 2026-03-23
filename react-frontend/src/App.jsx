@@ -1,23 +1,22 @@
-import './App.css'
-import HeroMaster from './components/HeroMaster'
-import MainPage from './pages/MainPage'
-import TransactionNav from './components/TransactionNav'
-import TransactionRecentTable from './components/TransactionRecentTable'
-import LoginPage from './pages/LoginPage'
+import "./App.css";
+import HeroMaster from "./components/HeroMaster";
+import MainPage from "./pages/MainPage";
+import TransactionNav from "./components/TransactionNav";
+import TransactionRecentTable from "./components/TransactionRecentTable";
+import LoginPage from "./pages/LoginPage";
+import TransactionsPage from "./pages/TransactionsPage";
 
 function App() {
-  
   return (
     <>
       {/* <MainPage/> */}
-      {/* <LoginPage/> */}
-      
+
       {/* <HeroMaster/> */}
-      {/* <TransactionNav/> */}
-      <TransactionRecentTable/>
-      <LoginPage/>
+      {/* <LoginPage/> */}
+
+      <TransactionsPage />
     </>
-  )
+  );
 }
 
-export default App
+export default App;

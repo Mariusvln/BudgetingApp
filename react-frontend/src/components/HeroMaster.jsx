@@ -7,7 +7,7 @@ function HeroMaster() {
 
       <div className="text-center mb-15">
         <h1 className="text-7xl font-bold mb-2">Master Your Money with</h1>
-        <h1 class="text-7xl bg-gradient-to-r from-[#22C55E] to-[#15803D] bg-clip-text text-transparent font-bold">
+        <h1 class="text-7xl bg-linear-to-r from-[#22C55E] to-[#15803D] bg-clip-text text-transparent font-bold">
           FinVue
         </h1>
       </div>
@@ -16,7 +16,7 @@ function HeroMaster() {
         <button className="bg-[#16A34A] text-2xl w-48 h-15 p-3 text-white rounded-2xl font-bold mr-5 shadow-2xl shadow-[#16A34A]">
           Get Started
         </button>
-        <button className="bg-[#FFFFFF] text-2xl w-48 h-15 p-3 border-1 border-[#E2E8F0] text-black rounded-2xl font-bold">
+        <button className="bg-[#FFFFFF] text-2xl w-48 h-15 p-3 border border-[#E2E8F0] text-black rounded-2xl font-bold">
           Watch Demo
         </button>
       </div>
