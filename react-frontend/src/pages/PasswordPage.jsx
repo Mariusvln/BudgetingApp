@@ -36,7 +36,7 @@ const PasswordPage = () => {
                   id="email"
                   name="email"
                   placeholder="Enter your email"
-                  className="block w-full rounded-xl border border-layer-line bg-layer px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground-1 focus:border-primary-focus focus:ring-primary-focus disabled:pointer-events-none disabled:opacity-50"
+                  className="block w-full rounded-xl border border-layer-line bg-layer px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground-1 focus:border-primary-focus focus:ring-primary-focus disabled:pointer-events-none disabled:opacity-50 border-card-line bg-[#f8fafc]"
                   required
                 />
               </div>

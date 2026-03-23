@@ -10,14 +10,14 @@ const LoginPage = () => {
               <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-green-400">
                 <span className="text-lg font-bold text-black">F</span>
               </div>
-              <span className="text-[18px] font-semibold text-foreground">FinVue</span>
+              <span className="text-[28px] font-semibold text-foreground">FinVue</span>
             </div>
 
-            <h3 id="hs-modal-signin-label" className="text-[48px] leading-none font-bold text-foreground">
+            <h3 id="hs-modal-signin-label" className="text-[38px] leading-none font-bold text-foreground">
               Sign in
             </h3>
 
-            <p className="mt-4 text-[16px] leading-8 text-muted-foreground-2">
+            <p className="mt-4 text-[18px] leading-8 text-muted-foreground-2 text-gray-500">
               Welcome back! Please enter your
               <br />
               details.
@@ -37,13 +37,13 @@ const LoginPage = () => {
                   id="username"
                   name="username"
                   placeholder="Enter your username"
-                  className="block w-full rounded-xl border border-layer-line bg-layer px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground-1 focus:border-primary-focus focus:ring-primary-focus disabled:pointer-events-none disabled:opacity-50"
+                  className="block w-full rounded-xl border border-layer-line bg-layer px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground-1 focus:border-primary-focus focus:ring-primary-focus disabled:pointer-events-none disabled:opacity-50 border-card-line bg-[#f8fafc]"
                   required
                 />
               </div>
 
               <div>
-                <label htmlFor="email" className="mb-2 block text-sm font-medium text-foreground">
+                <label htmlFor="email" className="mb-2 block text-sm font-medium text-foreground ">
                   Email address
                 </label>
                 <input
@@ -51,7 +51,7 @@ const LoginPage = () => {
                   id="email"
                   name="email"
                   placeholder="Enter your email"
-                  className="block w-full rounded-xl border border-layer-line bg-layer px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground-1 focus:border-primary-focus focus:ring-primary-focus disabled:pointer-events-none disabled:opacity-50"
+                  className="block w-full rounded-xl border border-layer-line bg-layer px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground-1 focus:border-primary-focus focus:ring-primary-focus disabled:pointer-events-none disabled:opacity-50 border-card-line bg-[#f8fafc]"
                   required
                 />
               </div>
@@ -65,7 +65,7 @@ const LoginPage = () => {
                   id="password"
                   name="password"
                   placeholder="••••••••"
-                  className="block w-full rounded-xl border border-layer-line bg-layer px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground-1 focus:border-primary-focus focus:ring-primary-focus disabled:pointer-events-none disabled:opacity-50"
+                  className="block w-full rounded-xl border border-layer-line bg-layer px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground-1 focus:border-primary-focus focus:ring-primary-focus disabled:pointer-events-none disabled:opacity-50 border-card-line bg-[#f8fafc]"
                   required
                 />
               </div>
@@ -76,7 +76,7 @@ const LoginPage = () => {
                     id="checkbox"
                     name="checkbox"
                     type="checkbox"
-                    className="shrink-0 size-4 rounded-sm border border-line-3 bg-transparent text-primary focus:ring-0 focus:ring-offset-0 checked:border-primary-checked checked:bg-primary-checked disabled:pointer-events-none disabled:opacity-50"
+                    className="shrink-0 size-4 rounded-sm border border-line-3 bg-transparent text-primary focus:ring-0 focus:ring-offset-0 checked:border-primary-checked checked:bg-primary-checked disabled:pointer-events-none disabled:opacity-50 border-card-line bg-[#f8fafc]"
                   />
                   <span className="ms-3">Remember me</span>
                 </label>
@@ -96,7 +96,7 @@ const LoginPage = () => {
           </form>
         </div>
 
-        <div className="bottomWindow flex min-h-[72px] items-center justify-center border-t border-card-line bg-[#F8FAFC] px-6 py-6">
+        <div className="bottomWindow flex min-h-[72px] items-center justify-center border-t border-card-line bg-[#F8FAFC] px-6 py-6 border-gray-400">
           <p className="text-center text-sm text-muted-foreground-2">
             Don't have an account?{' '}
             <a href="#" className="font-medium text-green-500 hover:underline">
