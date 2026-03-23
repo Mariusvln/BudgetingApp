@@ -40,6 +40,12 @@
 .hero-buttons {
   text-align: center;
 }
+ .hero-avatars{
+  display: none;
+}
+.avatar{
+  display: none;
+}
 
 .btn-get-started {
   background-color: #32a316;
@@ -82,6 +88,9 @@
 
     padding-top: 68px;
 }
+.hero-description{
+  display: none;
+}
 
 .hero-card-title{
     text-align: left;
@@ -89,4 +98,94 @@
 
 .hero-card-description{
     text-align: left;
+}
+
+@media (max-width: 480px) {
+
+  .hero-badge {
+    width: auto;
+    margin-top: 3rem;
+    font-size: 0.75rem;
+    color: #22C55E;
+    
+
+  }
+
+  .hero-title,
+  .hero-brand {
+    font-size: 34px;
+    line-height: 2.4rem;
+    text-align: left;
+    color: black;
+  }
+
+  .hero-header {
+    margin-bottom: 2rem;
+    padding: 0 1rem;
+    margin-left: 15px;
+  }
+
+  .hero-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+  
+  }
+
+  .btn-get-started,
+  .btn-demo {
+    width: 90%;
+    height: 3.25rem;
+    font-size: 1rem;
+    margin-right: 0;
+    border-radius: 10px;
+    background-color: #1a9e4a;
+    color: #0a3d1d;
+    font-weight: 700;
+    
+  }
+  .hero-avatars{
+  display: flex;
+}
+
+.avatar{
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #cbd5e1;
+  border: 2px solid white;
+  margin-left: -8px;
+}
+
+.btn-demo{
+  background-color: rgb(230, 245, 237);
+  color: #22C55E;
+  border-color: #c3f7d5;
+}
+  .hero-card {
+    width: 90%;
+    min-height: auto;
+    margin: 1rem auto;
+    padding: 2rem 1.2rem 1.2rem 1.2rem;
+  }
+
+  .hero-card-title,
+  .hero-card-description {
+    text-align: left;
+  }
+  .hero-description{
+    display: block;
+    font-size: 0.9rem;
+    color: #959caa;
+    text-align: left;
+    margin: 1rem auto;
+    margin-left: 0;
+    font-size: 15px;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    
+    width: 85%;
+    line-height: 1.5;
+  }
+
 }
