@@ -3,7 +3,7 @@ import HeroMaster from "./components/HeroMaster";
 import MainPage from "./pages/MainPage";
 import TransactionNav from "./components/TransactionNav";
 import TransactionRecentTable from "./components/TransactionRecentTable";
-import LoginPage from "./pages/loginPage";
+import LoginPage from "./pages/LoginPage";
 import TransactionsPage from "./pages/TransactionsPage";
 import HeroPage from "./pages/HeroPage";
 import RegisterPage from "./pages/RegisterPage";
