@@ -3,9 +3,7 @@ import HeroMaster from "./components/HeroMaster";
 import MainPage from "./pages/MainPage";
 import TransactionNav from "./components/TransactionNav";
 import TransactionRecentTable from "./components/TransactionRecentTable";
-import HeroPage from "./pages/HeroPage";
-import LoginPage from "./pages/LoginPage";
-import RegisterPage from "./pages/RegisterPage";
+import LoginPage from "./pages/loginPage";
 import TransactionsPage from "./pages/TransactionsPage";
 
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
@@ -35,11 +33,8 @@ function App() {
 
           </Route>
 
-          {/* Automatinis nukreipimas, jei kelias nerastas */}
-          <Route path="/" element={<Navigate to="/" replace />} />
-        </Routes>
-      </Router>
-    </AuthProvider>
+      <LoginPage />
+    </>
   );
 }
 

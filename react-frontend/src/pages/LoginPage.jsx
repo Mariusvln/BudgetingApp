@@ -45,7 +45,7 @@ const LoginPage = () => {
               <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-green-400">
                 <span className="text-lg font-bold text-black">F</span>
               </div>
-              <span className="text-[18px] font-semibold text-foreground">FinVue</span>
+              <span className="text-[28px] font-semibold text-foreground">FinVue</span>
             </div>
 
             <h3 className="text-[48px] leading-none font-bold text-foreground">Sign in</h3>
@@ -117,7 +117,7 @@ const LoginPage = () => {
           </form>
         </div>
 
-        <div className="bottomWindow flex min-h-[72px] items-center justify-center border-t border-card-line bg-[#F8FAFC] px-6 py-6">
+        <div className="bottomWindow flex min-h-[72px] items-center justify-center border-t border-card-line bg-[#F8FAFC] px-6 py-6 border-gray-400">
           <p className="text-center text-sm text-muted-foreground-2">
             Don't have an account?{' '}
             {/* 6. Use Link for internal navigation */}
