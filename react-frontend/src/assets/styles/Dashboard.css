@@ -1,11 +1,46 @@
 @import "tailwindcss";
 
+.header_allignment {
+  display: flex;
+  padding: 1.25rem;
+  justify-content: space-between;
+  background-color: #ffffff;
+}
+
+.flex_gap5 {
+  display: flex;
+  gap: 1.25rem;
+}
+
+.flex_center {
+  justify-content: center;
+}
+
+.bold-font {
+  font-weight: 700;
+}
+
+.header_nav_element {
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
+  background: #f1f5f9;
+  border-radius: 2rem;
+}
+
+.header_nav_element:hover {
+  background-color: #d1d5db;
+}
+
 .progress-bar-orange {
-  @apply [&&::-webkit-progress-bar]:bg-amber-500 [&&::-webkit-progress-bar]:rounded-2xl [&&::-moz-progress-bar]:bg-amber-500 [&&::-moz-progress-bar]:rounded-2xl;
+  @apply appearance-none border-none rounded-2xl overflow-hidden bg-gray-200
+  [&&::-webkit-progress-bar]:bg-amber-500 [&&::-webkit-progress-bar]:rounded-2xl [&::-webkit-progress-value]:rounded-2xl 
+  [&&::-moz-progress-bar]:bg-amber-500 [&&::-moz-progress-bar]:rounded-2xl;
 }
 
 .progress-bar-green {
-  @apply [&&::-webkit-progress-bar]:bg-green-500 [&&::-webkit-progress-bar]:rounded-2xl [&&::-moz-progress-bar]:bg-green-500 [&&::-moz-progress-bar]:rounded-2xl;
+  @apply appearance-none border-none rounded-2xl overflow-hidden bg-gray-200
+  [&&::-webkit-progress-bar]:bg-green-500 [&&::-webkit-progress-bar]:rounded-2xl [&::-webkit-progress-value]:rounded-2xl 
+  [&&::-moz-progress-bar]:bg-green-500 [&&::-moz-progress-bar]:rounded-2xl;
 }
 
 .CircularProgressbar-path {
@@ -77,8 +112,8 @@
 }
 
 .circular-prog-bar {
-    height: 3.75rem;
-    width: 3.75rem;
+  height: 3.75rem;
+  width: 3.75rem;
 }
 
 .saving-goals {
@@ -122,7 +157,7 @@
 }
 
 .saving-goal_amount {
-    color: #6B7280; 
+  color: #6b7280;
 }
 
 .view-goals {
@@ -138,4 +173,131 @@
 
 .view-goals:hover {
   background-color: #008235;
+}
+
+.flex_between {
+  display: flex;
+  justify-content: space-between;
+}
+
+.flex_col {
+  display: flex;
+  flex-direction: column;
+}
+
+.black-text {
+  color: #000000;
+}
+
+.bold_font {
+  font-weight: 700;
+}
+
+.nav_element_style {
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 600;
+  text-align: center;
+  color: #6b7280;
+}
+
+.nav_button_style {
+  padding-top: 1.25rem;
+  padding-bottom: 1.25rem;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+  border-radius: 0.75rem;
+}
+
+.nav_button_plus {
+  padding-top: 0.875rem;
+  padding-bottom: 0.875rem;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+  border-radius: 0.75rem;
+  font-size: 1.5rem;
+  line-height: 2rem;
+  background: #dcfce7;
+  border-radius: 0.75rem;
+}
+
+.nav_button_plus:hover {
+  background: #adffca;
+}
+
+.account-card {
+  width: 22.5rem;
+  border-radius: 0.75rem;
+  padding: 2rem;
+  @apply bg-linear-to-bl from-[#005C26] to-[#0F172A] to-60%;
+}
+
+.green-text {
+  color: #00c753;
+}
+
+.small-text {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.button-radius1 {
+  border-radius: 0.5rem;
+}
+
+.wallet_button {
+  padding: 0.5rem;
+  background: #e1e1ff1a;
+}
+
+.account-card-money {
+  align-self: flex-start;
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+}
+
+.semibold {
+  font-weight: 600;
+}
+
+.card_holder {
+  letter-spacing: 0.025em;
+  color: #94a3b8;
+}
+
+.transfer_button {
+  width: 7.5rem;
+  background-color: #00c950;
+}
+
+.transfer_button:hover {
+  background-color: #00a63e;
+}
+
+.saving-goal_button {
+  padding-block: 0.3125rem;
+  padding-inline: 0.9375rem;
+  padding-bottom: 0.75rem;
+  border-radius: 1.5rem;
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+  background: #00c7531a;
+  border-radius: 1.5rem;
+}
+
+.saving-goal_button:hover {
+  background: #00c75336;
+}
+
+@media (max-width: 929px) {
+  .desktop-display {
+    display: none;
+  }
+}
+
+@media (min-width: 930px) {
+  .mobile-display {
+    display: none;
+  }
 }
