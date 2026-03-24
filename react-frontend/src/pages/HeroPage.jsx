@@ -1,5 +1,4 @@
 // import "../assets/styles/MainPage.css";
-import Dashboard from "../components/Dasboard";
 import HeroMaster from "../components/HeroMaster";
 import HeroCard from "../components/HeroCard";
 import HeroPhoneSection from "../components/HeroPhoneSection";

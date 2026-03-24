@@ -1,11 +1,17 @@
 import "../assets/styles/MainPage.css";
-import Dashboard from "../components/Dasboard";
+import DashboardMobile from "../components/DashboardMobile";
+import DashboardHeaderMobile from "../components/DashboardHeaderMobile"
+import DashboardDesktop from "../components/DashboardDesktop";
 
 const MainPage = () => {
   return (
+    <div>
+      <DashboardHeaderMobile/>
     <main className="main_layout">
-      <Dashboard/>
+      <DashboardMobile/>
+      <DashboardDesktop/>
     </main>
+    </div>
   );
 };
 

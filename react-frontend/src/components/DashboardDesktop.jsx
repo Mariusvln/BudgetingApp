@@ -1,14 +1,14 @@
 import { CircularProgressbar } from "react-circular-progressbar";
 import "../assets/styles/Dashboard.css";
 
-const Dashboard = () => {
+const DashboardDesktop = () => {
   const percentage = 40;
   return (
-    <>
+    <div className="desktop-display flex gap-5">
       <section className="income-cards_grid">
         <div className="income-card">
           <p className="income-card-paragraph">Total Income</p>
-          <h3 className="income-card_title">$8,500.00</h3>
+          <h3 className="income-card_title black-text">$8,500.00</h3>
           <progress
             max="100"
             value="80"
@@ -17,7 +17,7 @@ const Dashboard = () => {
         </div>
         <div className="income-card">
           <p className="income-card-paragraph">Total Expenses</p>
-          <h3 className="income-card_title">$4,200.00</h3>
+          <h3 className="income-card_title black-text">$4,200.00</h3>
           <progress
             max="100"
             value="40"
@@ -26,7 +26,7 @@ const Dashboard = () => {
         </div>
         <div className="income-card">
           <p className="income-card-paragraph">Monthly Savings</p>
-          <h3 className="income-card_title">$4,300.00</h3>
+          <h3 className="income-card_title black-text">$4,300.00</h3>
           <progress
             max="100"
             value="60"
@@ -36,7 +36,7 @@ const Dashboard = () => {
         <div className="circular-prog-card">
           <div className="flex flex-col">
             <p className="income-card-paragraph">Savings Ratio</p>
-            <h3 className="circular-prog-card_title">40.8%</h3>
+            <h3 className="circular-prog-card_title black-text">40.8%</h3>
           </div>
           <div className="circular-prog-bar">
             <CircularProgressbar
@@ -48,12 +48,12 @@ const Dashboard = () => {
       </section>
       <section className="saving-goals">
         <div className="saving-goal">
-          <h4 className="h4_style">Saving Goals</h4>
-          <button className="add-button">+</button>
+          <h4 className="h4_style black-text">Saving Goals</h4>
+          <button className="add-button black-text">+</button>
         </div>
         <div>
           <div className="saving-goal">
-            <p>New Car Fund</p>
+            <p className="black-text">New Car Fund</p>
             <p className="saving-goal_amount">$12,000 / $25,000</p>
           </div>
           <progress
@@ -64,7 +64,7 @@ const Dashboard = () => {
         </div>
         <div>
           <div className="saving-goal">
-            <p>Emegency Fund</p>
+            <p className="black-text">Emegency Fund</p>
             <p className="saving-goal_amount">$8,500 / $10,000</p>
           </div>
           <progress
@@ -75,8 +75,8 @@ const Dashboard = () => {
         </div>
         <button className="view-goals">+ View All Goals</button>
       </section>
-    </>
+    </div>
   );
 };
 
-export default Dashboard
+export default DashboardDesktop
