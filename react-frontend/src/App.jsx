@@ -22,7 +22,7 @@ import Logout from "./components/Logout";
 function App() {
   return (
     <AuthProvider>
-      <Router>
+      {/* <Router> */}
         <Routes>
           <Route path="/" element={<HeroPage />} />
           <Route path="/login" element={<LoginPage />} />
@@ -33,7 +33,7 @@ function App() {
             <Route path="/logout" element={<Logout />} />
           </Route>
         </Routes>
-      </Router>
+      {/* </Router> */}
     </AuthProvider>
   );
 }
