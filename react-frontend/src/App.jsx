@@ -8,7 +8,7 @@ import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import TransactionsPage from "./pages/TransactionsPage";
 
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router';
 import { AuthProvider } from './contexts/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute'; 
 
@@ -19,7 +19,7 @@ import Logout from './components/Logout';
 function App() {
   return (
     <AuthProvider>
-      <Router>
+      {/* <Router> */}
         <Routes>
 
           <Route path="/" element={<HeroPage />} />
@@ -38,7 +38,7 @@ function App() {
           {/* Automatinis nukreipimas, jei kelias nerastas */}
           <Route path="/" element={<Navigate to="/" replace />} />
         </Routes>
-      </Router>
+      {/* </Router> */}
     </AuthProvider>
   );
 }
