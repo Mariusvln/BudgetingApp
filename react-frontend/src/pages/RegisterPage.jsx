@@ -25,7 +25,7 @@ const RegisterPage = () => {
 
   return (
     <div className="RegisterPage w-[424px] mx-auto mt-20">
-      <div className="bg-card border border-card-line rounded-xl shadow-2xs overflow-hidden flex flex-col min-h-[715px] -translate-x-[8px] -translate-y-[20px]">
+      <div className="bg-card border border-card-line rounded-xl shadow-2xs overflow-hidden flex flex-col min-h-[715px] -translate-x-[8px] -translate-y-[20px] border-gray-300">
         <div className="flex-1 px-6 pt-6 pb-8">
           
           <div className="mb-8">
@@ -40,14 +40,14 @@ const RegisterPage = () => {
               Sign Up
             </h3>
 
-            <p className="mt-4 text-[16px] leading-8 text-muted-foreground-2">
+            <p className="mt-4 text-[16px] leading-8 text-muted-foreground-2 text-gray-500">
               Welcome back! Please enter your
               <br />
               details.
             </p>
           </div>
 
-          <div className="mb-6 border-t border-card-line" />
+          <div className="mb-6 border-t border-card-line border-gray-300" />
 
           {/* PRIDĖTA: onSubmit={handleRegister} */}
           <form onSubmit={handleRegister}>
@@ -62,7 +62,7 @@ const RegisterPage = () => {
                   type="text"
                   id="username"
                   placeholder="Enter your username"
-                  className="block w-full rounded-xl border border-layer-line bg-layer px-4 py-3 text-sm text-foreground"
+                  className="block w-full rounded-xl border border-layer-line bg-layer px-4 py-3 text-sm text-foreground border-card-line bg-[#F8FAFC] border-gray-300"
                 />
               </div>
 
@@ -77,12 +77,12 @@ const RegisterPage = () => {
                   value={email} // SUSIETA SU STATE
                   onChange={(e) => setEmail(e.target.value)} // NAUJINA STATE
                   placeholder="Enter your email"
-                  className="block w-full rounded-xl border border-layer-line bg-layer px-4 py-3 text-sm text-foreground"
+                  className="block w-full rounded-xl border border-layer-line bg-layer px-4 py-3 text-sm text-foreground border-card-line bg-[#F8FAFC] border-gray-300"
                 />
               </div>
 
               <div>
-                <label htmlFor="password" name="password" className="mb-2 block text-sm font-medium text-foreground">
+                <label htmlFor="password" name="password" className="mb-2 block text-sm font-medium text-foreground ">
                   Password
                 </label>
                 <input
@@ -92,7 +92,7 @@ const RegisterPage = () => {
                   value={password} // SUSIETA SU STATE
                   onChange={(e) => setPassword(e.target.value)} // NAUJINA STATE
                   placeholder="••••••••"
-                  className="block w-full rounded-xl border border-layer-line bg-layer px-4 py-3 text-sm text-foreground"
+                  className="block w-full rounded-xl border border-layer-line bg-layer px-4 py-3 text-sm text-foreground border-card-line bg-[#F8FAFC] border-gray-300" 
                 />
               </div>
 
@@ -104,7 +104,7 @@ const RegisterPage = () => {
                   type="password"
                   id="repeat-password"
                   placeholder="••••••••"
-                  className="block w-full rounded-xl border border-layer-line bg-layer px-4 py-3 text-sm text-foreground"
+                  className="block w-full rounded-xl border border-layer-line bg-layer px-4 py-3 text-sm text-foreground border-card-line bg-[#F8FAFC] border-gray-300"
                 />
               </div>
 
@@ -125,7 +125,7 @@ const RegisterPage = () => {
 
               <button
                 type="submit"
-                className="mt-1 w-full rounded-xl bg-green-400 px-4 py-3 text-base font-semibold text-black hover:opacity-90"
+                className="mt-1 w-full rounded-xl bg-green-400 px-4 py-3 text-base font-semibold text-black hover:opacity-90 "
               >
                 Sign Up
               </button>
@@ -133,7 +133,7 @@ const RegisterPage = () => {
           </form>
         </div>
 
-        <div className="bottomWindow flex min-h-[72px] items-center justify-center border-t border-card-line bg-[#F8FAFC] px-6 py-6">
+        <div className="bottomWindow flex min-h-[72px] items-center justify-center border-t border-card-line bg-[#F8FAFC] px-6 py-6 border-gray-300">
           <p className="text-center text-sm text-muted-foreground-2">
             have an account?{' '}
             <a href="#" className="font-medium text-green-500 hover:underline">
