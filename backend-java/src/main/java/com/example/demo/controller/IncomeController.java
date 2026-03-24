@@ -16,7 +16,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/app/")
@@ -32,13 +34,24 @@ public class IncomeController {
         return new RegisterResponse("OK");
     }
 
-    @GetMapping("/showAllExpenses")
-    public List<Income> showAllIncomes() {
+    public IncomeResponse mapToDTO(Income income) {
+        return new IncomeResponse(income.getDescription(), income.getAmount(), income.getDate(), income.getCategory(), income.getProcessType());
+    }
+
+    public List<IncomeResponse> mapUsersToDTOs(List<Income> incomes) {
+        return incomes.stream()
+                .map(this::mapToDTO)
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("/showAllIncomes")
+    public List<IncomeResponse> showAllIncomes() {
 //        incomes.addIncome();
         List<Income> resultIncomes = incomes.showAllIncomes();
-//        resultIncomes.stream().map(IncomeResponse);
 
-        return incomes.showAllIncomes();
+        //        resultIncomes.stream().map(IncomeResponse);
+
+        return mapUsersToDTOs(resultIncomes);
     }
 
 
