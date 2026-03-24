@@ -1,0 +1,92 @@
+/* HeroMaster.css */
+
+.hero-badge-container {
+  display: flex;
+  justify-content: center;
+}
+
+.hero-badge {
+  text-align: center;
+  padding: 0.5rem; /* p-2 */
+  width: 16.25rem; /* w-65 equivalent */
+  margin-top: 6.75rem; /* mt-27 equivalent */
+  margin-bottom: 1rem; /* mb-4 */
+  background-color: #DCFCE7;
+  color: #15803D;
+  border-radius: 1.5rem; /* rounded-3xl */
+  text-transform: uppercase;
+}
+
+.hero-header {
+  text-align: center;
+  margin-bottom: 3.75rem; /* mb-15 */
+}
+
+.hero-title {
+  font-size: 4.5rem; /* text-7xl */
+  font-weight: 800; /* font-bold */
+  margin-bottom: 0.5rem; /* mb-2 */
+}
+
+.hero-brand {
+  font-size: 4.5rem;
+  font-weight: 800;
+  background: linear-gradient(to right, #22C55E, #15803D);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.hero-buttons {
+  text-align: center;
+}
+
+.btn-get-started {
+  background-color: #32a316;
+  font-size: 1.5rem; /* text-2xl */
+  width: 12rem; /* w-48 */
+  height: 3.75rem; /* h-15 */
+  padding: 0.75rem; /* p-3 */
+  color: white;
+  border-radius: 1rem; /* rounded-2xl */
+  font-weight: 800;
+  margin-right: 1.25rem; /* mr-5 */
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 25px 50px -12px rgba(22, 163, 74, 0.5); /* shadow-2xl with color */
+}
+
+.btn-demo {
+  background-color: #FFFFFF;
+  font-size: 1.5rem;
+  width: 12rem;
+  height: 3.75rem;
+  padding: 0.75rem;
+  border: 1px solid #E2E8F0;
+  color: black;
+  border-radius: 1rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.hero-card{
+    background-color: #ffffff;
+    width: 312px;
+    height: 157px;
+
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    padding: 1.4rem;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+
+    padding-top: 68px;
+}
+
+.hero-card-title{
+    text-align: left;
+}
+
+.hero-card-description{
+    text-align: left;
+}
