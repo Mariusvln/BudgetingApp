@@ -4,7 +4,7 @@ import HeroMaster from "../components/HeroMaster";
 import HeroCard from "../components/HeroCard";
 import HeroPhoneSection from "../components/HeroPhoneSection";
 
-const MainPage = () => {
+const HeroPage = () => {
   return (
     <>
       {/* <MainPage /> */}
@@ -39,4 +39,4 @@ const MainPage = () => {
   );
 };
 
-export default MainPage;
+export default HeroPage;
