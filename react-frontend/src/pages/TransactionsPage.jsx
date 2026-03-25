@@ -1,7 +1,7 @@
 import TransactionNav from "../components/TransactionNav";
-import TransactionHeader from "../components/TransactionHeader";
-import TransactionRecentTable from "../components/TransactionRecentTable";
-import TransactionAddPanel from "../components/TransactionAddPanel";
+import TransactionHeader from "../components/transaction-page-components/TransactionHeader";
+import TransactionRecentTable from "../components/transaction-page-components/TransactionRecentTable";
+import TransactionAddPanel from "../components/transaction-page-components/TransactionAddPanel";
 
 function TransactionsPage() {
   return (

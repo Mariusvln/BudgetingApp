@@ -1,9 +1,8 @@
-import React from "react";
 import TransactionNav from "../components/TransactionNav";
-import ProfileAccountStatus from "../components/ProfileAccountStatus";
-import ProfileHeader from "../components/ProfileHeader";
-import ProfileNotifications from "../components/ProfileNotifications";
-import ProfilePersonalInformation from "../components/ProfilePersonalInformation";
+import ProfileAccountStatus from "../components/profile-page-components/ProfileAccountStatus";
+import ProfileHeader from "../components/profile-page-components/ProfileHeader";
+import ProfileNotifications from "../components/profile-page-components/ProfileNotifications";
+import ProfilePersonalInformation from "../components/profile-page-components/ProfilePersonalInformation";
 
 const ProfilePage = () => {
   return (

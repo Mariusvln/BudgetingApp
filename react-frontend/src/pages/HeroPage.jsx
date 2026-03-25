@@ -1,12 +1,11 @@
-// import "../assets/styles/MainPage.css";
-import HeroMaster from "../components/HeroMaster";
-import HeroCard from "../components/HeroCard";
-import HeroPhoneSection from "../components/HeroPhoneSection";
+import HeroMaster from "../components/hero-page-components/HeroMaster";
+import HeroCard from "../components/hero-page-components/HeroCard";
+import HeroPhoneSection from "../components/hero-page-components/HeroPhoneSection";
 
 const HeroPage = () => {
   return (
     <>
-      {/* <MainPage /> */}
+      {/* Main page */}
       <HeroMaster />
 
       <div className="relative mt-[64px] flex w-full justify-center">

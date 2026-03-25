@@ -1,5 +1,4 @@
-import React from 'react';
-import '../styles/HeroMaster.css';
+import '../../assets/styles/HeroMaster.css';
 
 function HeroMaster() {
   return (
