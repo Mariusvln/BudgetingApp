@@ -1,7 +1,7 @@
-import "../assets/styles/Dashboard.css"
-import userIcon from "../assets/images/icons/user-icon.svg"
-import searchIcon from "../assets/images/icons/search-icon.svg"
-import bellIcon from "../assets/images/icons/bell-icon.svg"
+import "../../assets/styles/Dashboard.css"
+import userIcon from "../../assets/images/icons/user-icon.svg"
+import searchIcon from "../../assets/images/icons/search-icon.svg"
+import bellIcon from "../../assets/images/icons/bell-icon.svg"
 
 const DashboardHeaderMobile = () => {
     return (

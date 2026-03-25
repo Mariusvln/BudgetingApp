@@ -68,21 +68,12 @@
   padding: 1rem;
   flex-direction: column;
   gap: 0.75rem;
-  justify-content: center;
   border-radius: 1rem;
   background-color: #ffffff;
 }
 
-.income-card-paragraph {
-  font-weight: 600;
-  color: #6b7280;
-}
-
 .income-card_title {
   margin-bottom: 0.5rem;
-  font-size: 1.875rem;
-  line-height: 2.25rem;
-  font-weight: 700;
 }
 
 .income-card_prog-bar {
@@ -97,18 +88,9 @@
   padding-left: 1rem;
   padding-right: 1rem;
   gap: 2rem;
-  justify-content: center;
   align-items: center;
   border-radius: 1rem;
   background-color: #ffffff;
-}
-
-.circular-prog-card_title {
-  margin-top: 0.25rem;
-  margin-bottom: 0.25rem;
-  font-size: 1.875rem;
-  line-height: 2.25rem;
-  font-weight: 700;
 }
 
 .circular-prog-bar {
@@ -124,6 +106,11 @@
   justify-content: space-between;
   border-radius: 1rem;
   background-color: #ffffff;
+}
+
+.h3_style {
+  font-size: 1.875rem;
+  line-height: 2.25rem;
 }
 
 .h4_style {
@@ -251,12 +238,6 @@
   background: #e1e1ff1a;
 }
 
-.account-card-money {
-  align-self: flex-start;
-  font-size: 1.875rem;
-  line-height: 2.25rem;
-}
-
 .semibold {
   font-weight: 600;
 }
@@ -300,4 +281,12 @@
   .mobile-display {
     display: none;
   }
+}
+
+.white-text {
+  color: #ffffff;
+}
+
+.gray-text {
+  color: #6b7280;
 }

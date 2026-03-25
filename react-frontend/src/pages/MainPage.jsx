@@ -1,7 +1,7 @@
 import "../assets/styles/MainPage.css";
-import DashboardMobile from "../components/DashboardMobile";
-import DashboardHeaderMobile from "../components/DashboardHeaderMobile"
-import DashboardDesktop from "../components/DashboardDesktop";
+import DashboardMobile from "../components/main-page-components/DashboardMobile";
+import DashboardHeaderMobile from "../components/main-page-components/DashboardHeaderMobile"
+import DashboardDesktop from "../components/main-page-components/DashboardDesktop";
 
 const MainPage = () => {
   return (
