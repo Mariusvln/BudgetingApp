@@ -24,7 +24,7 @@ public class Income {
 
     private PROCESS_TYPE processType;
 
-    // private userid userid; ADD THIS
+    // private userid userid;
 
     // Constructors
     public Income() {}
@@ -35,6 +35,10 @@ public class Income {
         this.date = date;
         this.category = category;
         this.processType = processType;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getDescription() {
