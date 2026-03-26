@@ -24,8 +24,8 @@ function App() {
           <Route path="/" element={<HeroPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
-          <Route path="/profile" element={<ProfilePage />} />
           <Route path="/main" element={<MainPage />}/>
+          <Route path="/profile" element={<ProfilePage />} />
           <Route element={<ProtectedRoute />}>
             <Route path="/dashboard" element={<TransactionsPage />} />
             <Route path="/logout" element={<Logout />} />

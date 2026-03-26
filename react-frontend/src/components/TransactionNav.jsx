@@ -9,37 +9,37 @@ function TransactionNav() {
       
       <ul className="menu px-2 flex-1">
         <li>
-          <a>
+          <a href="http://localhost:5173/main">
             <img src="./src/assets/images/icons/home-icon.svg" className="w-5" />
-            Home
+            Main
           </a>
         </li>
         <li>
-          <a className="active">
+          <a href="http://localhost:5173/dashboard">
             <img src="./src/assets/images/icons/transaction-icon.svg" className="w-5" />
             Transactions
           </a>
         </li>
-        <li>
-          <a>
+        {/* <li>
+          <a href="http://localhost:5173/dashboard">
             <img src="./src/assets/images/icons/budgets-icon.svg" className="w-5" />
             Budgets
           </a>
-        </li>
+        </li> */}
         <li>
-          <a>
+          <a href="http://localhost:5173/analytics">
             <img src="./src/assets/images/icons/analytics-icon.svg" className="w-5" />
             Analytics
           </a>
         </li>
         <li>
-          <a>
+          <a href="http://localhost:5173/profile">
             <img src="./src/assets/images/icons/user-icon.svg" className="w-5" />
             Profile
           </a>
         </li>
         <li>
-          <a>
+          <a href="http://localhost:5173/settings">
             <img src="./src/assets/images/icons/settings-icon.svg" className="w-5" />
             Settings
           </a>
