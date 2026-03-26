@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -19,19 +20,33 @@ public class IncomeService {
 
     private final IncomeRepository incomeRepository;
 
-    public Income addIncome(){
-        Income income = new Income("Earned money from cutting grass", BigDecimal.valueOf(20), LocalDate.now(), 1, PROCESS_TYPE.SINGLE);
-//        expense.set
-//
-//        User u=new User();
-//        u.setEmail(email);
-//        u.setPassword(encoder.encode(password));
-//        u.setRole(Role.ROLE_USER);
-//        return userRepository.save(u);
-        return incomeRepository.save(income);
+    public Income addIncome(Income givenIncome){
+        return incomeRepository.save(givenIncome);
     }
 
     public List<Income> showAllIncomes(){
         return incomeRepository.findAll();
     }
+
+    public BigDecimal calculateAllGivenIncomes(){
+        List<Income> incomes = showAllIncomes();
+
+        BigDecimal total = incomes.stream().map(Income::getAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
+        return total;
+    }
+
+    public List<Income> calculateAllGivenIncomesFromDateStartToDateEnd(LocalDate dateStart, LocalDate dateEnd){
+        List<Income> incomes = showAllIncomes();
+
+        List<Income> filtered = new ArrayList<>();
+        for (Income r : incomes) {
+            if (!r.getDate().isBefore(dateStart) && !r.getDate().isAfter(dateEnd)) {
+                filtered.add(r);
+            }
+        }
+
+        return filtered;
+    }
+
+
 }

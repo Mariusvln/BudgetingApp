@@ -2,20 +2,12 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.*;
 import com.example.demo.entity.Income;
-import com.example.demo.entity.User;
 import com.example.demo.service.IncomeService;
-import com.example.demo.service.JwtService;
-import com.example.demo.service.UserService;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,11 +18,10 @@ import java.util.stream.Collectors;
 public class IncomeController {
 
     private final IncomeService incomes;
-//    private final JwtService jwtService;
 
     @PostMapping("/addIncome")
-    public RegisterResponse addIncome() {
-        incomes.addIncome();
+    public RegisterResponse addIncome(@RequestBody Income income) {
+        incomes.addIncome(income);
         return new RegisterResponse("OK");
     }
 
@@ -46,12 +37,24 @@ public class IncomeController {
 
     @GetMapping("/showAllIncomes")
     public List<IncomeResponse> showAllIncomes() {
-//        incomes.addIncome();
         List<Income> resultIncomes = incomes.showAllIncomes();
 
-        //        resultIncomes.stream().map(IncomeResponse);
-
         return mapUsersToDTOs(resultIncomes);
+    }
+
+    @GetMapping("/calculateIncomes")
+    public RegisterResponse calculateIncomes() {
+        BigDecimal total = incomes.calculateAllGivenIncomes();
+
+
+        return new RegisterResponse(total.toString());
+    }
+
+    @GetMapping("/calculateIncomesFromDateStartToDateFinish")
+    public List<Income> calculateIncomesFromDateStartToDateFinish(@RequestParam LocalDate dateStart, @RequestParam LocalDate dateEnd) {
+        List<Income> total = incomes.calculateAllGivenIncomesFromDateStartToDateEnd(dateStart, dateEnd);
+
+        return total;
     }
 
 

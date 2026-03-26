@@ -16,16 +16,10 @@ public class IncomeResponse {
 
     public LocalDate date;
 
-    //    @ManyToOne
-//    @JoinColumn(name = "category_id")
-//    private Category category;
     public int category;
 
     public PROCESS_TYPE processType;
 
-    // private userid userid; ADD THIS
-
-    // Constructors
     public IncomeResponse() {}
 
     public IncomeResponse(String description, BigDecimal amount, LocalDate date, int category, PROCESS_TYPE processType) {
@@ -36,13 +30,4 @@ public class IncomeResponse {
         this.processType = processType;
     }
 
-//    public IncomeReponse mapToDTO(Income income) {
-//        return new IncomeReponse(income.getDescription(), income.getAmount(), income.getDate(), income.getCategory(), income.getProcessType());
-//    }
-//
-//    public List<IncomeReponse> mapUsersToDTOs(List<Income> incomes) {
-//        return incomes.stream()
-//                .map(this::mapToDTO)
-//                .collect(Collectors.toList());
-//    }
 }
