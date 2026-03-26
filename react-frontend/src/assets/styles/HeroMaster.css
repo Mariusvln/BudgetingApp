@@ -40,12 +40,10 @@
 .hero-buttons {
   text-align: center;
 }
- .hero-avatars{
+.hero-users-container{
   display: none;
 }
-.avatar{
-  display: none;
-}
+
 
 .btn-get-started {
   background-color: #32a316;
@@ -73,6 +71,7 @@
   border-radius: 1rem;
   font-weight: 800;
   cursor: pointer;
+  
 }
 
 .hero-card{
@@ -133,22 +132,39 @@
   
   }
 
-  .btn-get-started,
-  .btn-demo {
-    width: 90%;
-    height: 3.25rem;
-    font-size: 1rem;
-    margin-right: 0;
-    border-radius: 10px;
-    background-color: #1a9e4a;
-    color: #0a3d1d;
-    font-weight: 700;
+  .btn-get-started, 
+   .btn-demo { 
+     width: 90%; 
+     height: 3.25rem; 
+     font-size: 1rem; 
+     margin-right: 0; 
+     border-radius: 10px; 
+   background-color: #1a9e4a; 
+     color: #0a3d1d; 
+     font-weight: 700; 
     
   }
-  .hero-avatars{
+  .hero-users-container {
   display: flex;
+  flex-direction: row; 
+  align-items: center; 
+  gap: 10px;
+  margin-top: 20px;
+  margin-left: 15px;
 }
-
+.hero-avatars-group {
+  display: flex;
+  flex-direction: row;
+}
+.avatar-slot{
+ width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  border: 2px solid #ffffff;
+  overflow: hidden;
+  margin-left: -12px; 
+  background-color: white;
+}
 .avatar{
   width: 26px;
   height: 26px;
