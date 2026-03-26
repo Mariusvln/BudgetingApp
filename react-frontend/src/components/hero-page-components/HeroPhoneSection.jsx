@@ -1,4 +1,4 @@
-import phone1 from '../assets/phone1.png'
+import phone1 from '../../assets/images/phone1.png'
 
 function HeroPhoneSection() {
   return (

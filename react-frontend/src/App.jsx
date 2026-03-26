@@ -1,8 +1,5 @@
 import "./App.css";
-import HeroMaster from "./components/HeroMaster";
 import MainPage from "./pages/MainPage";
-import TransactionNav from "./components/TransactionNav";
-import TransactionRecentTable from "./components/TransactionRecentTable";
 import LoginPage from "./pages/LoginPage";
 import TransactionsPage from "./pages/TransactionsPage";
 import HeroPage from "./pages/HeroPage";
@@ -23,20 +20,17 @@ import Logout from "./components/Logout";
 function App() {
   return (
     <AuthProvider>
-      {/* <Router> */}
         <Routes>
           <Route path="/" element={<HeroPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/main" element={<MainPage />}/>
-
           <Route element={<ProtectedRoute />}>
             <Route path="/dashboard" element={<TransactionsPage />} />
             <Route path="/logout" element={<Logout />} />
           </Route>
         </Routes>
-      {/* </Router> */}
     </AuthProvider>
   );
 }

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router';
 import { useAuth } from '../contexts/AuthContext'; // Import the hook
-import '../styles/LoginPageStyle.css';
+import '../assets/styles/LoginPageStyle.css';
 
 const LoginPage = () => {
   // 1. Setup state for form inputs

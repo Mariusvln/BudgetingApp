@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import axios from 'axios';
-import '../styles/LoginPageStyle.css';
+import '../assets/styles/LoginPageStyle.css';
 
 const RegisterPage = () => {
   // 1. Pridedame būseną (state) duomenims saugoti

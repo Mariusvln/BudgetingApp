@@ -1,4 +1,4 @@
-import '../styles/HeroMaster.css';
+import '../../assets/styles/HeroMaster.css';
 
 function HeroCard({ title, description }) {
     return (
