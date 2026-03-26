@@ -1,4 +1,8 @@
 import '../../assets/styles/HeroMaster.css';
+import profile1 from '../../assets/images/icons/p1.png';
+import profile2 from '../../assets/images/icons/p2.png';
+import profile3 from '../../assets/images/icons/p3.png';
+
 
 function HeroMaster() {
   return (
@@ -23,17 +27,26 @@ function HeroMaster() {
         <button className="btn-demo">
           Watch Demo
         </button>
-        <div class="hero-users">
-  <div class="hero-avatars">
-    <span class="avatar"></span>
-    <span class="avatar"></span>
-    <span class="avatar"></span>
+    <div className="hero-users-container">
+  <div className="hero-avatars-group">
+    <div className="avatar-slot">
+      <img src={profile1} alt="User 1" />
+    </div>
+    <div className="avatar-slot">
+      <img src={profile2} alt="User 2" />
+    </div>
+    <div className="avatar-slot">
+      <img src={profile3} alt="User 3" />
+    </div>
   </div>
 
-  <p class="hero-users-text">
+  <p className="hero-users-text">
     Joined by <strong>10,000+</strong> users this month
   </p>
 </div>
+      </div>
+      <div className='core-benefits-banner'>
+     
       </div>
     </>
   );
