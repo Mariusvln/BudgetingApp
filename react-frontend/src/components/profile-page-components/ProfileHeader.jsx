@@ -1,6 +1,6 @@
 function ProfileHeader() {
   return (
-    <div className="bg-white rounded-2xl shadow p-6 flex items-center gap-6 mb-6">
+    <div className="bg-base-100 rounded-2xl shadow p-6 flex items-center gap-6 mb-6">
       <div className="w-20 h-20 rounded-full bg-gray-200 flex items-center justify-center text-xl font-bold">
         AS
       </div>
