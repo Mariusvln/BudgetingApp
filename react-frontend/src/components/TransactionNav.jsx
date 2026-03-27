@@ -1,6 +1,6 @@
 function TransactionNav() {
   return (
-    <aside className="w-64 min-h-screen border-r border-base-200 bg-white flex flex-col">
+    <aside className="w-64 min-h-screen border-r border-base-300 bg-base-100 flex flex-col">
       
       <div className="p-4">
         <h1 className="text-3xl font-bold bg-linear-to-r from-[#22C55E] to-[#15803D] bg-clip-text text-transparent">FinVue</h1>
@@ -38,12 +38,12 @@ function TransactionNav() {
             Profile
           </a>
         </li>
-        <li>
+        {/* <li>
           <a href="http://localhost:5173/settings">
             <img src="./src/assets/images/icons/settings-icon.svg" className="w-5" />
             Settings
           </a>
-        </li>
+        </li> */}
       </ul>
 
       

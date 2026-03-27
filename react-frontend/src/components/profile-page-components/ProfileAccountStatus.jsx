@@ -1,6 +1,6 @@
 function ProfileAccountStatus() {
   return (
-    <div className="bg-white rounded-2xl shadow p-6">
+    <div className="bg-base-100 rounded-2xl shadow p-6">
       <h3 className="text-lg font-semibold mb-4">Account Status</h3>
 
       <div className="flex items-center gap-3">
