@@ -1,42 +1,50 @@
 package com.example.demo.service;
 
 import com.example.demo.entity.Expense;
-import com.example.demo.entity.Role;
-import com.example.demo.entity.User;
-import com.example.demo.repository.CategoryExpenseSummary;
+import com.example.demo.entity.Income;
 import com.example.demo.repository.ExpenseRepository;
-import com.example.demo.repository.UserRepository;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import com.example.demo.repository.IncomeRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class ExpenseService {
 
     private final ExpenseRepository expenseRepository;
 
-    public void addExpense(String email, String password){
-//        Expense expense = new Expense();
-//        expense.set
-//
-//        User u=new User();
-//        u.setEmail(email);
-//        u.setPassword(encoder.encode(password));
-//        u.setRole(Role.ROLE_USER);
-//        return userRepository.save(u);
+    public Expense addIncome(Expense givenExpense){
+        return expenseRepository.save(givenExpense);
     }
 
-//    private final ExpenseRepository expenseRepository;
-
-    public ExpenseService(ExpenseRepository expenseRepository) {
-        this.expenseRepository = expenseRepository;
+    public List<Expense> showAllIncomes(){
+        return expenseRepository.findAll();
     }
 
-    public List<CategoryExpenseSummary> getExpensesByCategory(
-            LocalDate startDate,
-            LocalDate endDate) {
+    public BigDecimal calculateAllGivenIncomes(){
+        List<Expense> incomes = showAllIncomes();
 
-        return expenseRepository.findTotalExpensesByCategory(startDate, endDate);
+        BigDecimal total = incomes.stream().map(Expense::getAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
+        return total;
     }
+
+    public List<Expense> calculateAllGivenIncomesFromDateStartToDateEnd(LocalDate dateStart, LocalDate dateEnd){
+        List<Expense> incomes = showAllIncomes();
+
+        List<Expense> filtered = new ArrayList<>();
+        for (Expense r : incomes) {
+            if (!r.getDate().isBefore(dateStart) && !r.getDate().isAfter(dateEnd)) {
+                filtered.add(r);
+            }
+        }
+
+        return filtered;
+    }
+
+
 }

@@ -1,10 +1,6 @@
 package com.example.demo.service;
 
-import com.example.demo.entity.Category;
-import com.example.demo.entity.Expense;
 import com.example.demo.entity.Income;
-import com.example.demo.entity.PROCESS_TYPE;
-import com.example.demo.repository.ExpenseRepository;
 import com.example.demo.repository.IncomeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
