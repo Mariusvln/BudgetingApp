@@ -43,16 +43,7 @@ const HeroPage = () => {
           <HeroCard icon={budget} title="Bank Grade security" description="" />
         </div>
       </div>
-
-      <div className="m-20">
-        <div className="">
-          <FeatureSection />
-        </div>
-        <div>
-          <CtaSection />
-        </div>
-      </div>
-     <div className="core-benefits-baner flex justify-center items-center w-full my-8 block md:hidden">
+  <div className="core-benefits-baner flex justify-center items-center w-full my-8 block md:hidden">
   <p className="core-benefits text-center text-[#64e764] font-bold tracking-widest text-[15px] sm:text-sm leading-tight">
     CORE <br /> BENEFITS
   </p>
@@ -63,6 +54,50 @@ const HeroPage = () => {
 <div className="description-container  flex justify-center items-center block md:hidden">
   <p className="experience-description text-center  text-[#808080] font-light text-[20px]">Experience the future of <br />personal finance with our <br />comprhesive tools designed <br />for the modern era.</p>
 </div>
+
+<div className="active-users "></div>
+      <div className="m-20">
+        <div className="">
+          <FeatureSection />
+        </div>
+        <br />
+        <div className="active-users flex flex-col items-center gap-6 px-6 md:hidden ">
+ 
+  <div className="w-full max-w-[400px] bg-[#f0f9f4] rounded-2xl p-6 flex flex-col items-center border border-[#e0ece6]">
+    <span className="text-[#7a8b94] text-xs font-bold tracking-widest mb-2">ACTIVE USERS</span>
+    <div className="flex items-center gap-2">
+      <h2 className="text-[#1a2b3b] text-4xl font-extrabold ">500K+</h2>
+      <span className="text-[#22c55e] text-2xl">↑</span>
+    </div>
+  </div>
+
+
+  <div className="w-full max-w-[400px] bg-[#f0f9f4] rounded-2xl p-8 flex flex-col items-center border border-[#e0ece6]">
+    <span className="text-[#7a8b94] text-xs font-bold tracking-widest mb-2">ASSETS TRACKED</span>
+    <div className="flex items-center gap-2">
+      <h2 className="text-[#1a2b3b] text-4xl font-extrabold ">$2B+</h2>
+      <svg className="w-8 h-8 text-[#22c55e]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+      </svg>
+    </div>
+  </div>
+
+  
+  <div className="w-full max-w-[400px] bg-[#f0f9f4] rounded-2xl p-8 flex flex-col items-center border border-[#e0ece6]">
+    <span className="text-[#7a8b94] text-xs font-bold tracking-widest mb-2">CUSTOMER RATING</span>
+    <div className="flex items-center gap-2">
+      <h2 className="text-[#1a2b3b] text-4xl font-extrabold">4.9/5</h2>
+      <span className="text-[#22c55e] text-2xl">★</span>
+    </div>
+  </div>
+</div>
+
+<div className="m-20"></div>
+        <div>
+          <CtaSection />
+        </div>
+      </div>
+   
     </>
   );
 };
