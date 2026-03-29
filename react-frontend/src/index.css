@@ -1,6 +1,8 @@
 @import "tailwindcss";
 
-@plugin "flyonui";
+@plugin "flyonui" {
+  themes: light --default;
+};
 
 
 @plugin "daisyui" {
