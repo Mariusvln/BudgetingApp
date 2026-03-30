@@ -2,7 +2,7 @@ import "../../assets/styles/Dashboard.css";
 
 const SavingGoal = () => {
   return (
-    <section className="flex_col flex_center bg-white p-4 rounded-xl gap-4">
+    <section className="flex_col flex_center saving-goal">
       <div className="flex_between">
         <div>
           <div className="flex_between gap-22 text-gray-500">
