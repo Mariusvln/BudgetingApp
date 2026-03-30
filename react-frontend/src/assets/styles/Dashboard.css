@@ -216,6 +216,7 @@
   width: 22.5rem;
   border-radius: 0.75rem;
   padding: 2rem;
+  align-self: center; 
   @apply bg-linear-to-bl from-[#005C26] to-[#0F172A] to-60%;
 }
 
@@ -294,4 +295,13 @@
   border-radius: 12px;
   background: radial-gradient(141.42% 141.42% at 0% 0%, #66FFA6 0%, rgba(102, 255, 166, 0.00) 50%), radial-gradient(141.42% 70.71% at 50% 0%, #0C6 0%, rgba(0, 204, 102, 0.00) 50%), radial-gradient(141.42% 141.42% at 100% 0%, #096 0%, rgba(0, 153, 102, 0.00) 50%), #13EC6D;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.10), 0 4px 6px -4px rgba(0, 0, 0, 0.10);
+}
+
+.saving-goal {
+  padding: 1rem; 
+  gap: 1rem; 
+  border-radius: 0.75rem; 
+  background-color: #ffffff; 
+  width: 22.5rem;
+  align-self: center; 
 }
