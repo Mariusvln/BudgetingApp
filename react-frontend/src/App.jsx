@@ -8,35 +8,33 @@ import RegisterPage from "./pages/RegisterPage";
 import ProfilePage from "./pages/ProfilePage";
 import AnalyticsPage from "./pages/AnalyticsPage";
 
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-} from "react-router";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router";
 import { AuthProvider } from "./contexts/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
+import { ThemeProvider } from "./contexts/ThemeProvider";
 
 import Logout from "./components/Logout";
 
 function App() {
   return (
-    <AuthProvider>
+    <ThemeProvider>
+      <AuthProvider>
         <Routes>
           <Route path="/" element={<HeroPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
-          <Route path="/main" element={<MainPage />}/>
+          <Route path="/main" element={<MainPage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/analytics" element={<AnalyticsPage />} />
           <Route path="/incomes" element={<IncomesPage />} />
-          
+
           <Route element={<ProtectedRoute />}>
             <Route path="/dashboard" element={<TransactionsPage />} />
             <Route path="/logout" element={<Logout />} />
           </Route>
         </Routes>
-    </AuthProvider>
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
 
