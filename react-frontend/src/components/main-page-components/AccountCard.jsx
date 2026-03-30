@@ -4,7 +4,7 @@ import "../../assets/styles/Dashboard.css";
 
 const AccountCard = () => {
     return (
-        <section className="flex_col account-card">
+        <section className="flex_col account-card self-center">
                 <div className="flex_between">
                   <p className="small-text green-text">Main Account</p>
                   <button>
