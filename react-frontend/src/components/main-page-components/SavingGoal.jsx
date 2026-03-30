@@ -2,7 +2,7 @@ import "../../assets/styles/Dashboard.css";
 
 const SavingGoal = () => {
   return (
-    <section className="flex_col flex_center saving-goal">
+    <section className="flex_col flex_center saving-goal_mobile">
       <div className="flex_between">
         <div>
           <div className="flex_between gap-22 text-gray-500">
@@ -20,7 +20,7 @@ const SavingGoal = () => {
       <progress
         max="100"
         value="80"
-        className="progress-bar-green h-2"
+        className="progress-bar-green h-2 w-[100%]"
       ></progress>
     </section>
   );

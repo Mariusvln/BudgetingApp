@@ -7,7 +7,7 @@ import TransactionNav from "../TransactionNav"
 const DashboardDesktop = () => {
   const percentage = 40;
   return (
-    <div className="flex justify-between desktop-display">
+    <div className="flex justify-between gap-7 desktop-display">
       <TransactionNav />
       <div className="flex flex-col gap-5 justify-center items-center">
         <section className="flex gap-5.5">
