@@ -16,7 +16,7 @@ function CtaSection() {
         Join thousands of users who have optimized their savings and reached their goals with FinVue.
       </p>
 
-      <div className="flex items-center justify-center gap-4">
+      <div className=" flex flex-wrap items-center justify-center gap-4">
         <button
           onClick={handleClick}
           className="px-6 py-3 bg-green-500 hover:bg-green-600 rounded-xl font-semibold shadow-lg"

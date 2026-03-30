@@ -9,6 +9,9 @@ import FeatureSection from "../components/hero-page-components/FeatureSection";
 import analitic from "../assets/images/icons/analytics-icon.svg";
 import budget from "../assets/images/icons/budgets-icon.svg";
 import optimize from "../assets/images/icons/optimization-icon.svg";
+import star from "../assets/images/icons/stars.svg";
+import up from "../assets/images/icons/up.svg";
+import chart from "../assets/images/icons/charts.svg";
 
 const HeroPage = () => {
   return (
@@ -67,7 +70,7 @@ const HeroPage = () => {
     <span className="text-[#7a8b94] text-xs font-bold tracking-widest mb-2">ACTIVE USERS</span>
     <div className="flex items-center gap-2">
       <h2 className="text-[#1a2b3b] text-4xl font-extrabold ">500K+</h2>
-      <span className="text-[#22c55e] text-2xl">↑</span>
+      <span className="text-[#22c55e] text-2xl"><img src={up} alt="Arrow Up" /></span>
     </div>
   </div>
 
@@ -76,9 +79,7 @@ const HeroPage = () => {
     <span className="text-[#7a8b94] text-xs font-bold tracking-widest mb-2">ASSETS TRACKED</span>
     <div className="flex items-center gap-2">
       <h2 className="text-[#1a2b3b] text-4xl font-extrabold ">$2B+</h2>
-      <svg className="w-8 h-8 text-[#22c55e]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-      </svg>
+<span className="text-[#22c55e] text-2xl"><img src={chart} alt="Chart" /></span>
     </div>
   </div>
 
@@ -87,7 +88,7 @@ const HeroPage = () => {
     <span className="text-[#7a8b94] text-xs font-bold tracking-widest mb-2">CUSTOMER RATING</span>
     <div className="flex items-center gap-2">
       <h2 className="text-[#1a2b3b] text-4xl font-extrabold">4.9/5</h2>
-      <span className="text-[#22c55e] text-2xl">★</span>
+      <span className="text-[#22c55e] text-2xl"><span className="text-[#22c55e] text-2xl"><img src={star} alt="Star" /></span></span>
     </div>
   </div>
 </div>
