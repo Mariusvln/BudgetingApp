@@ -7,7 +7,7 @@ function TransactionNav() {
       </div>
 
       
-      <ul className="menu px-2 flex-1">
+      <ul className="menu px-2 flex-1 w-full">
         <li>
           <a href="http://localhost:5173/main">
             <img src="./src/assets/images/icons/home-icon.svg" className="w-5" />
