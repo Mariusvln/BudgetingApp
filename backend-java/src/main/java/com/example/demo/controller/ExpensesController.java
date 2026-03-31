@@ -22,13 +22,13 @@ public class ExpensesController {
     private final ExpenseService expenses;
 
     @PostMapping("/addExpense")
-    public RegisterResponse addExpense(@RequestBody Expense expense) {
+    public RegisterResponse addExpense(@RequestBody ExpenseRequest expense) {
         expenses.addIncome(expense);
         return new RegisterResponse("OK");
     }
 
     public ExpenseResponse mapToDTO(Expense expense) {
-        return new ExpenseResponse(expense.getDescription(), expense.getAmount(), expense.getDate(), expense.getCategory(), expense.getProcessType());
+        return new ExpenseResponse(expense.getUser(),  expense.getDescription(), expense.getAmount(), expense.getDate(), expense.getCategory(), expense.getProcessType());
     }
 
     public List<ExpenseResponse> mapUsersToDTOs(List<Expense> expense) {

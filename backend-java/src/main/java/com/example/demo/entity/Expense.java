@@ -1,11 +1,15 @@
 package com.example.demo.entity;
 
+import com.example.demo.dto.ExpenseRequest;
+import com.example.demo.service.ExpenseService;
+import com.example.demo.service.UserService;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
 public class Expense {
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,6 +20,10 @@ public class Expense {
     private BigDecimal amount;
 
     private LocalDate date;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     //    @ManyToOne
 //    @JoinColumn(name = "category_id")
@@ -29,7 +37,8 @@ public class Expense {
     // Constructors
     public Expense() {}
 
-    public Expense(String description, BigDecimal amount, LocalDate date, int category, PROCESS_TYPE processType) {
+    public Expense(User user, String description, BigDecimal amount, LocalDate date, int category, PROCESS_TYPE processType) {
+        this.user = user;
         this.description = description;
         this.amount = amount;
         this.date = date;
@@ -40,6 +49,8 @@ public class Expense {
     public Long getId() {
         return id;
     }
+
+    public User getUser() {return user;}
 
     public String getDescription() {
         return description;
@@ -59,5 +70,33 @@ public class Expense {
 
     public PROCESS_TYPE getProcessType() {
         return processType;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public void setCategory(int category) {
+        this.category = category;
+    }
+
+    public void setProcessType(PROCESS_TYPE processType) {
+        this.processType = processType;
     }
 }
