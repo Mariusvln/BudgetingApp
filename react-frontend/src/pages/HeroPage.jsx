@@ -5,6 +5,7 @@ import HeroPhoneSection from "../components/hero-page-components/HeroPhoneSectio
 import CtaSection from "../components/hero-page-components/CtaSection";
 import FeatureCard from "../components/hero-page-components/FeatureCard";
 import FeatureSection from "../components/hero-page-components/FeatureSection";
+import HeroFooter from "../components/hero-page-components/HeroFooter";
 
 import analitic from "../assets/images/icons/analytics-icon.svg";
 import budget from "../assets/images/icons/budgets-icon.svg";
@@ -93,11 +94,13 @@ const HeroPage = () => {
   </div>
 </div>
 
+
 <div className="m-20"></div>
         <div>
           <CtaSection />
         </div>
       </div>
+<HeroFooter />
    
     </>
   );
