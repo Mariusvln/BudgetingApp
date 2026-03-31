@@ -9,7 +9,7 @@
   text-align: center;
   padding: 0.5rem; /* p-2 */
   width: 16.25rem; /* w-65 equivalent */
-  margin-top: 6.75rem; /* mt-27 equivalent */
+  margin-top: 3.75rem; /* mt-27 equivalent */
   margin-bottom: 1rem; /* mb-4 */
   background-color: #DCFCE7;
   color: #15803D;
@@ -53,7 +53,7 @@
   padding: 0.75rem; /* p-3 */
   color: white;
   border-radius: 1rem; /* rounded-2xl */
-  font-weight: 800;
+  font-weight: 600;
   margin-right: 1.25rem; /* mr-5 */
   border: none;
   cursor: pointer;
@@ -75,7 +75,7 @@
 }
 
 .hero-card{
-    background-color: #ffffff;
+    /* background-color: #ffffff; */
     width: 312px;
 
     border: 1px solid #e5e7eb;
