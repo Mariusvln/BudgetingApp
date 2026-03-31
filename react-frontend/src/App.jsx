@@ -7,6 +7,7 @@ import HeroPage from "./pages/HeroPage";
 import RegisterPage from "./pages/RegisterPage";
 import ProfilePage from "./pages/ProfilePage";
 import AnalyticsPage from "./pages/AnalyticsPage";
+import AdminPage from "./pages/AdminPage";
 
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router";
 import { AuthProvider } from "./contexts/AuthContext";
@@ -27,6 +28,7 @@ function App() {
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/analytics" element={<AnalyticsPage />} />
           <Route path="/incomes" element={<IncomesPage />} />
+          <Route path="/admin" element={<AdminPage />} />
 
           <Route element={<ProtectedRoute />}>
             <Route path="/dashboard" element={<TransactionsPage />} />
