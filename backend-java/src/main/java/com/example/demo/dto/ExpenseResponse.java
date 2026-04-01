@@ -1,12 +1,14 @@
 package com.example.demo.dto;
 
 import com.example.demo.entity.PROCESS_TYPE;
+import com.example.demo.entity.User;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class ExpenseResponse {
 
+    public Long user;
 
     public Long id;
 
@@ -22,7 +24,8 @@ public class ExpenseResponse {
 
     public ExpenseResponse() {}
 
-    public ExpenseResponse(String description, BigDecimal amount, LocalDate date, int category, PROCESS_TYPE processType) {
+    public ExpenseResponse(User user, String description, BigDecimal amount, LocalDate date, int category, PROCESS_TYPE processType) {
+        this.user = user.getId();
         this.description = description;
         this.amount = amount;
         this.date = date;
