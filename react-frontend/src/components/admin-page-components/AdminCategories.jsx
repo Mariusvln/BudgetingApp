@@ -27,26 +27,26 @@ const AdminCategories = () => {
   };
 
   return (
-    <div className="grid md:grid-cols-2 gap-6">
-      <div className="card bg-base-100 shadow p-4">
+    <div className="flex gap-6">
+      <div className="card bg-base-100 shadow p-6 w-[25%] rounded-2xl">
         <h2 className="font-bold mb-3 text-2xl">Add Category</h2>
 
-        <label className="uppercase text-[#64748B]" for="Catname">
+        <label className="uppercase text-[#64748B] text-sm mb-2" for="Catname">
           category name
         </label>
         <input
-          className="input input-bordered w-full mb-3 rounded-xl bg-base-300"
+          className="input input-bordered w-full mb-3 rounded-xl bg-[#F2F3FF] border-none"
           placeholder="Category name"
           name="Catname"
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
 
-        <label className="uppercase text-[#64748B]" for="Cattype">
+        <label className="uppercase text-[#64748B] mb-2 text-sm" for="Cattype">
           type
         </label>
         <select
-          className="select select-bordered w-full mb-3 rounded-xl bg-base-300"
+          className="select select-bordered w-full mb-3 rounded-xl bg-[#F2F3FF] border-none"
           name="Cattype"
           value={type}
           onChange={(e) => setType(e.target.value)}
@@ -56,14 +56,14 @@ const AdminCategories = () => {
         </select>
 
         <button
-          className="btn btn-success bg-[#006E2F] text-white border-none rounded-xl"
+          className="btn btn-success bg-[#006E2F] text-white border-none rounded-xl mt-2"
           onClick={handleCreate}
         >
           Create Category
         </button>
       </div>
 
-      <div className="card bg-base-100 shadow p-4">
+      <div className="card bg-base-100 shadow p-6 w-[100%] rounded-2xl">
         <h2 className="font-bold mb-3 text-2xl">Categories</h2>
 
         <div className="space-y-2">
