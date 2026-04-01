@@ -1,3 +1,4 @@
+import "./mockServer";
 import "./App.css";
 import MainPage from "./pages/MainPage";
 import LoginPage from "./pages/LoginPage";
