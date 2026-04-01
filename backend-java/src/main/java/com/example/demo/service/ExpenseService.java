@@ -1,9 +1,12 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.ExpenseRequest;
 import com.example.demo.entity.Expense;
 import com.example.demo.entity.Income;
+import com.example.demo.entity.User;
 import com.example.demo.repository.ExpenseRepository;
 import com.example.demo.repository.IncomeRepository;
+import com.example.demo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,9 +20,28 @@ import java.util.List;
 public class ExpenseService {
 
     private final ExpenseRepository expenseRepository;
+    private final UserRepository userRepository;
 
-    public Expense addIncome(Expense givenExpense){
-        return expenseRepository.save(givenExpense);
+    public Expense fromDTO(ExpenseRequest dto) {
+        Expense expense = new Expense();
+//        expense.setId(dto.getId());
+        expense.setDescription(dto.getDescription());
+        expense.setDate(dto.getDate());
+        expense.setCategory(dto.getCategory());
+        expense.setAmount(dto.getAmount());
+
+        if (dto.getId() != null) {
+            User user = userRepository.findById(dto.getId())
+                    .orElseThrow(() -> new IllegalArgumentException("User not found"));
+            expense.setUser(user);
+        }
+
+        return expense;
+    }
+
+    public Expense addIncome(ExpenseRequest givenExpenseRequest){
+        Expense expense = fromDTO(givenExpenseRequest);
+        return expenseRepository.save(expense);
     }
 
     public List<Expense> showAllIncomes(){
@@ -45,6 +67,7 @@ public class ExpenseService {
 
         return filtered;
     }
+
 
 
 }
