@@ -24,24 +24,35 @@ public class ExpenseService {
 
     public Expense fromDTO(ExpenseRequest dto) {
         Expense expense = new Expense();
-//        expense.setId(dto.getId());
+        expense.setId(dto.getId());
         expense.setDescription(dto.getDescription());
         expense.setDate(dto.getDate());
         expense.setCategory(dto.getCategory());
         expense.setAmount(dto.getAmount());
 
+        System.out.println("User id is ->> " + dto.getUser());
+
         if (dto.getId() != null) {
-            User user = userRepository.findById(dto.getId())
-                    .orElseThrow(() -> new IllegalArgumentException("User not found"));
+//            User user = userRepository.findById(dto.getUser())
+            User user = userRepository.findById(1L).get();
+//                    .orElseThrow(() -> new IllegalArgumentException("User not found"));
             expense.setUser(user);
         }
+        User user = userRepository.findById(1L).get();
+        expense.setUser(user);
 
+        System.out.println("Searched by id for user object and is ->> " + userRepository.findById(1L));
+        System.out.println("User object is ->> " + expense.getUser());
         return expense;
     }
 
     public Expense addIncome(ExpenseRequest givenExpenseRequest){
         Expense expense = fromDTO(givenExpenseRequest);
         return expenseRepository.save(expense);
+    }
+
+    public void addIncome(Long expenseId){
+        expenseRepository.deleteById(expenseId);
     }
 
     public List<Expense> showAllIncomes(){

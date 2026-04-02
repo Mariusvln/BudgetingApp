@@ -27,8 +27,14 @@ public class ExpensesController {
         return new RegisterResponse("OK");
     }
 
+    @DeleteMapping ("/deleteExpense")
+    public RegisterResponse deleteExpense(@RequestParam Long expenseId) {
+        expenses.addIncome(expenseId);
+        return new RegisterResponse("OK");
+    }
+
     public ExpenseResponse mapToDTO(Expense expense) {
-        return new ExpenseResponse(expense.getUser(),  expense.getDescription(), expense.getAmount(), expense.getDate(), expense.getCategory(), expense.getProcessType());
+        return new ExpenseResponse(expense.getUser().getId(),  expense.getDescription(), expense.getAmount(), expense.getDate(), expense.getCategory(), expense.getProcessType());
     }
 
     public List<ExpenseResponse> mapUsersToDTOs(List<Expense> expense) {
