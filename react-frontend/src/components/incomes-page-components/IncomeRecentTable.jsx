@@ -1,33 +1,46 @@
-import React from 'react';
+import Transaction from "./Transaction"
 
-function IncomeRecentTable({ transactions, loading, dateStart, dateEnd, setDateStart, setDateEnd }) {
+function IncomeRecentTable({
+  transactions,
+  loading,
+  dateStart,
+  dateEnd,
+  setDateStart,
+  setDateEnd,
+  onTransactionAdded
+}) {
   return (
     <div className="card bg-base-100 border border-base-200 shadow-sm">
       <div className="card-body">
-        
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
           <div>
             <h2 className="text-xl font-semibold">Income History</h2>
             <p className="text-sm text-gray-500">
-              {loading ? "Loading..." : `Showing ${transactions.length} entries`}
+              {loading
+                ? "Loading..."
+                : `Showing ${transactions.length} entries`}
             </p>
           </div>
 
           <div className="flex flex-wrap gap-2 items-center">
             <div className="form-control">
-              <label className="label py-0"><span className="label-text text-xs">Start</span></label>
-              <input 
-                type="date" 
-                className="input input-bordered input-sm" 
+              <label className="label py-0">
+                <span className="label-text text-xs">Start</span>
+              </label>
+              <input
+                type="date"
+                className="input input-bordered input-sm"
                 value={dateStart}
                 onChange={(e) => setDateStart(e.target.value)}
               />
             </div>
             <div className="form-control">
-              <label className="label py-0"><span className="label-text text-xs">End</span></label>
-              <input 
-                type="date" 
-                className="input input-bordered input-sm" 
+              <label className="label py-0">
+                <span className="label-text text-xs">End</span>
+              </label>
+              <input
+                type="date"
+                className="input input-bordered input-sm"
                 value={dateEnd}
                 onChange={(e) => setDateEnd(e.target.value)}
               />
@@ -44,6 +57,7 @@ function IncomeRecentTable({ transactions, loading, dateStart, dateEnd, setDateS
                 <th>Description</th>
                 <th>Category</th>
                 <th className="text-right">Amount</th>
+                <th></th>
               </tr>
             </thead>
 
@@ -56,26 +70,16 @@ function IncomeRecentTable({ transactions, loading, dateStart, dateEnd, setDateS
                 </tr>
               ) : (
                 transactions.map((t) => (
-                  <tr key={t.id} className="hover">
-                    <td className="text-xs font-mono text-gray-400">#{t.id}</td>
-                    <td className="text-sm text-gray-500">{t.date}</td>
-                    <td className="text-sm font-medium text-gray-700">{t.description}</td>
-                    <td>
-                      <span className="badge badge-soft badge-primary text-xs">
-                        Cat: {t.category}
-                      </span>
-                    </td>
-                    <td className="text-right font-medium text-green-600">
-                      +${t.amount?.toFixed(2)}
-                    </td>
-                  </tr>
+                  <Transaction id={t.id} description={t.description} category={t.category} amount={t.amount} date={t.date} onTransactionAdded={onTransactionAdded}/>
                 ))
               )}
             </tbody>
           </table>
 
           {!loading && transactions.length === 0 && (
-            <div className="text-center py-10 text-gray-400">No data found for this range</div>
+            <div className="text-center py-10 text-gray-400">
+              No data found for this range
+            </div>
           )}
         </div>
       </div>

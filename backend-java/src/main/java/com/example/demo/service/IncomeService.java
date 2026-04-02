@@ -20,6 +20,10 @@ public class IncomeService {
         return incomeRepository.save(givenIncome);
     }
 
+    public Income updateIncome(Income updated) {
+        return incomeRepository.save(updated);
+    }
+
     public List<Income> showAllIncomes(){
         return incomeRepository.findAll();
     }
