@@ -1,4 +1,8 @@
 package com.example.demo.entity;
 
-public enum Ензу {
+public enum Type {
+    INCOME,
+    EXPENSE
+
+
 }
