@@ -25,6 +25,12 @@ public class IncomeController {
         return new RegisterResponse("OK");
     }
 
+    @PutMapping("/updateIncome")
+    public RegisterResponse updateIncome(@RequestBody Income updated) {
+        incomes.updateIncome(updated);
+        return new RegisterResponse("OK");
+    }
+
     public IncomeResponse mapToDTO(Income income) {
         return new IncomeResponse(income.getDescription(), income.getAmount(), income.getDate(), income.getCategory(), income.getProcessType());
     }

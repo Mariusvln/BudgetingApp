@@ -49,6 +49,7 @@ function IncomesPage() {
               dateEnd={dateEnd}
               setDateStart={setDateStart}
               setDateEnd={setDateEnd}
+              onTransactionAdded={fetchIncomes}
             />
           </div>
           <IncomeAddPanel onTransactionAdded={fetchIncomes} />
