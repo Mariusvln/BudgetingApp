@@ -24,8 +24,8 @@ public class ExpenseResponse {
 
     public ExpenseResponse() {}
 
-    public ExpenseResponse(User user, String description, BigDecimal amount, LocalDate date, int category, PROCESS_TYPE processType) {
-        this.user = user.getId();
+    public ExpenseResponse(Long user, String description, BigDecimal amount, LocalDate date, int category, PROCESS_TYPE processType) {
+        this.user = user;
         this.description = description;
         this.amount = amount;
         this.date = date;

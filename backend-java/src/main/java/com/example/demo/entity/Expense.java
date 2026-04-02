@@ -82,6 +82,7 @@ public class Expense {
 
     public void setAmount(BigDecimal amount) {
         this.amount = amount;
+        System.out.println("Now after called setAmount it's a " + this.amount);
     }
 
     public void setDate(LocalDate date) {
@@ -90,6 +91,7 @@ public class Expense {
 
     public void setUser(User user) {
         this.user = user;
+        System.out.println("Now after called setUser it's a " + this.user);
     }
 
     public void setCategory(int category) {
