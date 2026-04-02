@@ -135,6 +135,7 @@ const HeroPage = () => {
           </div>
         </div>
       </div>
+      <HeroFooter />
     </>
   );
 };

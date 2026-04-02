@@ -41,7 +41,7 @@ const RegisterPage = () => {
             </h3>
 
             <p className="mt-4 text-[16px] leading-8 text-muted-foreground-2 text-gray-500">
-              Welcome back! Please enter your
+              Welcome! Please enter your
               <br />
               details.
             </p>
