@@ -12,14 +12,20 @@ public class Category {
 
     private String name;
 
-    @OneToMany(mappedBy = "category")
-    private List<Expense> expenses;
+//    @OneToMany(mappedBy = "category")
+//    private List<Expense> expenses;
+//    public CATEGORY_TYPE categoryType;
 
     // Constructors
     public Category() {}
 
     public Category(String name) {
         this.name = name;
+//        this.CATEGORY_TYPE = categoryType;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     // Getters and Setters

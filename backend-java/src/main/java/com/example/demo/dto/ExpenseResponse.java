@@ -1,5 +1,6 @@
 package com.example.demo.dto;
 
+import com.example.demo.entity.Category;
 import com.example.demo.entity.PROCESS_TYPE;
 import com.example.demo.entity.User;
 
@@ -18,13 +19,13 @@ public class ExpenseResponse {
 
     public LocalDate date;
 
-    public int category;
+    public Long category;
 
     public PROCESS_TYPE processType;
 
     public ExpenseResponse() {}
 
-    public ExpenseResponse(Long user, String description, BigDecimal amount, LocalDate date, int category, PROCESS_TYPE processType) {
+    public ExpenseResponse(Long user, String description, BigDecimal amount, LocalDate date, Long category, PROCESS_TYPE processType) {
         this.user = user;
         this.description = description;
         this.amount = amount;

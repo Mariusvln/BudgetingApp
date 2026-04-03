@@ -48,5 +48,9 @@ public class IncomeService {
         return filtered;
     }
 
+    public void deleteIncome(Long incomeId){
+        incomeRepository.deleteById(incomeId);
+    }
+
 
 }

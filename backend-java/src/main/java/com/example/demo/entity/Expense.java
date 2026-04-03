@@ -25,10 +25,11 @@ public class Expense {
     @JoinColumn(name = "user_id")
     private User user;
 
-    //    @ManyToOne
+
+//    @ManyToOne
 //    @JoinColumn(name = "category_id")
 //    private Category category;
-    private int category;
+    private Long category;
 
     private PROCESS_TYPE processType;
 
@@ -37,7 +38,7 @@ public class Expense {
     // Constructors
     public Expense() {}
 
-    public Expense(User user, String description, BigDecimal amount, LocalDate date, int category, PROCESS_TYPE processType) {
+    public Expense(User user, String description, BigDecimal amount, LocalDate date, Long category, PROCESS_TYPE processType) {
         this.user = user;
         this.description = description;
         this.amount = amount;
@@ -64,7 +65,7 @@ public class Expense {
         return date;
     }
 
-    public int getCategory() {
+    public Long getCategory() {
         return category;
     }
 
@@ -94,7 +95,7 @@ public class Expense {
         System.out.println("Now after called setUser it's a " + this.user);
     }
 
-    public void setCategory(int category) {
+    public void setCategory(Long category) {
         this.category = category;
     }
 

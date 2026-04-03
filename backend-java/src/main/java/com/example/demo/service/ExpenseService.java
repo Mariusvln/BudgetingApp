@@ -1,9 +1,11 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.ExpenseRequest;
+import com.example.demo.entity.Category;
 import com.example.demo.entity.Expense;
 import com.example.demo.entity.Income;
 import com.example.demo.entity.User;
+import com.example.demo.repository.CategoryRepository;
 import com.example.demo.repository.ExpenseRepository;
 import com.example.demo.repository.IncomeRepository;
 import com.example.demo.repository.UserRepository;
@@ -21,13 +23,14 @@ public class ExpenseService {
 
     private final ExpenseRepository expenseRepository;
     private final UserRepository userRepository;
+    private final CategoryRepository categoryRepository;
 
     public Expense fromDTO(ExpenseRequest dto) {
         Expense expense = new Expense();
         expense.setId(dto.getId());
         expense.setDescription(dto.getDescription());
         expense.setDate(dto.getDate());
-        expense.setCategory(dto.getCategory());
+        expense.setCategory((long) dto.getCategory());
         expense.setAmount(dto.getAmount());
 
         System.out.println("User id is ->> " + dto.getUser());

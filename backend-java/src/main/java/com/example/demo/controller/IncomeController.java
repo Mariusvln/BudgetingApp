@@ -31,6 +31,12 @@ public class IncomeController {
         return new RegisterResponse("OK");
     }
 
+    @DeleteMapping ("/deleteExpense")
+    public RegisterResponse deleteExpense(@RequestParam Long incomeId) {
+        incomes.deleteIncome(incomeId);
+        return new RegisterResponse("OK");
+    }
+
     public IncomeResponse mapToDTO(Income income) {
         return new IncomeResponse(income.getDescription(), income.getAmount(), income.getDate(), income.getCategory(), income.getProcessType());
     }
