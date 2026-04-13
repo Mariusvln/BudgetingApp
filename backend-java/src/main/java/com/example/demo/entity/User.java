@@ -18,4 +18,14 @@ public class User {
  public void setPassword(String p){this.password=p;}
  public Role getRole(){return role;}
  public void setRole(Role r){this.role=r;}
+
+ private String name;
+
+ public String getName() {
+  return name;
+ }
+
+ public void setName(String name) {
+  this.name = name;
+ }
 }
