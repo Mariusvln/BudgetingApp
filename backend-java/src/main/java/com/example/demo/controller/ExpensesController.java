@@ -5,9 +5,12 @@ import com.example.demo.entity.Expense;
 import com.example.demo.entity.Income;
 import com.example.demo.service.ExpenseService;
 import com.example.demo.service.IncomeService;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -72,6 +75,28 @@ public class ExpensesController {
         return mapUsersToDTOs(filteredExpenses);
     }
 
+    @GetMapping("/export")
+    public void exportExpenses(HttpServletResponse response) throws IOException {
+
+        response.setContentType("text/csv");
+        response.setHeader("Content-Disposition", "attachment; filename=expenses.csv");
+
+        List<Expense> expensesList = expenses.showAllIncomes();
+
+        PrintWriter writer = response.getWriter();
+        writer.println("Date,Category,Amount,Description");
+
+        for (Expense e : expensesList) {
+            writer.println(
+                    e.getDate() + "," +
+                            e.getCategory() + "," +
+                            e.getAmount() + "," +
+                            e.getDescription()
+            );
+        }
+
+        writer.flush();
+    }
 }
 
 
