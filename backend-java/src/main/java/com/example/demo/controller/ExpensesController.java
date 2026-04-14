@@ -65,7 +65,12 @@ public class ExpensesController {
 
         return total;
     }
-
+@GetMapping("/searchExpenses")
+    public List<ExpenseResponse> fetchExpensesBySearch(@RequestParam String title) {
+       
+        List<Expense> filteredExpenses = expenses.fetchExpensesBySearch(title);
+        return mapUsersToDTOs(filteredExpenses);
+    }
 
 }
 

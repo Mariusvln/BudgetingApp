@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -78,7 +79,11 @@ public class ExpenseService {
 
         return filtered;
     }
-
+    public List<Expense> fetchExpensesBySearch(String searchTitle){
+        return showAllIncomes().stream()
+                .filter(e -> e.getDescription().toLowerCase().contains(searchTitle.toLowerCase()))
+                .collect(Collectors.toList());
+    }
 
 
 }
