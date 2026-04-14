@@ -51,7 +51,7 @@ public class ExpenseService {
         return expenseRepository.save(expense);
     }
 
-    public void addIncome(Long expenseId){
+    public void deleteIncome(Long expenseId){
         expenseRepository.deleteById(expenseId);
     }
 
@@ -59,14 +59,14 @@ public class ExpenseService {
         return expenseRepository.findAll();
     }
 
-    public BigDecimal calculateAllGivenIncomes(){
+    public BigDecimal fetchAllGivenIncomes(){
         List<Expense> incomes = showAllIncomes();
 
         BigDecimal total = incomes.stream().map(Expense::getAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
         return total;
     }
 
-    public List<Expense> calculateAllGivenIncomesFromDateStartToDateEnd(LocalDate dateStart, LocalDate dateEnd){
+    public List<Expense> fetchAllGivenIncomesFromDateStartToDateEnd(LocalDate dateStart, LocalDate dateEnd){
         List<Expense> incomes = showAllIncomes();
 
         List<Expense> filtered = new ArrayList<>();

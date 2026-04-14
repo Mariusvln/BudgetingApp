@@ -4,7 +4,7 @@ import IncomeHeader from "../components/incomes-page-components/IncomeHeader";
 import IncomeRecentTable from "../components/incomes-page-components/TransactionRecentTable";
 import IncomeAddPanel from "../components/incomes-page-components/IncomeAddPanel";
 
-function IncomesPage() {
+function ExpensesPage() {
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
   
@@ -17,7 +17,7 @@ function IncomesPage() {
     setLoading(true);
     try {
       const response = await fetch(
-        `http://localhost:8080/api/app/calculateExpensesFromDateStartToDateFinish?dateStart=${start}&dateEnd=${end}`
+        `http://localhost:8080/api/app/fetchExpensesFromDateStartToDateFinish?dateStart=${start}&dateEnd=${end}`
       );
       if (!response.ok) throw new Error("Network response was not ok");
       const data = await response.json();
@@ -58,4 +58,4 @@ function IncomesPage() {
   );
 }
 
-export default IncomesPage;
+export default ExpensesPage;

@@ -17,7 +17,7 @@ function IncomesPage() {
     setLoading(true);
     try {
       const response = await fetch(
-        `http://localhost:8080/api/app/calculateIncomesFromDateStartToDateFinish?dateStart=${start}&dateEnd=${end}`
+        `http://localhost:8080/api/app/fetchIncomesFromDateStartToDateFinish?dateStart=${start}&dateEnd=${end}`
       );
       if (!response.ok) throw new Error("Network response was not ok");
       const data = await response.json();

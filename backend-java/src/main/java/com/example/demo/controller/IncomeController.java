@@ -31,6 +31,12 @@ public class IncomeController {
         return new RegisterResponse("OK");
     }
 
+    @DeleteMapping ("/deleteIncome")
+    public RegisterResponse deleteIncome(@RequestParam Long expenseId) {
+        incomes.deleteIncome(expenseId);
+        return new RegisterResponse("OK");
+    }
+
     public IncomeResponse mapToDTO(Income income) {
         return new IncomeResponse(income.getDescription(), income.getAmount(), income.getDate(), income.getCategory(), income.getProcessType());
     }
@@ -48,17 +54,17 @@ public class IncomeController {
         return mapUsersToDTOs(resultIncomes);
     }
 
-    @GetMapping("/calculateIncomes")
+    @GetMapping("/fetchIncomes")
     public RegisterResponse calculateIncomes() {
-        BigDecimal total = incomes.calculateAllGivenIncomes();
+        BigDecimal total = incomes.fetchAllGivenIncomes();
 
 
         return new RegisterResponse(total.toString());
     }
 
-    @GetMapping("/calculateIncomesFromDateStartToDateFinish")
+    @GetMapping("/fetchIncomesFromDateStartToDateFinish")
     public List<Income> calculateIncomesFromDateStartToDateFinish(@RequestParam LocalDate dateStart, @RequestParam LocalDate dateEnd) {
-        List<Income> total = incomes.calculateAllGivenIncomesFromDateStartToDateEnd(dateStart, dateEnd);
+        List<Income> total = incomes.fetchAllGivenIncomesFromDateStartToDateEnd(dateStart, dateEnd);
 
         return total;
     }
