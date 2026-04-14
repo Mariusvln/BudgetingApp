@@ -50,6 +50,12 @@ function TransactionNav() {
             Incomes
           </a>
         </li>
+                <li>
+          <a href="http://localhost:5173/expenses">
+            <img src="./src/assets/images/icons/rent-icon.svg" className="w-5" />
+            Expenses
+          </a>
+        </li>
       </ul>
 
       
