@@ -29,7 +29,7 @@ public class ExpensesController {
 
     @DeleteMapping ("/deleteExpense")
     public RegisterResponse deleteExpense(@RequestParam Long expenseId) {
-        expenses.addIncome(expenseId);
+        expenses.deleteIncome(expenseId);
         return new RegisterResponse("OK");
     }
 
@@ -53,15 +53,15 @@ public class ExpensesController {
 
     @GetMapping("/calculateExpenses")
     public RegisterResponse calculateIncomes() {
-        BigDecimal total = expenses.calculateAllGivenIncomes();
+        BigDecimal total = expenses.fetchAllGivenIncomes();
 
 
         return new RegisterResponse(total.toString());
     }
 
-    @GetMapping("/calculateExpensesFromDateStartToDateFinish")
-    public List<Expense> calculateIncomesFromDateStartToDateFinish(@RequestParam LocalDate dateStart, @RequestParam LocalDate dateEnd) {
-        List<Expense> total = expenses.calculateAllGivenIncomesFromDateStartToDateEnd(dateStart, dateEnd);
+    @GetMapping("/fetchExpensesFromDateStartToDateFinish")
+    public List<Expense> fetchIncomesFromDateStartToDateFinish(@RequestParam LocalDate dateStart, @RequestParam LocalDate dateEnd) {
+        List<Expense> total = expenses.fetchAllGivenIncomesFromDateStartToDateEnd(dateStart, dateEnd);
 
         return total;
     }

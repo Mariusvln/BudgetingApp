@@ -4,6 +4,7 @@ import MainPage from "./pages/MainPage";
 import LoginPage from "./pages/LoginPage";
 import TransactionsPage from "./pages/TransactionsPage";
 import IncomesPage from "./pages/IncomesPage";
+import ExpensesPage from "./pages/ExpensesPage";
 import HeroPage from "./pages/HeroPage";
 import RegisterPage from "./pages/RegisterPage";
 import ProfilePage from "./pages/ProfilePage";
@@ -29,6 +30,7 @@ function App() {
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/analytics" element={<AnalyticsPage />} />
           <Route path="/incomes" element={<IncomesPage />} />
+          <Route path="/expenses" element={<ExpensesPage />} />
           <Route path="/admin" element={<AdminPage />} />
 
           <Route element={<ProtectedRoute />}>
