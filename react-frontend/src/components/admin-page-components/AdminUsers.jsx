@@ -35,7 +35,7 @@ const AdminUsers = () => {
             <tr>
               <th>Name</th>
               <th>Email</th>
-              <th>Role</th>
+              {/* <th>Role</th> */}
             </tr>
           </thead>
           <tbody>
@@ -43,13 +43,13 @@ const AdminUsers = () => {
               <tr key={user.id}>
                 <td className="font-medium">{user.name}</td>
                 <td>{user.email}</td>
-                <td>
+                {/* <td>
                   <span className={`badge ${
                     user.role === "PREMIUM" ? "badge-success" : "badge-ghost"
                   }`}>
                     {user.role}
                   </span>
-                </td>
+                </td> */}
               </tr>
             ))}
 

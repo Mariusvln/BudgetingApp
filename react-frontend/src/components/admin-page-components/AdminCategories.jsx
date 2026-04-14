@@ -5,6 +5,7 @@ const AdminCategories = () => {
   const [name, setName] = useState("");
   const [type, setType] = useState("INCOME");
   const [search, setSearch] = useState("");
+  const [filterType, setFilterType] = useState("ALL");
 
   useEffect(() => {
     fetch("/api/categories")
@@ -52,9 +53,16 @@ const AdminCategories = () => {
     setCategories((prev) => prev.map((c) => (c.id === cat.id ? updated : c)));
   };
 
-  const filteredCategories = categories.filter((cat) =>
-    cat.name.toLowerCase().includes(search.toLowerCase()),
-  );
+  const filteredCategories = categories.filter((cat) => {
+    const matchesSearch = cat.name
+      .toLowerCase()
+      .includes(search.toLowerCase());
+
+    const matchesType =
+      filterType === "ALL" || cat.type === filterType;
+
+    return matchesSearch && matchesType;
+  });
 
   return (
     <div className="flex gap-6">
@@ -92,44 +100,94 @@ const AdminCategories = () => {
 
       {/* RIGHT: LIST */}
       <div className="card bg-base-100 shadow p-6 w-full rounded-2xl">
-        <div className="flex justify-between items-center mb-4">
+        {/* TOP BAR */}
+        <div className="flex items-center justify-between mb-6">
           <h2 className="font-bold text-2xl">Categories List</h2>
 
-          <input
-            type="text"
-            placeholder="Search categories..."
-            className="input input-bordered w-64 bg-[#F2F3FF] border-none rounded-xl"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
+          <div className="flex items-center gap-4">
+            <input
+              type="text"
+              placeholder="Search categories..."
+              className="input w-64 bg-[#F2F3FF] border-none rounded-xl"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+
+            <div className="flex bg-base-200 rounded-xl p-1">
+              <button
+                onClick={() => setFilterType("INCOME")}
+                className={`btn btn-sm rounded-xl border-none px-4 ${
+                  filterType === "INCOME"
+                    ? "bg-green-700 text-white"
+                    : "bg-transparent"
+                }`}
+              >
+                Income
+              </button>
+
+              <button
+                onClick={() => setFilterType("EXPENSE")}
+                className={`btn btn-sm rounded-xl border-none px-4 ml-1 ${
+                  filterType === "EXPENSE"
+                    ? "bg-green-700 text-white"
+                    : "bg-transparent"
+                }`}
+              >
+                Expense
+              </button>
+
+              <button
+                onClick={() => setFilterType("ALL")}
+                className={`btn btn-sm rounded-xl border-none px-4 ml-1 ${
+                  filterType === "ALL"
+                    ? "bg-green-700 text-white"
+                    : "bg-transparent"
+                }`}
+              >
+                All
+              </button>
+            </div>
+          </div>
         </div>
 
-        <div className="space-y-3">
+        {/* HEADER */}
+        <div className="flex px-3 py-2 text-sm font-semibold text-gray-500 uppercase">
+          <div className="w-1/3">Name</div>
+          <div className="w-1/3 text-center">Type</div>
+          <div className="w-1/3 text-right">Actions</div>
+        </div>
+
+        {/* LIST */}
+        <div className="space-y-3 mt-2">
           {filteredCategories.map((cat) => (
             <div
               key={cat.id}
-              className="flex justify-between items-center p-3 rounded-xl bg-base-200"
+              className="flex items-center p-4 rounded-xl bg-base-200"
             >
-              <span className="font-medium">{cat.name}</span>
+              <div className="w-1/3 font-medium">{cat.name}</div>
 
-              <div className="flex items-center gap-3">
+              <div className="w-1/3 flex justify-center">
                 <span
-                  className={`badge ${
-                    cat.type === "INCOME" ? "badge-success" : "badge-error"
+                  className={`badge px-3 py-3 ${
+                    cat.type === "INCOME"
+                      ? "bg-green-100 text-green-700 border-none"
+                      : "bg-red-100 text-red-700 border-none"
                   }`}
                 >
-                  {cat.type}
+                  {cat.type === "INCOME" ? "Income" : "Expense"}
                 </span>
+              </div>
 
+              <div className="w-1/3 flex justify-end gap-3">
                 <button
-                  className="btn btn-xs btn-outline"
+                  className="btn btn-xs btn-ghost bg-transparent border-none shadow-none hover:bg-transparent"
                   onClick={() => handleEdit(cat)}
                 >
                   ✏️
                 </button>
 
                 <button
-                  className="btn btn-xs btn-outline btn-error"
+                  className="btn btn-xs btn-ghost bg-transparent border-none shadow-none hover:bg-transparent"
                   onClick={() => handleDelete(cat.id)}
                 >
                   🗑
