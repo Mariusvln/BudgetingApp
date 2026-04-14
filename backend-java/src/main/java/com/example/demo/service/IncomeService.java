@@ -24,18 +24,22 @@ public class IncomeService {
         return incomeRepository.save(updated);
     }
 
+    public void deleteIncome(Long expenseId){
+        incomeRepository.deleteById(expenseId);
+    }
+
     public List<Income> showAllIncomes(){
         return incomeRepository.findAll();
     }
 
-    public BigDecimal calculateAllGivenIncomes(){
+    public BigDecimal fetchAllGivenIncomes(){
         List<Income> incomes = showAllIncomes();
 
         BigDecimal total = incomes.stream().map(Income::getAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
         return total;
     }
 
-    public List<Income> calculateAllGivenIncomesFromDateStartToDateEnd(LocalDate dateStart, LocalDate dateEnd){
+    public List<Income> fetchAllGivenIncomesFromDateStartToDateEnd(LocalDate dateStart, LocalDate dateEnd){
         List<Income> incomes = showAllIncomes();
 
         List<Income> filtered = new ArrayList<>();
