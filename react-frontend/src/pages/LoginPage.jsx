@@ -2,28 +2,17 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router';
 import { useAuth } from '../contexts/AuthContext'; // Import the hook
 import '../assets/styles/LoginPageStyle.css';
+import { useForm } from "react-hook-form";
 
 const LoginPage = () => {
-  // 1. Setup state for form inputs
-  const [formData, setFormData] = useState({
-    username: '',
-    email: '',
-    password: ''
-  });
   const [error, setError] = useState('');
   
-  const { login } = useAuth(); // 2. Pull login function from Context
+  const { login } = useAuth();
   const navigate = useNavigate();
 
-  // 3. Update state as user types
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
   // 4. Handle Form Submission
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
+  const handleLogin = async (formData) => {
+    setError(error.message);
     
     try {
       // Calls the Java API via AuthContext
@@ -35,6 +24,18 @@ const LoginPage = () => {
       console.error("Login Error:", err);
     }
   };
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      // username: "",
+      email: "",
+      password: "",
+    },
+  });
 
   return (
     <div className="LoginPage w-[424px] mx-auto mt-20">
@@ -58,19 +59,20 @@ const LoginPage = () => {
           <div className="mb-6 border-t border-card-line border-gray-300" />
 
           {/* 5. Add onSubmit and value/onChange to inputs */}
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit(handleLogin)} noValidate>
             <div className="grid gap-y-5">
               <div>
                 <label className="mb-2 block text-sm font-medium text-foreground">Username</label>
                 <input
                   type="text"
                   name="username"
-                  value={formData.username}
-                  onChange={handleChange}
                   placeholder="Enter your username"
                   className="block w-full rounded-xl border border-layer-line bg-layer px-4 py-3 text-sm text-foreground focus:border-primary-focus focus:ring-primary-focus border-card-line bg-[#F8FAFC] border-gray-300"
-                  required
+                  // {...register("username", {
+                  //   required: "Username is required",
+                  // })}
                 />
+                {/* <p className="text-red-500">{errors.username?.message}</p> */}
               </div>
 
               <div>
@@ -78,12 +80,18 @@ const LoginPage = () => {
                 <input
                   type="email"
                   name="email"
-                  value={formData.email}
-                  onChange={handleChange}
                   placeholder="Enter your email" 
-                  className="block w-full rounded-xl border border-layer-line bg-layer px-4 py-3 text-sm text-foreground focus:border-primary-focus focus:ring-primary-focus border-card-line bg-[#F8FAFC] border-gray-300"
-                  required
+                  className={`block w-full rounded-xl border border-layer-line bg-layer px-4 py-3 text-sm text-foreground border-card-line bg-[#F8FAFC] ${errors.email?.message ? `border-red-500` : `border-gray-300`}`}
+                  {...register("email", {
+                    required: "Email is required",
+                    pattern: {
+                      value:
+                        /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/g,
+                      message: "Invalid email address",
+                    },
+                  })}
                 />
+                <p className="text-red-500">{errors.email?.message}</p>
               </div>
 
               <div>
@@ -91,12 +99,13 @@ const LoginPage = () => {
                 <input
                   type="password"
                   name="password"
-                  value={formData.password}
-                  onChange={handleChange}
                   placeholder="••••••••" 
-                  className="block w-full rounded-xl border border-layer-line bg-layer px-4 py-3 text-sm text-foreground focus:border-primary-focus focus:ring-primary-focus border-card-line bg-[#F8FAFC] border-gray-300" 
-                  required 
+                  className={`block w-full rounded-xl border border-layer-line bg-layer px-4 py-3 text-sm text-foreground border-card-line bg-[#F8FAFC] ${errors.password?.message ? `border-red-500` : `border-gray-300`}`}
+                  {...register("password", {
+                    required: "Password is required",
+                  })} 
                 />
+                <p className="text-red-500">{errors.password?.message}</p>
               </div>
 
               <div className="flex items-center justify-between pt-1">
@@ -121,7 +130,7 @@ const LoginPage = () => {
           <p className="text-center text-sm text-muted-foreground-2 ">
             Don't have an account?{' '}
             {/* 6. Use Link for internal navigation */}
-            <Link to="/register" className="font-medium text-green-500 hover:underline">
+            <Link to="/signup" className="font-medium text-green-500 hover:underline">
               Sign up for free
             </Link>
           </p>

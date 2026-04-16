@@ -4,11 +4,11 @@ function HeroHeader() {
   const navigate = useNavigate();
 
   const RegisterClick = () => {
-    navigate("/register");
+    navigate("/signup");
   };
 
   const SignInClick = () => {
-    navigate("/login");
+    navigate("/signin");
   };
 
   return (
