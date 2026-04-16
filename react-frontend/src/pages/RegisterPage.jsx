@@ -1,42 +1,58 @@
-import { useState } from 'react';
-import axios from 'axios';
-import '../assets/styles/LoginPageStyle.css';
+import { useState } from "react";
+import { Link } from "react-router";
+import axios from "axios";
+import "../assets/styles/LoginPageStyle.css";
+import { useForm } from "react-hook-form";
 
 const RegisterPage = () => {
-  // 1. Pridedame būseną (state) duomenims saugoti
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [error, setError] = useState("");
 
-  // 2. Registracijos funkcija
-  const handleRegister = async (e) => {
-    e.preventDefault();
+  const handleRegister = async (formData) => {
     try {
-      // Siunčiame tik email ir password, kaip prašei
-      await axios.post('http://localhost:8080/api/auth/register', 
-        { email, password }, 
-        { withCredentials: true }
+      const {email, password} = formData
+      await axios.post(
+        "http://localhost:8080/api/auth/register",
+        { email, password },
+        { withCredentials: true },
       );
       alert("Registration successful!");
     } catch (err) {
       console.error("Registration error:", err);
-      alert("Registration failed!");
+      setError(error.message)
     }
   };
+
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      // username: "",
+      email: "",
+      password: "",
+    },
+  });
 
   return (
     <div className="RegisterPage w-[424px] mx-auto mt-20">
       <div className="bg-card border border-card-line rounded-xl shadow-2xs overflow-hidden flex flex-col min-h-[715px] -translate-x-[8px] -translate-y-[20px] border-gray-300">
         <div className="flex-1 px-6 pt-6 pb-8">
-          
           <div className="mb-8">
             <div className="mb-8 flex items-center gap-3">
               <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-green-400">
                 <span className="text-lg font-bold text-black">F</span>
               </div>
-              <span className="text-[18px] font-semibold text-foreground">FinVue</span>
+              <span className="text-[18px] font-semibold text-foreground">
+                FinVue
+              </span>
             </div>
 
-            <h3 id="hs-modal-signin-label" className="text-[48px] leading-none font-bold text-foreground">
+            <h3
+              id="hs-modal-signin-label"
+              className="text-[48px] leading-none font-bold text-foreground"
+            >
               Sign Up
             </h3>
 
@@ -49,13 +65,13 @@ const RegisterPage = () => {
 
           <div className="mb-6 border-t border-card-line border-gray-300" />
 
-          {/* PRIDĖTA: onSubmit={handleRegister} */}
-          <form onSubmit={handleRegister}>
+          <form onSubmit={handleSubmit(handleRegister)} noValidate>
             <div className="grid gap-y-5">
-              
-              {/* Username paliekame tik vizualiai (backendui nesiunčiame) */}
               <div>
-                <label htmlFor="username" className="mb-2 block text-sm font-medium text-foreground">
+                <label
+                  htmlFor="username"
+                  className="mb-2 block text-sm font-medium text-foreground"
+                >
                   Username
                 </label>
                 <input
@@ -63,53 +79,89 @@ const RegisterPage = () => {
                   id="username"
                   placeholder="Enter your username"
                   className="block w-full rounded-xl border border-layer-line bg-layer px-4 py-3 text-sm text-foreground border-card-line bg-[#F8FAFC] border-gray-300"
+                  // {...register("username", {
+                  //   required: "Username is required",
+                  // })}
                 />
+                {/* <p className="text-red-500">{errors.username?.message}</p> */}
               </div>
 
               <div>
-                <label htmlFor="email" className="mb-2 block text-sm font-medium text-foreground">
+                <label
+                  htmlFor="email"
+                  className="mb-2 block text-sm font-medium text-foreground"
+                >
                   Email address
                 </label>
                 <input
                   type="email"
                   id="email"
                   required
-                  value={email} // SUSIETA SU STATE
-                  onChange={(e) => setEmail(e.target.value)} // NAUJINA STATE
                   placeholder="Enter your email"
-                  className="block w-full rounded-xl border border-layer-line bg-layer px-4 py-3 text-sm text-foreground border-card-line bg-[#F8FAFC] border-gray-300"
+                  className={`block w-full rounded-xl border border-layer-line bg-layer px-4 py-3 text-sm text-foreground border-card-line bg-[#F8FAFC] ${errors.email?.message ? `border-red-500` : `border-gray-300`}`}
+                  {...register("email", {
+                    required: "Email is required",
+                    pattern: {
+                      value:
+                        /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/g,
+                      message: "Invalid email address",
+                    },
+                  })}
                 />
+                <p className="text-red-500">{errors.email?.message}</p>
               </div>
 
               <div>
-                <label htmlFor="password" name="password" className="mb-2 block text-sm font-medium text-foreground ">
+                <label
+                  htmlFor="password"
+                  name="password"
+                  className="mb-2 block text-sm font-medium text-foreground "
+                >
                   Password
                 </label>
                 <input
                   type="password"
                   id="password"
                   required
-                  value={password} // SUSIETA SU STATE
-                  onChange={(e) => setPassword(e.target.value)} // NAUJINA STATE
                   placeholder="••••••••"
-                  className="block w-full rounded-xl border border-layer-line bg-layer px-4 py-3 text-sm text-foreground border-card-line bg-[#F8FAFC] border-gray-300" 
+                  className={`block w-full rounded-xl border border-layer-line bg-layer px-4 py-3 text-sm text-foreground border-card-line bg-[#F8FAFC] ${errors.password?.message ? `border-red-500` : `border-gray-300`}`}
+                  {...register("password", {
+                    required: "Password is required",
+                  })}
                 />
+                <p className="text-red-500">{errors.password?.message}</p>
               </div>
 
               <div>
-                <label htmlFor="repeat-password" className="mb-2 block text-sm font-medium text-foreground">
+                <label
+                  htmlFor="repeatPassword"
+                  className="mb-2 block text-sm font-medium text-foreground"
+                >
                   Repeat password
                 </label>
                 <input
                   type="password"
-                  id="repeat-password"
+                  id="repeatPassword"
                   placeholder="••••••••"
-                  className="block w-full rounded-xl border border-layer-line bg-layer px-4 py-3 text-sm text-foreground border-card-line bg-[#F8FAFC] border-gray-300"
+                  className={`block w-full rounded-xl border border-layer-line bg-layer px-4 py-3 text-sm text-foreground border-card-line bg-[#F8FAFC] ${errors.repeatPassword?.message ? `border-red-500` : `border-gray-300`}`}
+                  {...register("repeatPassword", {
+                    required: "Please repeat password",
+                    validate: (value) => {
+                      if(value != watch('password')) {
+                        return "Passwords do not match"
+                      }
+                    }
+                  },
+                )}
                 />
+                <p className="text-red-500">{errors.repeatPassword?.message}</p>
               </div>
 
               <div className="flex items-center justify-between pt-1">
-                <label htmlFor="checkbox" className="flex items-center text-sm text-foreground">
+                <label
+                  htmlFor="checkbox"
+                  className="flex items-center text-sm text-foreground"
+                >
                   <input
                     id="checkbox"
                     type="checkbox"
@@ -118,7 +170,10 @@ const RegisterPage = () => {
                   <span className="ms-3">Remember me</span>
                 </label>
 
-                <a href="#" className="text-sm font-medium text-green-500 hover:underline">
+                <a
+                  href="#"
+                  className="text-sm font-medium text-green-500 hover:underline"
+                >
                   Forgot password?
                 </a>
               </div>
@@ -135,9 +190,13 @@ const RegisterPage = () => {
 
         <div className="bottomWindow flex min-h-[72px] items-center justify-center border-t border-card-line bg-[#F8FAFC] px-6 py-6 border-gray-300">
           <p className="text-center text-sm text-muted-foreground-2">
-            have an account?{' '}
-            <a href="#" className="font-medium text-green-500 hover:underline">
-              Sign in </a>
+            have an account?{" "}
+            <Link
+              to="/signin"
+              className="font-medium text-green-500 hover:underline"
+            >
+              Sign in{" "}
+            </Link>
           </p>
         </div>
       </div>

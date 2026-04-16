@@ -25,8 +25,8 @@ function App() {
       <AuthProvider>
         <Routes>
           <Route path="/" element={<HeroPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/signin" element={<LoginPage />} />
+          <Route path="/signup" element={<RegisterPage />} />
           <Route path="/main" element={<MainPage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/analytics" element={<AnalyticsPage />} />
