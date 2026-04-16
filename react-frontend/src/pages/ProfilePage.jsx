@@ -4,6 +4,7 @@ import ProfileHeader from "../components/profile-page-components/ProfileHeader";
 import ProfileNotifications from "../components/profile-page-components/ProfileNotifications";
 import ProfilePersonalInformation from "../components/profile-page-components/ProfilePersonalInformation";
 import ThemeSelector from "../components/profile-page-components/ThemeSelector";
+import ExportButton from "../components/profile-page-components/ExportButton";
 
 const ProfilePage = () => {
   return (
@@ -37,6 +38,8 @@ const ProfilePage = () => {
           </button>
 
           <ThemeSelector />
+
+          <ExportButton />
 
           <button className="px-6 py-2 rounded-lg bg-green-500 text-white shadow">
             Save Changes
