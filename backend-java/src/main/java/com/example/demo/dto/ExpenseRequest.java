@@ -10,8 +10,6 @@ public class ExpenseRequest {
 
     public Long id;
 
-    public Long user;
-
     public String description;
 
     public BigDecimal amount;
@@ -24,8 +22,7 @@ public class ExpenseRequest {
 
     public ExpenseRequest() {}
 
-    public ExpenseRequest(Long user, String description, BigDecimal amount, LocalDate date, int category, PROCESS_TYPE processType) {
-        this.user = user;
+    public ExpenseRequest(String description, BigDecimal amount, LocalDate date, int category, PROCESS_TYPE processType) {
         this.description = description;
         this.amount = amount;
         this.date = date;
@@ -37,9 +34,6 @@ public class ExpenseRequest {
         this.id = id;
     }
 
-    public void setUser(Long user) {
-        this.user = user;
-    }
 
     public void setAmount(BigDecimal amount) {
         this.amount = amount;
@@ -63,10 +57,6 @@ public class ExpenseRequest {
 
     public Long getId() {
         return id;
-    }
-
-    public Long getUser() {
-        return user;
     }
 
     public BigDecimal getAmount() {
