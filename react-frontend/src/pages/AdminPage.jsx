@@ -6,8 +6,8 @@ import AdminUserActivity from "../components/admin-page-components/AdminUserActi
 
 const AdminPage = () => {
   return (
-    <div className="flex min-h-screen bg-base-200">
-      <div className="w-64">
+    <div className="flex min-h-screen items-stretch bg-base-200">
+      <div className="w-64 h-full">
         <TransactionNav />
       </div>
 
