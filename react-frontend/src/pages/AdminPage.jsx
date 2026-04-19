@@ -13,7 +13,7 @@ const AdminPage = () => {
 
       <div className="flex-1 p-6 space-y-6">
         <h1 className="text-3xl font-bold">Admin Management</h1>
-        <p className="">Configure global categories and manage platform users.</p>
+        {/* <p className="">Configure global categories and manage platform users.</p> */}
 
         <AdminCategories />
         <AdminUsers />

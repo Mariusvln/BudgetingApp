@@ -7,12 +7,25 @@ const AdminCategories = () => {
   const [search, setSearch] = useState("");
   const [filterType, setFilterType] = useState("ALL");
 
-  useEffect(() => {
-    fetch("/api/categories")
-      .then((res) => res.json())
-      .then((data) => setCategories(data))
-      .catch(() => setCategories([]));
-  }, []);
+useEffect(() => {
+  const loadCategories = async () => {
+    try {
+      const res = await fetch("http://localhost:8080/api/categories");
+
+      if (!res.ok) {
+        throw new Error(`Categories request failed: ${res.status}`);
+      }
+
+      const data = await res.json();
+      setCategories(Array.isArray(data) ? data : []);
+    } catch (error) {
+      console.error("Error loading categories:", error);
+      setCategories([]);
+    }
+  };
+
+  loadCategories();
+}, []);
 
   const handleCreate = async () => {
     const newCategory = { name, type };

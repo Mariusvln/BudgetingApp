@@ -5,15 +5,25 @@ function AdminUserActivity() {
   const [search, setSearch] = useState("");
 
 useEffect(() => {
-  const delay = setTimeout(() => {
-    if (search === "") {
-      fetch("http://localhost:8080/api/activity")
-        .then(res => res.json())
-        .then(setData);
-    } else {
-      fetch(`http://localhost:8080/api/activity/search?query=${search}`)
-        .then(res => res.json())
-        .then(setData);
+  const delay = setTimeout(async () => {
+    try {
+      let url = "http://localhost:8080/api/activity";
+
+      if (search !== "") {
+        url = `http://localhost:8080/api/activity/search?query=${encodeURIComponent(search)}`;
+      }
+
+      const res = await fetch(url);
+
+      if (!res.ok) {
+        throw new Error(`Activity request failed: ${res.status}`);
+      }
+
+      const result = await res.json();
+      setData(Array.isArray(result) ? result : []);
+    } catch (error) {
+      console.error("Error loading activity:", error);
+      setData([]);
     }
   }, 300);
 
