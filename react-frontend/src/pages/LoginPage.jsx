@@ -12,15 +12,13 @@ const LoginPage = () => {
 
   // 4. Handle Form Submission
   const handleLogin = async (formData) => {
-    setError(error.message);
-    
+    setError("");
+
     try {
-      // Calls the Java API via AuthContext
-      await login(formData); 
-      // If successful, redirect to dashboard
-      navigate('/dashboard'); 
+      await login(formData);
+      navigate("/dashboard");
     } catch (err) {
-      setError('Invalid credentials. Please try again.');
+      setError("Invalid credentials. Please try again.");
       console.error("Login Error:", err);
     }
   };

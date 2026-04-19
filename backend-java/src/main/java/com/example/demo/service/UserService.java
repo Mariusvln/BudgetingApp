@@ -16,8 +16,9 @@ public class UserService {
     private final PasswordEncoder encoder;
     private final UserActivityService activityService;
 
-    public User register(String email,String password){
-        User u=new User();
+    public User register(String name, String email, String password) {
+        User u = new User();
+        u.setName(name);
         u.setEmail(email);
         u.setPassword(encoder.encode(password));
         u.setRole(Role.ROLE_USER);
