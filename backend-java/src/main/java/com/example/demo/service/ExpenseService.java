@@ -8,7 +8,9 @@ import com.example.demo.repository.ExpenseRepository;
 import com.example.demo.repository.IncomeRepository;
 import com.example.demo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -23,34 +25,28 @@ public class ExpenseService {
     private final ExpenseRepository expenseRepository;
     private final UserRepository userRepository;
 
-    public Expense fromDTO(ExpenseRequest dto) {
+    public Expense addExpense(String email, ExpenseRequest request) {
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found"));;
+        Expense expense = fromDTO(request, user);
+        return expenseRepository.save(expense);
+    }
+
+    public Expense fromDTO(ExpenseRequest dto, User user) {
         Expense expense = new Expense();
         expense.setId(dto.getId());
         expense.setDescription(dto.getDescription());
         expense.setDate(dto.getDate());
         expense.setCategory(dto.getCategory());
         expense.setAmount(dto.getAmount());
-
-        System.out.println("User id is ->> " + dto.getUser());
-
-        if (dto.getId() != null) {
-//            User user = userRepository.findById(dto.getUser())
-            User user = userRepository.findById(1L).get();
-//                    .orElseThrow(() -> new IllegalArgumentException("User not found"));
-            expense.setUser(user);
-        }
-        User user = userRepository.findById(1L).get();
+        expense.setProcessType(dto.getProcessType());
         expense.setUser(user);
-
-        System.out.println("Searched by id for user object and is ->> " + userRepository.findById(1L));
-        System.out.println("User object is ->> " + expense.getUser());
         return expense;
     }
 
-    public Expense addIncome(ExpenseRequest givenExpenseRequest){
-        Expense expense = fromDTO(givenExpenseRequest);
-        return expenseRepository.save(expense);
-    }
+//    public Expense addIncome(ExpenseRequest givenExpenseRequest){
+//        Expense expense = fromDTO(givenExpenseRequest);
+//        return expenseRepository.save(expense);
+//    }
 
     public void deleteIncome(Long expenseId){
         expenseRepository.deleteById(expenseId);

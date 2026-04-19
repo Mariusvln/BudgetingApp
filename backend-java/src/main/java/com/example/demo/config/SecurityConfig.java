@@ -33,6 +33,7 @@
                     .csrf(AbstractHttpConfigurer::disable)
                     .authorizeHttpRequests(auth -> auth
                             .requestMatchers("/api/auth/**").permitAll()
+                            .requestMatchers("/api/app/**").authenticated()
                             .requestMatchers("/api/app/**").permitAll()
                             .requestMatchers("/api/users/**").permitAll()
                             .requestMatchers("/api/categories/**").permitAll()

@@ -11,6 +11,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -29,8 +30,8 @@ public class ExpensesController {
     private final ExpenseService expenses;
 
     @PostMapping("/addExpense")
-    public RegisterResponse addExpense(@RequestBody ExpenseRequest expense) {
-        expenses.addIncome(expense);
+    public RegisterResponse addExpense(@RequestBody ExpenseRequest expense, Authentication authentication) {
+        expenses.addExpense(authentication.getName(), expense);
         return new RegisterResponse("OK");
     }
 
