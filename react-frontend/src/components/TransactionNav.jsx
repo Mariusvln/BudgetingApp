@@ -1,4 +1,8 @@
+import { useEffect, useState } from "react";
+
 function TransactionNav() {
+  const [user, setUser] = useState(null);
+
   const navItems = [
     {
       label: "Main",
@@ -16,11 +20,6 @@ function TransactionNav() {
       icon: "./src/assets/images/icons/analytics-icon.svg",
     },
     {
-      label: "Profile",
-      href: "http://localhost:5173/profile",
-      icon: "./src/assets/images/icons/user-icon.svg",
-    },
-    {
       label: "Incomes",
       href: "http://localhost:5173/incomes",
       icon: "./src/assets/images/icons/rent-icon.svg",
@@ -30,12 +29,34 @@ function TransactionNav() {
       href: "http://localhost:5173/expenses",
       icon: "./src/assets/images/icons/rent-icon.svg",
     },
+        {
+      label: "Profile",
+      href: "http://localhost:5173/profile",
+      icon: "./src/assets/images/icons/user-icon.svg",
+    },
   ];
 
   const currentPath = window.location.pathname;
 
+  useEffect(() => {
+    fetch("http://localhost:8080/api/auth/me", {
+      credentials: "include",
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Failed to fetch current user");
+        }
+        return res.json();
+      })
+      .then((data) => setUser(data))
+      .catch((err) => {
+        console.error(err);
+        setUser(null);
+      });
+  }, []);
+
   return (
-    <aside className="w-64 min-h-full bg-base-100 border-r border-base-300 flex flex-col">
+    <aside className="w-64 h-screen sticky top-0 bg-base-100 border-r border-base-300 flex flex-col">
       <div className="px-6 py-6 border-b border-base-200">
         <h1 className="text-3xl font-bold bg-linear-to-r from-[#22C55E] to-[#15803D] bg-clip-text text-transparent">
           FinVue
@@ -43,7 +64,7 @@ function TransactionNav() {
         <p className="text-sm text-gray-400 mt-1">Finance dashboard</p>
       </div>
 
-      <div className="flex-1 px-4 py-5">
+      <div className="flex-1 px-4 py-5 overflow-y-auto">
         <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gray-400 mb-4 px-2">
           Navigation
         </p>
@@ -100,10 +121,10 @@ function TransactionNav() {
 
             <div className="min-w-0 flex-1">
               <p className="font-semibold text-sm text-base-content truncate">
-                user.name
+                {user?.name || "No name"}
               </p>
               <p className="text-xs text-gray-500 truncate">
-                user.email
+                {user?.email || "No email"}
               </p>
             </div>
           </div>

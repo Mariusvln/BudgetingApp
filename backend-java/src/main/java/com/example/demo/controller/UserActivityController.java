@@ -22,12 +22,20 @@ public class UserActivityController {
 
     @GetMapping("/search")
     public List<UserActivity> search(@RequestParam String query) {
+        String q = query == null ? "" : query.trim().toLowerCase();
+
         return repository.findAll().stream()
-                .filter(a ->
-                        a.getUsername().toLowerCase().contains(query.toLowerCase()) ||
-                                a.getEmail().toLowerCase().contains(query.toLowerCase()) ||
-                                String.valueOf(a.getId()).contains(query)
-                )
+                .filter(activity -> {
+                    String id = activity.getId() != null ? String.valueOf(activity.getId()).toLowerCase() : "";
+                    String username = activity.getUsername() != null ? activity.getUsername().toLowerCase() : "";
+                    String email = activity.getEmail() != null ? activity.getEmail().toLowerCase() : "";
+                    String action = activity.getAction() != null ? activity.getAction().toLowerCase() : "";
+
+                    return id.contains(q)
+                            || username.contains(q)
+                            || email.contains(q)
+                            || action.contains(q);
+                })
                 .toList();
     }
 }

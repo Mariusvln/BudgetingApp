@@ -5,22 +5,24 @@ import "../assets/styles/LoginPageStyle.css";
 import { useForm } from "react-hook-form";
 
 const RegisterPage = () => {
-  const [error, setError] = useState("");
+  const [setError] = useState("");
 
-  const handleRegister = async (formData) => {
-    try {
-      const {email, password} = formData
-      await axios.post(
-        "http://localhost:8080/api/auth/register",
-        { email, password },
-        { withCredentials: true },
-      );
-      alert("Registration successful!");
-    } catch (err) {
-      console.error("Registration error:", err);
-      setError(error.message)
-    }
-  };
+const handleRegister = async (formData) => {
+  try {
+    const { username, email, password } = formData;
+
+    await axios.post(
+      "http://localhost:8080/api/auth/register",
+      { username, email, password },
+      { withCredentials: true }
+    );
+
+    alert("Registration successful!");
+  } catch (err) {
+    console.error("Registration error:", err);
+    setError("Registration failed");
+  }
+};
 
   const {
     register,
@@ -78,12 +80,12 @@ const RegisterPage = () => {
                   type="text"
                   id="username"
                   placeholder="Enter your username"
-                  className="block w-full rounded-xl border border-layer-line bg-layer px-4 py-3 text-sm text-foreground border-card-line bg-[#F8FAFC] border-gray-300"
-                  // {...register("username", {
-                  //   required: "Username is required",
-                  // })}
+                  className={`block w-full rounded-xl border border-layer-line bg-layer px-4 py-3 text-sm text-foreground border-card-line bg-[#F8FAFC] ${errors.username?.message ? "border-red-500" : "border-gray-300"}`}
+                  {...register("username", {
+                    required: "Username is required",
+                  })}
                 />
-                {/* <p className="text-red-500">{errors.username?.message}</p> */}
+                <p className="text-red-500">{errors.username?.message}</p>
               </div>
 
               <div>

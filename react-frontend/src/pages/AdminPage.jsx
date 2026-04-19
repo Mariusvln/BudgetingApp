@@ -7,13 +7,12 @@ import AdminUserActivity from "../components/admin-page-components/AdminUserActi
 const AdminPage = () => {
   return (
     <div className="flex min-h-screen items-stretch bg-base-200">
-      <div className="w-64 h-full">
+      <div className="w-64">
         <TransactionNav />
       </div>
 
       <div className="flex-1 p-6 space-y-6">
         <h1 className="text-3xl font-bold">Admin Management</h1>
-        {/* <p className="">Configure global categories and manage platform users.</p> */}
 
         <AdminCategories />
         <AdminUsers />

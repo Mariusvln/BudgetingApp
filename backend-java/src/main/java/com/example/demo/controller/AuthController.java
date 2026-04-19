@@ -37,7 +37,7 @@ public class AuthController {
 
     @PostMapping("/register")
     public RegisterResponse register(@RequestBody RegisterRequest request) {
-        users.register(request.email(), request.password());
+        users.register(request.username(), request.email(), request.password());
         return new RegisterResponse("OK");
     }
 
@@ -79,6 +79,7 @@ public class AuthController {
 
         return new MeResponse(
                 user.getId(),
+                user.getName(),
                 user.getEmail(),
                 user.getRole().name()
         );
