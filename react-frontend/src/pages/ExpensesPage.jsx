@@ -3,6 +3,7 @@ import TransactionNav from "../components/TransactionNav";
 import IncomeHeader from "../components/incomes-page-components/IncomeHeader";
 import IncomeRecentTable from "../components/incomes-page-components/TransactionRecentTable";
 import IncomeAddPanel from "../components/incomes-page-components/IncomeAddPanel";
+import ExportButton from "../components/profile-page-components/ExportButton";
 
 function ExpensesPage() {
   const [transactions, setTransactions] = useState([]);
@@ -50,6 +51,9 @@ function ExpensesPage() {
               setDateStart={setDateStart}
               setDateEnd={setDateEnd}
             />
+            <div className="mt-4">
+            <ExportButton />
+           </div>
           </div>
           <IncomeAddPanel onTransactionAdded={fetchIncomes} />
         </div>

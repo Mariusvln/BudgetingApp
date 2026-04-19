@@ -4,7 +4,6 @@ import ProfileHeader from "../components/profile-page-components/ProfileHeader";
 import ProfileNotifications from "../components/profile-page-components/ProfileNotifications";
 import ProfilePersonalInformation from "../components/profile-page-components/ProfilePersonalInformation";
 import ThemeSelector from "../components/profile-page-components/ThemeSelector";
-import ExportButton from "../components/profile-page-components/ExportButton";
 
 const ProfilePage = () => {
   return (
@@ -33,13 +32,13 @@ const ProfilePage = () => {
         </div>
         {/* Actions */}
         <div className="flex gap-4 mt-2">
+          <a href="http://localhost:5173/logout">
           <button className="px-6 py-2 h-11 rounded-lg border border-base-300 bg-base-100">
             Sign Out
           </button>
+          </a>
 
           <ThemeSelector />
-
-          <ExportButton />
 
           <button className="px-6 py-2 rounded-lg bg-green-500 text-white shadow">
             Save Changes
