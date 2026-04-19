@@ -32,9 +32,11 @@ const ProfilePage = () => {
         </div>
         {/* Actions */}
         <div className="flex gap-4 mt-2">
+          <a href="http://localhost:5173/logout">
           <button className="px-6 py-2 h-11 rounded-lg border border-base-300 bg-base-100">
             Sign Out
           </button>
+          </a>
 
           <ThemeSelector />
 

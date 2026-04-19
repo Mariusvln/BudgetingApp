@@ -5,15 +5,32 @@ const AdminUsers = () => {
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    fetch("/api/users")
-      .then(res => res.json())
-      .then(data => setUsers(data));
+    const loadUsers = async () => {
+      try {
+        const res = await fetch("http://localhost:8080/api/users");
+
+        if (!res.ok) {
+          throw new Error(`Users request failed: ${res.status}`);
+        }
+
+        const data = await res.json();
+        setUsers(Array.isArray(data) ? data : []);
+      } catch (error) {
+        console.error("Error loading users:", error);
+        setUsers([]);
+      }
+    };
+
+    loadUsers();
   }, []);
 
-  const filteredUsers = users.filter(user =>
-    user.name.toLowerCase().includes(search.toLowerCase()) ||
-    user.email.toLowerCase().includes(search.toLowerCase())
-  );
+  const filteredUsers = users.filter((user) => {
+    const name = (user.name || "").toLowerCase();
+    const email = (user.email || "").toLowerCase();
+    const query = search.toLowerCase();
+
+    return name.includes(query) || email.includes(query);
+  });
 
   return (
     <div className="card bg-base-100 shadow p-4">
@@ -25,7 +42,7 @@ const AdminUsers = () => {
           placeholder="Find a User..."
           className="input input-bordered w-64 bg-[#F2F3FF] border-none rounded-xl"
           value={search}
-          onChange={e => setSearch(e.target.value)}
+          onChange={(e) => setSearch(e.target.value)}
         />
       </div>
 
@@ -35,27 +52,19 @@ const AdminUsers = () => {
             <tr>
               <th>Name</th>
               <th>Email</th>
-              {/* <th>Role</th> */}
             </tr>
           </thead>
           <tbody>
-            {filteredUsers.map(user => (
+            {filteredUsers.map((user) => (
               <tr key={user.id}>
-                <td className="font-medium">{user.name}</td>
-                <td>{user.email}</td>
-                {/* <td>
-                  <span className={`badge ${
-                    user.role === "PREMIUM" ? "badge-success" : "badge-ghost"
-                  }`}>
-                    {user.role}
-                  </span>
-                </td> */}
+                <td className="font-medium">{user.name || "-"}</td>
+                <td>{user.email || "-"}</td>
               </tr>
             ))}
 
             {filteredUsers.length === 0 && (
               <tr>
-                <td colSpan="3" className="text-center opacity-60 py-4">
+                <td colSpan="2" className="text-center opacity-60 py-4">
                   No users found
                 </td>
               </tr>
