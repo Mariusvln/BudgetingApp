@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.entity.User;
 import com.example.demo.repository.UserRepository;
+import com.example.demo.service.UserActivityService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,9 +13,11 @@ import java.util.List;
 public class UserController {
 
     private final UserRepository userRepository;
+    private final UserActivityService activityService;
 
-    public UserController(UserRepository userRepository) {
+    public UserController(UserRepository userRepository, UserActivityService activityService) {
         this.userRepository = userRepository;
+        this.activityService = activityService;
     }
 
     @GetMapping
@@ -24,6 +27,15 @@ public class UserController {
 
     @DeleteMapping("/{id}")
     public void deleteUser(@PathVariable Long id) {
-        userRepository.deleteById(id);
+        userRepository.findById(id).ifPresent(user -> {
+
+            activityService.log(
+                    user.getName(),
+                    user.getEmail(),
+                    "Deleted user with id " + user.getId()
+            );
+
+            userRepository.deleteById(id);
+        });
     }
 }

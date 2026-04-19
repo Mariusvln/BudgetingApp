@@ -2,6 +2,7 @@ import TransactionNav from "../components/TransactionNav";
 import AdminCategories from "../components/admin-page-components/AdminCategories";
 import AdminUsers from "../components/admin-page-components/AdminUsers";
 import AdminEvents from "../components/admin-page-components/AdminEvents";
+import AdminUserActivity from "../components/admin-page-components/AdminUserActivity";
 
 const AdminPage = () => {
   return (
@@ -17,6 +18,7 @@ const AdminPage = () => {
         <AdminCategories />
         <AdminUsers />
         <AdminEvents />
+        <AdminUserActivity />
       </div>
     </div>
   );
