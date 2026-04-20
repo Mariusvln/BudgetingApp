@@ -4,15 +4,15 @@ import IncomeHeader from "../components/incomes-page-components/IncomeHeader";
 import IncomeRecentTable from "../components/incomes-page-components/TransactionRecentTable";
 import IncomeAddPanel from "../components/incomes-page-components/IncomeAddPanel";
 import ExportButton from "../components/profile-page-components/ExportButton";
-
+ 
 function ExpensesPage() {
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
-  
+ 
   // Centralize date state here
   const [dateStart, setDateStart] = useState("2026-03-23");
   const [dateEnd, setDateEnd] = useState("2026-03-26");
-
+ 
   // Updated fetch function to use dynamic dates
   const fetchIncomes = useCallback(async (start = dateStart, end = dateEnd) => {
     setLoading(true);
@@ -29,37 +29,47 @@ function ExpensesPage() {
       setLoading(false);
     }
   }, [dateStart, dateEnd]);
-
-  // Re-fetch whenever dates change for /incomes page
+ 
+  // Re-fetch whenever dates change
   useEffect(() => {
     fetchIncomes();
   }, [fetchIncomes]);
-
+ 
   return (
     <div className="flex bg-base-200 min-h-screen">
       <TransactionNav />
+ 
       <div className="flex-1 p-6">
+      
+        <input
+          type="text"
+          placeholder="Search expenses"
+          className="w-full max-w-xl px-4 py-2 mb-4 border border-gray-300 rounded-lg bg-base-100 focus:outline-none focus:ring-2 focus:ring-primary"
+        />
+ 
         <IncomeHeader />
+ 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2">
-
-            <IncomeRecentTable 
-              transactions={transactions} 
-              loading={loading} 
+            <IncomeRecentTable
+              transactions={transactions}
+              loading={loading}
               dateStart={dateStart}
               dateEnd={dateEnd}
               setDateStart={setDateStart}
               setDateEnd={setDateEnd}
             />
+ 
             <div className="mt-4">
-            <ExportButton />
-           </div>
+              <ExportButton />
+            </div>
           </div>
+ 
           <IncomeAddPanel onTransactionAdded={fetchIncomes} />
         </div>
       </div>
     </div>
   );
 }
-
+ 
 export default ExpensesPage;
