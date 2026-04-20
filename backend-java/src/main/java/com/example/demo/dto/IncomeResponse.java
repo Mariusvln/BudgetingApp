@@ -7,6 +7,7 @@ import java.time.LocalDate;
 
 public class IncomeResponse {
 
+    public Long user;
 
     public Long id;
 
@@ -22,7 +23,8 @@ public class IncomeResponse {
 
     public IncomeResponse() {}
 
-    public IncomeResponse(String description, BigDecimal amount, LocalDate date, int category, PROCESS_TYPE processType) {
+    public IncomeResponse(Long user, String description, BigDecimal amount, LocalDate date, int category, PROCESS_TYPE processType) {
+        this.user = user;
         this.description = description;
         this.amount = amount;
         this.date = date;
