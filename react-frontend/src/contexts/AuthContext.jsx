@@ -26,7 +26,7 @@ export const AuthProvider = ({ children }) => {
     const res = await axios.post('http://localhost:8080/api/auth/login', credentials, { withCredentials: true });
     // After login, we immediately set the user so the app reacts
     const me = await axios.get('http://localhost:8080/api/auth/me', { withCredentials: true });
-    setUser(me.data);//
+    setUser(me.data);
   };
 
   const register = async (userData) => {
