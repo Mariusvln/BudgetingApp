@@ -9,6 +9,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -27,8 +28,8 @@ public class IncomeController {
     private final IncomeService incomes;
 
     @PostMapping("/addIncome")
-    public RegisterResponse addIncome(@RequestBody Income income) {
-        incomes.addIncome(income);
+    public RegisterResponse addIncome(@RequestBody IncomeRequest income, Authentication authentication) {
+        incomes.addIncome(authentication.getName(), income);
         return new RegisterResponse("OK");
     }
 
@@ -45,7 +46,7 @@ public class IncomeController {
     }
 
     public IncomeResponse mapToDTO(Income income) {
-        return new IncomeResponse(income.getDescription(), income.getAmount(), income.getDate(), income.getCategory(), income.getProcessType());
+        return new IncomeResponse(income.getUser().getId(), income.getDescription(), income.getAmount(), income.getDate(), income.getCategory(), income.getProcessType());
     }
 
     public List<IncomeResponse> mapUsersToDTOs(List<Income> incomes) {
