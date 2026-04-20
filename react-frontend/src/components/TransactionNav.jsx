@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useAuth } from "../contexts/AuthContext";
 
 function TransactionNav() {
-  const [user, setUser] = useState(null);
+  const { user } = useAuth();
 
   const navItems = [
     {
@@ -29,7 +29,7 @@ function TransactionNav() {
       href: "http://localhost:5173/expenses",
       icon: "./src/assets/images/icons/rent-icon.svg",
     },
-        {
+    {
       label: "Profile",
       href: "http://localhost:5173/profile",
       icon: "./src/assets/images/icons/user-icon.svg",
@@ -38,22 +38,17 @@ function TransactionNav() {
 
   const currentPath = window.location.pathname;
 
-  useEffect(() => {
-    fetch("http://localhost:8080/api/auth/me", {
-      credentials: "include",
-    })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Failed to fetch current user");
-        }
-        return res.json();
-      })
-      .then((data) => setUser(data))
-      .catch((err) => {
-        console.error(err);
-        setUser(null);
-      });
-  }, []);
+  function getInitials(name) {
+    if (!name || !name.trim()) return "U";
+
+    const parts = name.trim().split(" ");
+
+    if (parts.length === 1) {
+      return parts[0][0].toUpperCase();
+    }
+
+    return (parts[0][0] + parts[1][0]).toUpperCase();
+  }
 
   return (
     <aside className="w-64 h-screen sticky top-0 bg-base-100 border-r border-base-300 flex flex-col">
@@ -110,13 +105,8 @@ function TransactionNav() {
       <div className="p-4 border-t border-base-200">
         <div className="rounded-2xl bg-base-200 p-4 shadow-sm">
           <div className="flex items-center gap-3">
-            <div className="avatar">
-              <div className="w-12 rounded-full bg-white ring ring-base-300 ring-offset-2 ring-offset-base-100">
-                <img
-                  src="./src/assets/images/icons/avatar-icon.svg"
-                  alt="User avatar"
-                />
-              </div>
+            <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center text-sm font-bold ring ring-base-300 ring-offset-2 ring-offset-base-100">
+              {getInitials(user?.name)}
             </div>
 
             <div className="min-w-0 flex-1">

@@ -38,6 +38,7 @@
                             .requestMatchers("/api/app/**").authenticated()
                             .requestMatchers("/api/categories/**").permitAll()
                             .requestMatchers("/api/activity/**").permitAll()
+                            .requestMatchers("/api/users/**").permitAll()
                             .anyRequest().authenticated()
                     )
                     .addFilterBefore(cookieFilter, UsernamePasswordAuthenticationFilter.class)

@@ -59,7 +59,16 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<Void> logout(HttpServletResponse response) {
+    public ResponseEntity<Void> logout(Authentication authentication, HttpServletResponse response) {
+
+        if (authentication != null && authentication.isAuthenticated()) {
+            String email = authentication.getName();
+            User user = users.findByEmail(email).orElse(null);
+
+            if (user != null) {
+                users.logLogout(user);
+            }
+        }
 
         Cookie cookie = new Cookie("access_token", "");
         cookie.setHttpOnly(true);
