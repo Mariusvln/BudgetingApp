@@ -20,7 +20,7 @@ function IncomesPage() {
       const response = await fetch(
         `http://localhost:8080/api/app/fetchIncomesFromDateStartToDateFinish?dateStart=${start}&dateEnd=${end}`,
         { credentials: "include" }
-      );
+      );//
       if (!response.ok) throw new Error("Network response was not ok");
       const data = await response.json();
       setTransactions(data);
