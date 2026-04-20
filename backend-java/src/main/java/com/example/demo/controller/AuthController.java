@@ -36,9 +36,13 @@ public class AuthController {
     private String cookieDomain;
 
     @PostMapping("/register")
-    public RegisterResponse register(@RequestBody RegisterRequest request) {
-        users.register(request.username(), request.email(), request.password());
-        return new RegisterResponse("OK");
+    public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
+        try {
+            users.register(request.username(), request.email(), request.password());
+            return ResponseEntity.ok(new RegisterResponse("OK"));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @PostMapping("/login")
@@ -81,7 +85,9 @@ public class AuthController {
                 user.getId(),
                 user.getName(),
                 user.getEmail(),
-                user.getRole().name()
+                user.getRole().name(),
+                user.getLocation(),
+                user.getCreatedAt()
         );
     }
 

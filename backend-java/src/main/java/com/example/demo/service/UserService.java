@@ -17,6 +17,10 @@ public class UserService {
     private final UserActivityService activityService;
 
     public User register(String name, String email, String password) {
+        if (userRepository.existsByEmail(email)) {
+            throw new RuntimeException("Email is already in use");
+        }
+
         User u = new User();
         u.setName(name);
         u.setEmail(email);
@@ -48,6 +52,37 @@ public class UserService {
         }
 
         return user;
+    }
+
+    public User updateProfile(String currentEmail, String newName, String newEmail, String newLocation) {
+        User user = userRepository.findByEmail(currentEmail)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (newEmail != null && !newEmail.equalsIgnoreCase(user.getEmail())) {
+            boolean emailTaken = userRepository.existsByEmail(newEmail);
+            if (emailTaken) {
+                throw new RuntimeException("Email is already in use");
+            }
+            user.setEmail(newEmail);
+        }
+
+        if (newName != null && !newName.isBlank()) {
+            user.setName(newName.trim());
+        }
+
+        if (newLocation != null) {
+            user.setLocation(newLocation.trim());
+        }
+
+        User saved = userRepository.save(user);
+
+        activityService.log(
+                saved.getName(),
+                saved.getEmail(),
+                "Updated profile information"
+        );
+
+        return saved;
     }
 
     public Optional<User> findByEmail(String email) {
