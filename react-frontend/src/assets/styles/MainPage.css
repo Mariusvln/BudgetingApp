@@ -1,7 +1,5 @@
 .main_layout {
   display: flex;
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
   gap: 1.5rem;
   background-color: #f3f4f6;
   flex-direction: column;
