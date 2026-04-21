@@ -29,6 +29,7 @@ const ExpenseEditForm = ({ id, description, category, amount, date, show, onTran
     try {
       const response = await fetch("http://localhost:8080/api/app/updateExpense", {
         method: "PUT",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
@@ -116,4 +117,4 @@ const ExpenseEditForm = ({ id, description, category, amount, date, show, onTran
   );
 };
 
-export default IncomeEditForm;
+export default ExpenseEditForm;
