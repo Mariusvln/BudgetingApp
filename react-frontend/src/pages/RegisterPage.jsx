@@ -5,24 +5,26 @@ import "../assets/styles/LoginPageStyle.css";
 import { useForm } from "react-hook-form";
 
 const RegisterPage = () => {
-  const [setError] = useState("");
+  const [error, setError] = useState("");
 
-const handleRegister = async (formData) => {
-  try {
-    const { username, email, password } = formData;
+  const handleRegister = async (formData) => {
+    try {
+      setError("");
 
-    await axios.post(
-      "http://localhost:8080/api/auth/register",
-      { username, email, password },
-      { withCredentials: true }
-    );
+      const { username, email, password } = formData;
 
-    alert("Registration successful!");
-  } catch (err) {
-    console.error("Registration error:", err);
-    setError("Registration failed");
-  }
-};
+      await axios.post(
+        "http://localhost:8080/api/auth/register",
+        { username, email, password },
+        { withCredentials: true }
+      );
+
+      alert("Registration successful!");
+    } catch (err) {
+      console.error("Registration error:", err);
+      setError("Registration failed");
+    }
+  };
 
   const {
     register,
@@ -31,7 +33,6 @@ const handleRegister = async (formData) => {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      // username: "",
       email: "",
       password: "",
     },
@@ -149,12 +150,11 @@ const handleRegister = async (formData) => {
                   {...register("repeatPassword", {
                     required: "Please repeat password",
                     validate: (value) => {
-                      if(value != watch('password')) {
-                        return "Passwords do not match"
+                      if (value != watch("password")) {
+                        return "Passwords do not match";
                       }
-                    }
-                  },
-                )}
+                    },
+                  })}
                 />
                 <p className="text-red-500">{errors.repeatPassword?.message}</p>
               </div>
@@ -186,6 +186,8 @@ const handleRegister = async (formData) => {
               >
                 Sign Up
               </button>
+
+              {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
             </div>
           </form>
         </div>

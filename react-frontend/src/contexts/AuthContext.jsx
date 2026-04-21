@@ -43,15 +43,11 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  return (
-    <AuthContext.Provider value={{ user, login, register, logout, loading }}>
-      {/* 
-          IMPORTANT: Do not render children until loading is false. 
-          This prevents protected routes from redirecting to /login while we are still checking the cookie.
-      */}
-      {!loading && children}
-    </AuthContext.Provider>
-  );
+return (
+  <AuthContext.Provider value={{ user, setUser, login, register, logout, loading }}>
+    {!loading && children}
+  </AuthContext.Provider>
+);
 };
 
 export const useAuth = () => useContext(AuthContext);

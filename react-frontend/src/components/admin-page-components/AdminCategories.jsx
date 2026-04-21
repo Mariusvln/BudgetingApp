@@ -28,43 +28,72 @@ useEffect(() => {
 }, []);
 
   const handleCreate = async () => {
-    const newCategory = { name, type };
+  if (!name.trim()) return;
 
-    const res = await fetch("/api/categories", {
+  const newCategory = { name: name.trim(), type };
+
+  try {
+    const res = await fetch("http://localhost:8080/api/categories", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(newCategory),
     });
 
+    if (!res.ok) {
+      throw new Error(`Create category failed: ${res.status}`);
+    }
+
     const data = await res.json();
     setCategories((prev) => [...prev, data]);
     setName("");
-  };
+    setType("INCOME");
+  } catch (error) {
+    console.error("Error creating category:", error);
+  }
+};
 
-  const handleDelete = async (id) => {
-    await fetch(`/api/categories/${id}`, {
+ const handleDelete = async (id) => {
+  try {
+    const res = await fetch(`http://localhost:8080/api/categories/${id}`, {
       method: "DELETE",
     });
 
+    if (!res.ok) {
+      throw new Error(`Delete category failed: ${res.status}`);
+    }
+
     setCategories((prev) => prev.filter((c) => c.id !== id));
-  };
+  } catch (error) {
+    console.error("Error deleting category:", error);
+  }
+};
 
   const handleEdit = async (cat) => {
-    const newName = prompt("New category name:", cat.name);
-    const newType = prompt("New type (INCOME / EXPENSE):", cat.type);
+  const newName = prompt("New category name:", cat.name);
+  const newType = prompt("New type (INCOME / EXPENSE):", cat.type);
 
-    if (!newName || !newType) return;
+  if (!newName || !newType) return;
 
-    const res = await fetch(`/api/categories/${cat.id}`, {
+  try {
+    const res = await fetch(`http://localhost:8080/api/categories/${cat.id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name: newName, type: newType }),
+      body: JSON.stringify({
+        name: newName.trim(),
+        type: newType.trim().toUpperCase(),
+      }),
     });
 
-    const updated = await res.json();
+    if (!res.ok) {
+      throw new Error(`Update category failed: ${res.status}`);
+    }
 
+    const updated = await res.json();
     setCategories((prev) => prev.map((c) => (c.id === cat.id ? updated : c)));
-  };
+  } catch (error) {
+    console.error("Error updating category:", error);
+  }
+};
 
   const filteredCategories = categories.filter((cat) => {
     const matchesSearch = cat.name
