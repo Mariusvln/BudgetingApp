@@ -47,6 +47,9 @@ public class ExpenseService {
 //        Expense expense = fromDTO(givenExpenseRequest);
 //        return expenseRepository.save(expense);
 //    }
+    public Expense updateExpense(Expense updated) {
+    return expenseRepository.save(updated);
+}
 
     public void deleteIncome(Long expenseId){
         expenseRepository.deleteById(expenseId);
