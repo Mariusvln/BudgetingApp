@@ -33,7 +33,7 @@ const MonthlyGrowth = () => {
   };
 
   return (
-    <div className="bg-white rounded-xl grow p-[24px] basis-[100px]">
+    <div className="bg-white rounded-xl grow p-[24px] basis-[100px] min-h-[240px]">
       <div className="flex justify-between">
         <p className="text-sm bold-font gray-text">Monthly Growth</p>
         <p className="bold-font gray-text">...</p>
