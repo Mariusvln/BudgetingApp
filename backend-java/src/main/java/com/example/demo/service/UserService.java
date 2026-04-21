@@ -128,4 +128,25 @@ public class UserService {
                 "User logged out"
         );
     }
+
+    public void deleteOwnAccount(String currentEmail, String password) {
+        User user = userRepository.findByEmail(currentEmail)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (password == null || password.isBlank()) {
+            throw new RuntimeException("Password is required");
+        }
+
+        if (!encoder.matches(password, user.getPassword())) {
+            throw new RuntimeException("Incorrect password");
+        }
+
+        activityService.log(
+                user.getName() != null ? user.getName() : user.getEmail(),
+                user.getEmail(),
+                "User deleted own account"
+        );
+
+        userRepository.delete(user);
+    }
 }
