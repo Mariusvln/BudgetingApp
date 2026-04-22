@@ -10,6 +10,7 @@ const AdminUsers = () => {
   const [editingUser, setEditingUser] = useState(null);
   const [editName, setEditName] = useState("");
   const [editEmail, setEditEmail] = useState("");
+  const [editRole, setEditRole] = useState("USER");
 
   const [actionLoadingId, setActionLoadingId] = useState(null);
 
@@ -45,7 +46,12 @@ const AdminUsers = () => {
     return users.filter((user) => {
       const name = (user.name || "").toLowerCase();
       const email = (user.email || "").toLowerCase();
-      return name.includes(query) || email.includes(query);
+      const role = (user.role || "").toLowerCase();
+      return (
+        name.includes(query) ||
+        email.includes(query) ||
+        role.includes(query)
+      );
     });
   }, [users, search]);
 
@@ -53,12 +59,14 @@ const AdminUsers = () => {
     setEditingUser(user);
     setEditName(user.name || "");
     setEditEmail(user.email || "");
+    setEditRole(user.role || "USER");
   };
 
   const closeEditModal = () => {
     setEditingUser(null);
     setEditName("");
     setEditEmail("");
+    setEditRole("USER");
   };
 
   const handleDeleteUser = async (user) => {
@@ -94,7 +102,7 @@ const AdminUsers = () => {
     const trimmedName = editName.trim();
     const trimmedEmail = editEmail.trim();
 
-    if (!trimmedName || !trimmedEmail) {
+    if (!trimmedName || !trimmedEmail || !editRole) {
       alert("Fill all fields");
       return;
     }
@@ -110,6 +118,7 @@ const AdminUsers = () => {
         body: JSON.stringify({
           name: trimmedName,
           email: trimmedEmail,
+          role: editRole,
         }),
       });
 
@@ -134,6 +143,14 @@ const AdminUsers = () => {
     }
   };
 
+  const getRoleBadgeClass = (role) => {
+    if (role === "ADMIN") {
+      return "bg-red-100 text-red-700 border-none";
+    }
+
+    return "bg-green-100 text-green-700 border-none";
+  };
+
   return (
     <>
       <div className="card bg-base-100 shadow-sm">
@@ -150,7 +167,7 @@ const AdminUsers = () => {
 
             <input
               type="text"
-              placeholder="Search (name, email...)"
+              placeholder="Search (name, email, role...)"
               className="input w-64 bg-[#F2F3FF] border-none rounded-xl"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
@@ -164,6 +181,7 @@ const AdminUsers = () => {
                   <th>ID</th>
                   <th>Name</th>
                   <th>Email</th>
+                  <th>Role</th>
                   <th className="text-right">Actions</th>
                 </tr>
               </thead>
@@ -171,7 +189,7 @@ const AdminUsers = () => {
               <tbody>
                 {loading ? (
                   <tr>
-                    <td colSpan="4" className="text-center py-8">
+                    <td colSpan="5" className="text-center py-8">
                       <span className="loading loading-spinner loading-md text-primary"></span>
                     </td>
                   </tr>
@@ -181,6 +199,15 @@ const AdminUsers = () => {
                       <td>{user.id}</td>
                       <td className="font-medium">{user.name || "-"}</td>
                       <td>{user.email || "-"}</td>
+                      <td>
+                        <span
+                          className={`badge px-3 py-3 ${getRoleBadgeClass(
+                            user.role
+                          )}`}
+                        >
+                          {user.role || "USER"}
+                        </span>
+                      </td>
 
                       <td className="text-right">
                         <div className="flex justify-end gap-2">
@@ -205,7 +232,7 @@ const AdminUsers = () => {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="4" className="text-center py-8 text-gray-400">
+                    <td colSpan="5" className="text-center py-8 text-gray-400">
                       No users found
                     </td>
                   </tr>
@@ -237,6 +264,18 @@ const AdminUsers = () => {
                 onChange={(e) => setEditEmail(e.target.value)}
                 placeholder="Email"
               />
+
+              <div>
+                <label className="block text-sm font-medium mb-2">Role</label>
+                <select
+                  className="select select-bordered w-full"
+                  value={editRole}
+                  onChange={(e) => setEditRole(e.target.value)}
+                >
+                  <option value="USER">USER</option>
+                  <option value="ADMIN">ADMIN</option>
+                </select>
+              </div>
             </div>
 
             <div className="flex justify-end gap-3 mt-6">
