@@ -4,15 +4,15 @@ import IncomeHeader from "../components/incomes-page-components/IncomeHeader";
 import ExpensesRecentTable from "../components/incomes-page-components/ExpensesRecentTable";
 import ExpenseAddPanel from "../components/incomes-page-components/ExpenseAddPanel";
 import ExportButton from "../components/profile-page-components/ExportButton";
-
+ 
 function ExpensesPage() {
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
-  
+ 
   // Centralize date state here
   const [dateStart, setDateStart] = useState("2026-03-23");
   const [dateEnd, setDateEnd] = useState("2026-03-26");
-
+ 
   // Updated fetch function to use dynamic dates
   const fetchExpenses = useCallback(async (start = dateStart, end = dateEnd) => {
     setLoading(true);
@@ -30,8 +30,8 @@ function ExpensesPage() {
       setLoading(false);
     }
   }, [dateStart, dateEnd]);
-
-  // Re-fetch whenever dates change for /incomes page
+ 
+  // Re-fetch whenever dates change
   useEffect(() => {
     fetchExpenses();
   }, [fetchExpenses]);
@@ -39,8 +39,17 @@ function ExpensesPage() {
   return (
     <div className="flex bg-base-200 min-h-screen">
       <TransactionNav />
+ 
       <div className="flex-1 p-6">
+      
+        <input
+          type="text"
+          placeholder="Search expenses"
+          className="w-full max-w-xl px-4 py-2 mb-4 border border-gray-300 rounded-lg bg-base-100 focus:outline-none focus:ring-2 focus:ring-primary"
+        />
+ 
         <IncomeHeader />
+ 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2">
 
@@ -52,9 +61,10 @@ function ExpensesPage() {
               setDateStart={setDateStart}
               setDateEnd={setDateEnd}
             />
+ 
             <div className="mt-4">
-            <ExportButton />
-           </div>
+              <ExportButton />
+            </div>
           </div>
           <ExpenseAddPanel onTransactionAdded={fetchExpenses} />
         </div>
@@ -62,5 +72,5 @@ function ExpensesPage() {
     </div>
   );
 }
-
+ 
 export default ExpensesPage;
