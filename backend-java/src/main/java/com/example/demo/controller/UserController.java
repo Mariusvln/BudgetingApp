@@ -7,6 +7,7 @@ import com.example.demo.entity.User;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.UserActivityService;
 import com.example.demo.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -22,6 +23,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/users")
 @CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
+@Valid
 public class UserController {
 
     private final UserRepository userRepository;
@@ -63,7 +65,7 @@ public class UserController {
     }
 
     @PutMapping("/me")
-    public MeResponse updateMyProfile(@RequestBody UpdateProfileRequest request,
+    public MeResponse updateMyProfile(@Valid @RequestBody UpdateProfileRequest request,
                                       Authentication authentication,
                                       HttpServletResponse response) {
         if (authentication == null || !authentication.isAuthenticated()) {
@@ -129,7 +131,7 @@ public class UserController {
     }
 
     @DeleteMapping("/me")
-    public ResponseEntity<?> deleteMyAccount(@RequestBody DeleteAccountRequest request,
+    public ResponseEntity<?> deleteMyAccount(@Valid @RequestBody DeleteAccountRequest request,
                                              Authentication authentication,
                                              HttpServletResponse response) {
         if (authentication == null || !authentication.isAuthenticated()) {

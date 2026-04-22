@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.naming.InvalidNameException;
+import java.security.InvalidKeyException;
 import java.util.Optional;
 
 @Service
@@ -39,10 +41,11 @@ public class UserService {
         return saved;
     }
 
-    public User authenticate(String email, String password) {
-        User user = userRepository.findByEmail(email)
+    public User authenticate(String username, String email, String password) {
+        User user = userRepository.findByEmail(email).filter(u -> u.getName().matches(username))
                 .filter(u -> encoder.matches(password, u.getPassword()))
                 .orElse(null);
+
 
         if (user != null) {
             activityService.log(

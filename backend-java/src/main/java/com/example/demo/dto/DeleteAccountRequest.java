@@ -1,3 +1,10 @@
 package com.example.demo.dto;
 
-public record DeleteAccountRequest(String password) {}
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+
+public record DeleteAccountRequest(
+        @NotNull
+        @NotEmpty
+        String password
+) {}
