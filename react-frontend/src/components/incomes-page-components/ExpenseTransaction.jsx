@@ -1,12 +1,24 @@
 import { Fragment, useState } from "react";
 import ExpenseEditForm from "./ExpenseEditForm";
 
-const ExpenseTransaction = ({ id, description, category, amount, date, onTransactionAdded }) => {
+const ExpenseTransaction = ({
+  id,
+  description,
+  category,
+  amount,
+  date,
+  onTransactionAdded,
+  categories = [],
+}) => {
   const [showEdit, setShowEdit] = useState(false);
 
   const show = () => {
     setShowEdit((prev) => !prev);
   };
+
+  const categoryName =
+    categories.find((cat) => Number(cat.id) === Number(category))?.name ||
+    `Category #${category}`;
 
   return (
     <Fragment>
@@ -15,9 +27,13 @@ const ExpenseTransaction = ({ id, description, category, amount, date, onTransac
         <td className="text-sm text-gray-500">{date}</td>
         <td className="text-sm font-medium text-gray-700">{description}</td>
         <td>
-          <span className="badge badge-soft badge-primary text-xs">Cat: {category}</span>
+          <span className="badge badge-soft badge-primary text-xs">
+            {categoryName}
+          </span>
         </td>
-        <td className="text-right font-medium text-red-600">-${amount?.toFixed(2)}</td>
+        <td className="text-right font-medium text-red-600">
+          -${Number(amount)?.toFixed(2)}
+        </td>
         <td>
           <button
             type="button"
@@ -38,6 +54,7 @@ const ExpenseTransaction = ({ id, description, category, amount, date, onTransac
           date={date}
           show={show}
           onTransactionAdded={onTransactionAdded}
+          categories={categories}
         />
       )}
     </Fragment>

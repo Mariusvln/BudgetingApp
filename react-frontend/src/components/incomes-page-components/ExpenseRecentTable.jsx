@@ -1,33 +1,47 @@
 import ExpenseTransaction from "./ExpenseTransaction";
 
-function ExpenseRecentTable({ transactions, loading, dateStart, dateEnd, setDateStart, setDateEnd, onTransactionAdded }) {
+function ExpenseRecentTable({
+  transactions,
+  loading,
+  dateStart,
+  dateEnd,
+  setDateStart,
+  setDateEnd,
+  onTransactionAdded,
+  categories = [],
+}) {
   return (
     <div className="card bg-base-100 border border-base-200 shadow-sm">
       <div className="card-body">
-        
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
           <div>
             <h2 className="text-xl font-semibold">Expense History</h2>
             <p className="text-sm text-gray-500">
-              {loading ? "Loading..." : `Showing ${transactions.length} entries`}
+              {loading
+                ? "Loading..."
+                : `Showing ${transactions.length} entries`}
             </p>
           </div>
 
           <div className="flex flex-wrap gap-2 items-center">
             <div className="form-control">
-              <label className="label py-0"><span className="label-text text-xs">Start</span></label>
-              <input 
-                type="date" 
-                className="input input-bordered input-sm" 
+              <label className="label py-0">
+                <span className="label-text text-xs">Start</span>
+              </label>
+              <input
+                type="date"
+                className="input input-bordered input-sm"
                 value={dateStart}
                 onChange={(e) => setDateStart(e.target.value)}
               />
             </div>
             <div className="form-control">
-              <label className="label py-0"><span className="label-text text-xs">End</span></label>
-              <input 
-                type="date" 
-                className="input input-bordered input-sm" 
+              <label className="label py-0">
+                <span className="label-text text-xs">End</span>
+              </label>
+              <input
+                type="date"
+                className="input input-bordered input-sm"
                 value={dateEnd}
                 onChange={(e) => setDateEnd(e.target.value)}
               />
@@ -65,6 +79,7 @@ function ExpenseRecentTable({ transactions, loading, dateStart, dateEnd, setDate
                     category={t.category}
                     amount={t.amount}
                     onTransactionAdded={onTransactionAdded}
+                    categories={categories}
                   />
                 ))
               )}
@@ -72,7 +87,9 @@ function ExpenseRecentTable({ transactions, loading, dateStart, dateEnd, setDate
           </table>
 
           {!loading && transactions.length === 0 && (
-            <div className="text-center py-10 text-gray-400">No data found for this range</div>
+            <div className="text-center py-10 text-gray-400">
+              No data found for this range
+            </div>
           )}
         </div>
       </div>

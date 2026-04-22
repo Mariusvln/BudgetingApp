@@ -1,23 +1,44 @@
 import ReactDom from "react-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-const ExpenseEditForm = ({ id, description, category, amount, date, show, onTransactionAdded }) => {
+const ExpenseEditForm = ({
+  id,
+  description,
+  category,
+  amount,
+  date,
+  show,
+  onTransactionAdded,
+  categories = [],
+}) => {
   const formId = id;
   const [formDate, setDate] = useState(date);
   const [formAmount, setAmount] = useState(amount);
   const [formDescription, setDescription] = useState(description);
-  const [formCategory, setCategory] = useState(category);
+  const [formCategory, setCategory] = useState(String(category ?? ""));
   const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    setDate(date);
+    setAmount(amount);
+    setDescription(description);
+    setCategory(String(category ?? ""));
+  }, [date, amount, description, category]);
+
   const handleSubmit = async () => {
-    // console.log("Used handle submit")
     if (!formAmount || !formDescription) {
       alert("Please fill in all fields");
       return;
     }
 
+    if (!formCategory) {
+      alert("Please select a category");
+      return;
+    }
+
     setLoading(true);
-    const income = {
+
+    const expense = {
       description: formDescription,
       amount: parseFloat(formAmount),
       date: formDate,
@@ -33,35 +54,37 @@ const ExpenseEditForm = ({ id, description, category, amount, date, show, onTran
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(income),
-    });
+        body: JSON.stringify(expense),
+      });
 
-    if (response.ok) {
-    if (onTransactionAdded) {
-        onTransactionAdded();
-    }
-    alert("Income saved successfully!");
-    } else {
+      if (response.ok) {
+        if (onTransactionAdded) {
+          onTransactionAdded();
+        }
+        alert("Expense saved successfully!");
+      } else {
         const errorData = await response.text();
-        alert("Server error: " + errorData)
-
-    }
+        alert("Server error: " + errorData);
+      }
     } catch (error) {
       console.error("Connection error:", error);
       alert("Could not connect to the server.");
     } finally {
       setLoading(false);
-    };
-  }
+    }
+  };
 
   return ReactDom.createPortal(
     <div className="fixed top-0 bottom-0 left-0 right-0 bg-[#000000b3] z-1000]">
-      <form className="fixed top-[50%] left-[50%] -translate-x-2/4 -translate-y-2/4 bg-[white] z-1000 inset-y-2/4 flex flex-col justify-center gap-5 border border-black py-40 px-30"
-      onSubmit={(e) => {
-        e.preventDefault();
-        handleSubmit();
-      }}>
+      <form
+        className="fixed top-[50%] left-[50%] -translate-x-2/4 -translate-y-2/4 bg-[white] z-1000 inset-y-2/4 flex flex-col justify-center gap-5 border border-black py-40 px-30"
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleSubmit();
+        }}
+      >
         <p>{formId}</p>
+
         <label>
           Date:
           <input
@@ -71,6 +94,7 @@ const ExpenseEditForm = ({ id, description, category, amount, date, show, onTran
             className="border border-black ml-2"
           />
         </label>
+
         <label>
           Description:
           <input
@@ -80,14 +104,28 @@ const ExpenseEditForm = ({ id, description, category, amount, date, show, onTran
             className="border border-black w-80 ml-2"
           />
         </label>
+
         <label>
           Category:
-          <select className="border border-black ml-2" value={formCategory} onChange={(e) => setCategory(e.target.value)}>
-            <option value="1">Food</option>
-            <option value="2">Rent</option>
-            <option value="3">Salary</option>
+          <select
+            className="border border-black ml-2"
+            value={formCategory}
+            onChange={(e) => setCategory(e.target.value)}
+          >
+            {categories.length === 0 ? (
+              <option value="" disabled>
+                No expense categories available
+              </option>
+            ) : (
+              categories.map((cat) => (
+                <option key={cat.id} value={cat.id}>
+                  {cat.name}
+                </option>
+              ))
+            )}
           </select>
         </label>
+
         <label>
           Amount:
           <input
@@ -97,14 +135,18 @@ const ExpenseEditForm = ({ id, description, category, amount, date, show, onTran
             className="border border-black w-80 ml-2"
           />
         </label>
+
         <div className="flex gap-2 mt-2">
-          <button className="bg-green-500 py-1 px-2 text-white rounded-lg font-bold hover:bg-green-600"
-          type="submit"
-          disabled={loading}
+          <button
+            className="bg-green-500 py-1 px-2 text-white rounded-lg font-bold hover:bg-green-600"
+            type="submit"
+            disabled={loading}
           >
             Submit
           </button>
+
           <button
+            type="button"
             className="bg-red-500 py-1 px-2 text-white rounded-lg font-bold hover:bg-red-600"
             onClick={show}
           >
