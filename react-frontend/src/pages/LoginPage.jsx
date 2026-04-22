@@ -29,7 +29,7 @@ const LoginPage = () => {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      // username: "",
+      username: "",
       email: "",
       password: "",
     },
@@ -65,12 +65,12 @@ const LoginPage = () => {
                   type="text"
                   name="username"
                   placeholder="Enter your username"
-                  className="block w-full rounded-xl border border-layer-line bg-layer px-4 py-3 text-sm text-foreground focus:border-primary-focus focus:ring-primary-focus border-card-line bg-[#F8FAFC] border-gray-300"
-                  // {...register("username", {
-                  //   required: "Username is required",
-                  // })}
+                  className={`block w-full rounded-xl border border-layer-line bg-layer px-4 py-3 text-sm text-foreground focus:border-primary-focus focus:ring-primary-focus border-card-line bg-[#F8FAFC] ${errors.username?.message ? `border-red-500` : `border-gray-300`}`}
+                  {...register("username", {
+                    required: "Username is required",
+                  })}
                 />
-                {/* <p className="text-red-500">{errors.username?.message}</p> */}
+                <p className="text-red-500">{errors.username?.message}</p>
               </div>
 
               <div>
