@@ -10,6 +10,7 @@ import com.example.demo.service.JwtService;
 import com.example.demo.service.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,7 @@ import org.springframework.web.server.ResponseStatusException;
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
+@Valid
 public class AuthController {
 
     private final UserService users;
@@ -36,7 +38,7 @@ public class AuthController {
     private String cookieDomain;
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
+    public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest request) {
         try {
             users.register(request.username(), request.email(), request.password());
             return ResponseEntity.ok(new RegisterResponse("OK"));
@@ -46,8 +48,8 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public LoginResponse login(@RequestBody LoginRequest request, HttpServletResponse response) {
-        User user = users.authenticate(request.email(), request.password());
+    public LoginResponse login(@Valid @RequestBody LoginRequest request, HttpServletResponse response) {
+        User user = users.authenticate(request.username(), request.email(), request.password());
         if (user == null) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Bad creds");
         }

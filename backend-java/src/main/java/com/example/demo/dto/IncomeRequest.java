@@ -1,26 +1,38 @@
 package com.example.demo.dto;
 
 import com.example.demo.entity.PROCESS_TYPE;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+@NoArgsConstructor
+@Setter
+@Getter
 public class IncomeRequest {
 
 
     public Long id;
 
     public String description;
-
+    @NotNull
+    @NotEmpty
     public BigDecimal amount;
-
+    @NotNull
+    @NotEmpty
     public LocalDate date;
-
+    @NotNull
+    @NotEmpty
+    @Pattern(regexp = "^([123])?")
     public int category;
-
+    @NotNull
+    @NotEmpty
     public PROCESS_TYPE processType;
-
-    public IncomeRequest() {}
 
     public IncomeRequest(String description, BigDecimal amount, LocalDate date, int category, PROCESS_TYPE processType) {
         this.description = description;
@@ -29,54 +41,4 @@ public class IncomeRequest {
         this.category = category;
         this.processType = processType;
     }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
-
-    public void setCategory(int category) {
-        this.category = category;
-    }
-
-    public void setProcessType(PROCESS_TYPE processType) {
-        this.processType = processType;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public BigDecimal getAmount() {
-        return amount;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public int getCategory() {
-        return category;
-    }
-
-    public PROCESS_TYPE getProcessType() {
-        return processType;
-    }
-
 }

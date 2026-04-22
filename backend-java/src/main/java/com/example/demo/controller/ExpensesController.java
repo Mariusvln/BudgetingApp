@@ -6,6 +6,7 @@ import com.example.demo.entity.Income;
 import com.example.demo.service.ExpenseService;
 import com.example.demo.service.IncomeService;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -25,24 +26,25 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/app/")
 @RequiredArgsConstructor
+@Valid
 public class ExpensesController {
 
     private final ExpenseService expenses;
 
     @PostMapping("/addExpense")
-    public RegisterResponse addExpense(@RequestBody ExpenseRequest expense, Authentication authentication) {
+    public RegisterResponse addExpense(@Valid @RequestBody ExpenseRequest expense, Authentication authentication) {
         expenses.addExpense(authentication.getName(), expense);
         return new RegisterResponse("OK");
     }
 
     @PutMapping("/updateExpense")
-    public RegisterResponse updateExpense(@RequestBody Expense updated) {
+    public RegisterResponse updateExpense(@Valid @RequestBody Expense updated) {
         expenses.updateExpense(updated);
         return new RegisterResponse("OK");
     }
 
     @DeleteMapping ("/deleteExpense")
-    public RegisterResponse deleteExpense(@RequestParam Long expenseId) {
+    public RegisterResponse deleteExpense(@Valid @RequestParam Long expenseId) {
         expenses.deleteIncome(expenseId);
         return new RegisterResponse("OK");
     }

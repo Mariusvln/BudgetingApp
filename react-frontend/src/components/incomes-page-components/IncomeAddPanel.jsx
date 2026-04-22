@@ -108,8 +108,8 @@ function IncomeAddPanel({ onTransactionAdded }) {
                 },
               })}
             />
-            {errors.earning?.message && (
-              <p className="text-red-500">{errors.earning?.message}</p>
+            {errors.amount?.message && (
+              <p className="text-red-500">{errors.amount?.message}</p>
             )}
 
             <input

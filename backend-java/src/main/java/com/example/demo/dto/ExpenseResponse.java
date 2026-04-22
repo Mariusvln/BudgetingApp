@@ -2,10 +2,13 @@ package com.example.demo.dto;
 
 import com.example.demo.entity.PROCESS_TYPE;
 import com.example.demo.entity.User;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-
+@NoArgsConstructor
 public class ExpenseResponse {
 
     public Long user;
@@ -21,8 +24,6 @@ public class ExpenseResponse {
     public int category;
 
     public PROCESS_TYPE processType;
-
-    public ExpenseResponse() {}
 
     public ExpenseResponse(Long user, String description, BigDecimal amount, LocalDate date, int category, PROCESS_TYPE processType) {
         this.user = user;
