@@ -17,6 +17,10 @@ public class Income {
 
     private LocalDate date;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
 //    @ManyToOne
 //    @JoinColumn(name = "category_id")
 //    private Category category;
@@ -41,6 +45,8 @@ public class Income {
         return id;
     }
 
+    public User getUser() {return user;}
+
     public String getDescription() {
         return description;
     }
@@ -59,5 +65,35 @@ public class Income {
 
     public PROCESS_TYPE getProcessType() {
         return processType;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+        System.out.println("Now after called setAmount it's a " + this.amount);
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+        System.out.println("Now after called setUser it's a " + this.user);
+    }
+
+    public void setCategory(int category) {
+        this.category = category;
+    }
+
+    public void setProcessType(PROCESS_TYPE processType) {
+        this.processType = processType;
     }
 }

@@ -36,9 +36,13 @@ public class AuthController {
     private String cookieDomain;
 
     @PostMapping("/register")
-    public RegisterResponse register(@RequestBody RegisterRequest request) {
-        users.register(request.username(), request.email(), request.password());
-        return new RegisterResponse("OK");
+    public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
+        try {
+            users.register(request.username(), request.email(), request.password());
+            return ResponseEntity.ok(new RegisterResponse("OK"));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @PostMapping("/login")
@@ -55,11 +59,20 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<Void> logout(HttpServletResponse response) {
+    public ResponseEntity<Void> logout(Authentication authentication, HttpServletResponse response) {
+
+        if (authentication != null && authentication.isAuthenticated()) {
+            String email = authentication.getName();
+            User user = users.findByEmail(email).orElse(null);
+
+            if (user != null) {
+                users.logLogout(user);
+            }
+        }
 
         Cookie cookie = new Cookie("access_token", "");
         cookie.setHttpOnly(true);
-        cookie.setSecure(true);
+        cookie.setSecure(cookieSecure);
         cookie.setPath("/");
         cookie.setMaxAge(0);
 
@@ -81,7 +94,9 @@ public class AuthController {
                 user.getId(),
                 user.getName(),
                 user.getEmail(),
-                user.getRole().name()
+                user.getRole().name(),
+                user.getLocation(),
+                user.getCreatedAt()
         );
     }
 

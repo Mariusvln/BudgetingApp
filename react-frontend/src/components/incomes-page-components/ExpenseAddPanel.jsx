@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-function IncomeAddPanel({ onTransactionAdded }) {
+function ExpenseAddPanel({ onTransactionAdded }) {
   // Helper for today's date
   const getTodayDate = () => new Date().toISOString().split('T')[0];
 
@@ -21,7 +21,7 @@ function IncomeAddPanel({ onTransactionAdded }) {
     setLoading(true);
 
     // This matches the JSON structure your Java backend expects
-    const income = {
+    const expense = {
       description: description,
       amount: parseFloat(amount),
       date: date,
@@ -33,10 +33,11 @@ function IncomeAddPanel({ onTransactionAdded }) {
     try {
       const response = await fetch("http://localhost:8080/api/app/addExpense", {
         method: "POST",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(income),
+        body: JSON.stringify(expense),
       });
 
       if (response.ok) {
@@ -46,7 +47,7 @@ function IncomeAddPanel({ onTransactionAdded }) {
             onTransactionAdded();
         }
         
-        alert("Income saved successfully!");
+        alert("Expense saved successfully!");
         
         // Reset fields
         setAmount("");
@@ -69,7 +70,7 @@ function IncomeAddPanel({ onTransactionAdded }) {
       <div className="card bg-base-100 border border-base-200">
         <div className="card-body">
           <h2 className="font-semibold text-lg">Quick Add</h2>
-          <p className="text-sm text-gray-500 mb-4">Easily log a new transaction</p>
+          <p className="text-sm text-gray-500 mb-4">Easily log a new expensse</p>
 
           <div className="flex flex-col gap-3">
             <input
@@ -110,7 +111,7 @@ function IncomeAddPanel({ onTransactionAdded }) {
               disabled={loading}
               className={`btn bg-linear-to-r from-[#13EC6D] to-[#0BB855] hover:bg-linear-to-r hover:from-[#0BB855] hover:via-[#13EC6D] hover:to-[#0BB855] text-white ${loading ? 'opacity-50' : ''}`}
             >
-              {loading ? "Saving..." : "Add Transaction"}
+              {loading ? "Saving..." : "Add Expense"}
             </button>
 
             <button 
@@ -126,4 +127,4 @@ function IncomeAddPanel({ onTransactionAdded }) {
   );
 }
 
-export default IncomeAddPanel;
+export default ExpenseAddPanel;

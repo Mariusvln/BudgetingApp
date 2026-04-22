@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import TransactionNav from "../components/TransactionNav";
 import IncomeHeader from "../components/incomes-page-components/IncomeHeader";
-import IncomeRecentTable from "../components/incomes-page-components/TransactionRecentTable";
-import IncomeAddPanel from "../components/incomes-page-components/IncomeAddPanel";
+import ExpensesRecentTable from "../components/incomes-page-components/ExpensesRecentTable";
+import ExpenseAddPanel from "../components/incomes-page-components/ExpenseAddPanel";
 import ExportButton from "../components/profile-page-components/ExportButton";
  
 function ExpensesPage() {
@@ -14,11 +14,12 @@ function ExpensesPage() {
   const [dateEnd, setDateEnd] = useState("2026-03-26");
  
   // Updated fetch function to use dynamic dates
-  const fetchIncomes = useCallback(async (start = dateStart, end = dateEnd) => {
+  const fetchExpenses = useCallback(async (start = dateStart, end = dateEnd) => {
     setLoading(true);
     try {
       const response = await fetch(
-        `http://localhost:8080/api/app/fetchExpensesFromDateStartToDateFinish?dateStart=${start}&dateEnd=${end}`
+        `http://localhost:8080/api/app/fetchExpensesFromDateStartToDateFinish?dateStart=${start}&dateEnd=${end}`,
+        { credentials: "include" }
       );
       if (!response.ok) throw new Error("Network response was not ok");
       const data = await response.json();
@@ -32,9 +33,9 @@ function ExpensesPage() {
  
   // Re-fetch whenever dates change
   useEffect(() => {
-    fetchIncomes();
-  }, [fetchIncomes]);
- 
+    fetchExpenses();
+  }, [fetchExpenses]);
+
   return (
     <div className="flex bg-base-200 min-h-screen">
       <TransactionNav />
@@ -51,9 +52,10 @@ function ExpensesPage() {
  
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2">
-            <IncomeRecentTable
-              transactions={transactions}
-              loading={loading}
+
+            <ExpensesRecentTable 
+              transactions={transactions} 
+              loading={loading} 
               dateStart={dateStart}
               dateEnd={dateEnd}
               setDateStart={setDateStart}
@@ -64,8 +66,7 @@ function ExpensesPage() {
               <ExportButton />
             </div>
           </div>
- 
-          <IncomeAddPanel onTransactionAdded={fetchIncomes} />
+          <ExpenseAddPanel onTransactionAdded={fetchExpenses} />
         </div>
       </div>
     </div>

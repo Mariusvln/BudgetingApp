@@ -1,9 +1,16 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.ExpenseRequest;
+import com.example.demo.dto.IncomeRequest;
+import com.example.demo.entity.Expense;
 import com.example.demo.entity.Income;
+import com.example.demo.entity.User;
 import com.example.demo.repository.IncomeRepository;
+import com.example.demo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -15,9 +22,28 @@ import java.util.List;
 public class IncomeService {
 
     private final IncomeRepository incomeRepository;
+    private final UserRepository userRepository;
 
     public Income addIncome(Income givenIncome){
         return incomeRepository.save(givenIncome);
+    }
+
+    public Income addIncome(String email, IncomeRequest request) {
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found"));;
+        Income income = fromDTO(request, user);
+        return incomeRepository.save(income);
+    }
+
+    public Income fromDTO(IncomeRequest dto, User user) {
+        Income income = new Income();
+        income.setId(dto.getId());
+        income.setDescription(dto.getDescription());
+        income.setDate(dto.getDate());
+        income.setCategory(dto.getCategory());
+        income.setAmount(dto.getAmount());
+        income.setProcessType(dto.getProcessType());
+        income.setUser(user);
+        return income;
     }
 
     public Income updateIncome(Income updated) {

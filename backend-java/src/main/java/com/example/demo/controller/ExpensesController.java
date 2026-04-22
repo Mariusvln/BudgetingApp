@@ -35,6 +35,12 @@ public class ExpensesController {
         return new RegisterResponse("OK");
     }
 
+    @PutMapping("/updateExpense")
+    public RegisterResponse updateExpense(@RequestBody Expense updated) {
+        expenses.updateExpense(updated);
+        return new RegisterResponse("OK");
+    }
+
     @DeleteMapping ("/deleteExpense")
     public RegisterResponse deleteExpense(@RequestParam Long expenseId) {
         expenses.deleteIncome(expenseId);

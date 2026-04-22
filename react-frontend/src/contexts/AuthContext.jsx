@@ -25,7 +25,8 @@ export const AuthProvider = ({ children }) => {
   const login = async (credentials) => {
     const res = await axios.post('http://localhost:8080/api/auth/login', credentials, { withCredentials: true });
     // After login, we immediately set the user so the app reacts
-    setUser(res.data);
+    const me = await axios.get('http://localhost:8080/api/auth/me', { withCredentials: true });
+    setUser(me.data);
   };
 
   const register = async (userData) => {
@@ -42,15 +43,11 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  return (
-    <AuthContext.Provider value={{ user, login, register, logout, loading }}>
-      {/* 
-          IMPORTANT: Do not render children until loading is false. 
-          This prevents protected routes from redirecting to /login while we are still checking the cookie.
-      */}
-      {!loading && children}
-    </AuthContext.Provider>
-  );
+return (
+  <AuthContext.Provider value={{ user, setUser, login, register, logout, loading }}>
+    {!loading && children}
+  </AuthContext.Provider>
+);
 };
 
 export const useAuth = () => useContext(AuthContext);
