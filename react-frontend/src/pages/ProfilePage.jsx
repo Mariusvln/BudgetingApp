@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import DeleteAccountSection from "../components/profile-page-components/DeleteAccountSection";
 import axios from "axios";
 import TransactionNav from "../components/TransactionNav";
 import ProfileAccountStatus from "../components/profile-page-components/ProfileAccountStatus";
@@ -46,7 +47,7 @@ const ProfilePage = () => {
       const res = await axios.put(
         "http://localhost:8080/api/users/me",
         formData,
-        { withCredentials: true }
+        { withCredentials: true },
       );
 
       setUser(res.data);
@@ -86,6 +87,7 @@ const ProfilePage = () => {
           <div className="space-y-6">
             <ProfileNotifications />
             <ProfileAccountStatus />
+            <DeleteAccountSection />
           </div>
         </div>
 
@@ -108,9 +110,7 @@ const ProfilePage = () => {
           </button>
         </div>
 
-        {message && (
-          <p className="mt-4 text-sm text-gray-600">{message}</p>
-        )}
+        {message && <p className="mt-4 text-sm text-gray-600">{message}</p>}
       </div>
     </div>
   );
