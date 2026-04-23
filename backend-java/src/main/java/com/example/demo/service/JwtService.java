@@ -23,14 +23,14 @@ public class JwtService {
     private final long accessTokenTtlSeconds;
 
     public JwtService(
-            @Value("${app.jwt.secret}") String secret,
+            @Value("jljIU)Ojsfn2349jknnj()NRW#Cg7t87s,dasldakd;lkslkl;k9u8rsa...") String secret,
             @Value("${app.jwt.access-ttl-seconds:600}") long accessTokenTtlSeconds
     ) {
         // HS256 requires a sufficiently long secret; 32+ bytes recommended
         this.secretBytes = secret.getBytes(StandardCharsets.UTF_8);
         this.accessTokenTtlSeconds = accessTokenTtlSeconds;
     }
-
+//delete this comment
     public String generateAccessToken(String email, String role) {
         try {
             Instant now = Instant.now();
