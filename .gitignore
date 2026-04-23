@@ -1,1 +1,14 @@
-**backend-java/target/.
+# Maven
+target/
+*.class
+
+# IDE
+.idea/
+*.iml
+*.iws
+.settings/
+.project
+.metadata/
+
+# Logs
+*.log
