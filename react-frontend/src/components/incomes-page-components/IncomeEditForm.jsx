@@ -44,27 +44,12 @@ const IncomeEditForm = ({
     const parsedAmount = Number(amount);
     const parsedCategory = Number(category);
 
-    if (!description?.trim()) {
-      alert("Please fill in all fields");
-      return;
-    }
-
-    if (!Number.isFinite(parsedAmount) || parsedAmount <= 0) {
-      alert("Please enter a valid amount");
-      return;
-    }
-
-    if (!Number.isInteger(parsedCategory) || parsedCategory <= 0) {
-      alert("Please select a valid category");
-      return;
-    }
-
     setLoading(true);
 
     const income = {
       description: description.trim(),
       amount: parsedAmount,
-      date,
+      date: date,
       category: parsedCategory,
       processType: "SINGLE",
       id,
@@ -120,10 +105,17 @@ const IncomeEditForm = ({
           <input
             type="text"
             id="description"
-            className="border border-black w-80 ml-2"
-            {...register("description")}
+            className={`border w-80 ml-2 ${errors.description?.message ? `border-black` : `border-red-500`}`}
+            {...register("description", {
+              maxLength: {value: 50, message: "Description is too long"}
+            })
+            }
           />
         </label>
+
+        {errors.description?.message && (
+          <p className="text-red-500">{errors.description?.message}</p>
+        )}
 
         <label>
           Category:
@@ -151,7 +143,7 @@ const IncomeEditForm = ({
           <input
             type="number"
             id="amount"
-            className="border border-black w-80 ml-2"
+            className={`border w-80 ml-2 ${errors.amount?.message ? `border-black` : `border-red-500`}`}
             {...register("amount", {
               required: "Please input your income amount, letters and symbols not allowed",
               validate: (value) => {

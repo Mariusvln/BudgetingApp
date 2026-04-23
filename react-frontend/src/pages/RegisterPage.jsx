@@ -8,6 +8,7 @@ const RegisterPage = () => {
   const [error, setError] = useState("");
 
   const handleRegister = async (formData) => {
+    console.log(formData)
     try {
       setError("");
 
@@ -85,6 +86,7 @@ const RegisterPage = () => {
                   className={`block w-full rounded-xl border border-layer-line bg-layer px-4 py-3 text-sm text-foreground border-card-line bg-[#F8FAFC] ${errors.username?.message ? "border-red-500" : "border-gray-300"}`}
                   {...register("username", {
                     required: "Username is required",
+                    maxLength: {value: 53, message: "Username is too long"},
                   })}
                 />
                 <p className="text-red-500">{errors.username?.message}</p>
@@ -105,6 +107,7 @@ const RegisterPage = () => {
                   className={`block w-full rounded-xl border border-layer-line bg-layer px-4 py-3 text-sm text-foreground border-card-line bg-[#F8FAFC] ${errors.email?.message ? `border-red-500` : `border-gray-300`}`}
                   {...register("email", {
                     required: "Email is required",
+                    maxLength: {value: 254, message: "Email is too long"},
                     pattern: {
                       value:
                         /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/g,

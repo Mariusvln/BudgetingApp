@@ -134,8 +134,13 @@ function IncomeAddPanel({ onTransactionAdded, categories = [] }) {
               id="description"
               placeholder="Description (e.g. Grass cutting)"
               className="input input-bordered"
-              {...register("description")}
+              {...register("description", {
+                maxLength: {value: 50, message: "Description is too long"}
+              })}
             />
+            {errors.description?.message && (
+              <p className="text-red-500">{errors.description?.message}</p>
+            )}
 
             <select
               className="select select-bordered"

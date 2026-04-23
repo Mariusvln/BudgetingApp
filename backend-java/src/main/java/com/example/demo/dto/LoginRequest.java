@@ -1,18 +1,18 @@
 package com.example.demo.dto;
 
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
 public record LoginRequest(
-        @NotNull
-        @NotEmpty
+        @NotEmpty(message = "Username" + emptyOrNull)
+        @Size(max = 53, message = "Username cannot have more than 53 characters")
         String username,
-        @NotNull
-        @NotEmpty
-        @Pattern(regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")
+        @NotEmpty(message = "Email" + emptyOrNull)
+        @Pattern(regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$", message = "Invalid email address")
+        @Size(max = 254, message = "Email address is tool long to exist")
         String email,
-        @NotNull
-        @NotEmpty
+        @NotEmpty(message = "Password" + emptyOrNull)
         String password) {
+        private static final String emptyOrNull = " must not be empty or null";
 }

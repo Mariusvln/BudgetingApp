@@ -4,6 +4,7 @@ import com.example.demo.entity.PROCESS_TYPE;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,11 +18,11 @@ import java.time.LocalDate;
 public class ExpenseRequest {
 
     private Long id;
-
+    @Size(max = 50, message = "Description is too long")
     private String description;
 
     @NotNull
-    @DecimalMin(value = "0.01", message = "Amount must be greater than 0")
+    @Positive(message = "Amount must be greater than 0")
     private BigDecimal amount;
 
     @NotNull
