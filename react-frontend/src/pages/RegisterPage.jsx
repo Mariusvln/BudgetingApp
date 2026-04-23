@@ -33,6 +33,7 @@ const RegisterPage = () => {
     formState: { errors },
   } = useForm({
     defaultValues: {
+      username: "",
       email: "",
       password: "",
     },

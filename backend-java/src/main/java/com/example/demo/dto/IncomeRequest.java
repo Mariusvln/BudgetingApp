@@ -1,82 +1,44 @@
 package com.example.demo.dto;
 
 import com.example.demo.entity.PROCESS_TYPE;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+@NoArgsConstructor
+@Setter
+@Getter
 public class IncomeRequest {
 
+    private Long id;
 
-    public Long id;
+    private String description;
 
-    public String description;
+    @NotNull
+    @DecimalMin(value = "0.01", message = "Amount must be greater than 0")
+    private BigDecimal amount;
 
-    public BigDecimal amount;
+    @NotNull
+    private LocalDate date;
 
-    public LocalDate date;
+    @NotNull
+    @Positive(message = "Category must be a valid id")
+    private Integer category;
 
-    public int category;
+    @NotNull
+    private PROCESS_TYPE processType;
 
-    public PROCESS_TYPE processType;
-
-    public IncomeRequest() {}
-
-    public IncomeRequest(String description, BigDecimal amount, LocalDate date, int category, PROCESS_TYPE processType) {
+    public IncomeRequest(String description, BigDecimal amount, LocalDate date, Integer category, PROCESS_TYPE processType) {
         this.description = description;
         this.amount = amount;
         this.date = date;
         this.category = category;
         this.processType = processType;
     }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
-
-    public void setCategory(int category) {
-        this.category = category;
-    }
-
-    public void setProcessType(PROCESS_TYPE processType) {
-        this.processType = processType;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public BigDecimal getAmount() {
-        return amount;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public int getCategory() {
-        return category;
-    }
-
-    public PROCESS_TYPE getProcessType() {
-        return processType;
-    }
-
 }

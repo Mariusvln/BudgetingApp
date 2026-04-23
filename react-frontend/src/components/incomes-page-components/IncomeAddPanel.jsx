@@ -1,19 +1,48 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 
-function IncomeAddPanel({ onTransactionAdded }) {
+function IncomeAddPanel({ onTransactionAdded, categories = [] }) {
   const getTodayDate = () => new Date().toISOString().split("T")[0];
 
   const startDate = getTodayDate();
   const [loading, setLoading] = useState(false);
 
-  // 2. Function to send data to your Java Backend
+  const {
+    register,
+    handleSubmit,
+    reset,
+    setValue,
+    watch,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      description: "",
+      amount: "",
+      date: startDate,
+      category: "",
+    },
+  });
+
+  useEffect(() => {
+    if (categories.length > 0) {
+      setValue("category", String(categories[0].id));
+    } else {
+      setValue("category", "");
+    }
+  }, [categories, setValue]);
+
+  const selectedCategory = watch("category");
+
   const handleSave = async (formData) => {
     const { description, amount, date, category } = formData;
 
+    if (!category) {
+      alert("Please select a category");
+      return;
+    }
+
     setLoading(true);
 
-    // This matches the JSON structure your Java backend expects
     const income = {
       description: description,
       amount: parseFloat(amount),
@@ -26,6 +55,7 @@ function IncomeAddPanel({ onTransactionAdded }) {
     try {
       const response = await fetch("http://localhost:8080/api/app/addIncome", {
         method: "POST",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
@@ -33,14 +63,16 @@ function IncomeAddPanel({ onTransactionAdded }) {
       });
 
       if (response.ok) {
-        // --- THIS IS THE KEY ADDITION ---
-        // Call the refresh function passed from IncomesPage
         if (onTransactionAdded) {
           onTransactionAdded();
         }
 
-        // Reset fields
-        reset()
+        reset({
+          description: "",
+          amount: "",
+          date: startDate,
+          category: categories.length > 0 ? String(categories[0].id) : "",
+        });
       } else {
         const errorData = await response.text();
         alert("Server error: " + errorData);
@@ -52,20 +84,6 @@ function IncomeAddPanel({ onTransactionAdded }) {
       setLoading(false);
     }
   };
-
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm({
-    defaultValues: {
-      description: "",
-      amount: "",
-      date: startDate,
-      category: "1",
-    },
-  });
 
   return (
     <div className="w-full max-w-sm">
@@ -85,9 +103,7 @@ function IncomeAddPanel({ onTransactionAdded }) {
               type="date"
               id="date"
               className="input input-bordered"
-              {...register("date", {
-                valueAsDate: true,
-              })}
+              {...register("date")}
             />
 
             <input
@@ -96,11 +112,12 @@ function IncomeAddPanel({ onTransactionAdded }) {
               placeholder="$ 0.00"
               className="input input-bordered"
               {...register("amount", {
-                required: "Please input your income, letters and symbols not allowed",
+                required:
+                  "Please input your income, letters and symbols not allowed",
                 valueAsNumber: true,
                 validate: (value) => {
                   if (isNaN(value)) {
-                    return "Only numbers are allowed"
+                    return "Only numbers are allowed";
                   } else if (value <= 0) {
                     return "Income cannot be 0 or less";
                   }
@@ -108,8 +125,8 @@ function IncomeAddPanel({ onTransactionAdded }) {
                 },
               })}
             />
-            {errors.earning?.message && (
-              <p className="text-red-500">{errors.earning?.message}</p>
+            {errors.amount?.message && (
+              <p className="text-red-500">{errors.amount?.message}</p>
             )}
 
             <input
@@ -122,24 +139,47 @@ function IncomeAddPanel({ onTransactionAdded }) {
 
             <select
               className="select select-bordered"
-              {...register("category")}
+              {...register("category", {
+                required: "Please select a category",
+              })}
+              value={selectedCategory || ""}
             >
-              <option value="1">Food</option>
-              <option value="2">Rent</option>
-              <option value="3">Salary</option>
+              {categories.length === 0 ? (
+                <option value="" disabled>
+                  No income categories available
+                </option>
+              ) : (
+                categories.map((cat) => (
+                  <option key={cat.id} value={cat.id}>
+                    {cat.name}
+                  </option>
+                ))
+              )}
             </select>
+            {errors.category?.message && (
+              <p className="text-red-500">{errors.category.message}</p>
+            )}
 
             <button
               type="submit"
-              disabled={loading}
+              disabled={loading || categories.length === 0}
               className={`btn bg-linear-to-r from-[#13EC6D] to-[#0BB855] hover:bg-linear-to-r hover:from-[#0BB855] hover:via-[#13EC6D] hover:to-[#0BB855] text-white ${loading ? "opacity-50" : ""}`}
             >
               {loading ? "Saving..." : "Add Transaction"}
             </button>
 
             <button
+              type="button"
               className="btn btn-ghost"
-              onClick={() => { reset() }}
+              onClick={() => {
+                reset({
+                  description: "",
+                  amount: "",
+                  date: startDate,
+                  category:
+                    categories.length > 0 ? String(categories[0].id) : "",
+                });
+              }}
             >
               Clear Fields
             </button>

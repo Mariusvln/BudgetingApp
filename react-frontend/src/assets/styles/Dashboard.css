@@ -39,12 +39,12 @@
 
 .progress-bar-green {
   @apply appearance-none border-none rounded-2xl overflow-hidden bg-gray-200
-  [&&::-webkit-progress-bar]:bg-gray-200 [&&::-webkit-progress-value]:bg-green-500 [&&::-webkit-progress-bar]:rounded-2xl [&::-webkit-progress-value]:rounded-2xl 
-  [&&::-moz-progress-bar]:bg-green-500 [&&::-moz-progress-bar]:rounded-2xl;
+  [&&::-webkit-progress-bar]:bg-gray-200 [&&::-webkit-progress-value]:bg-green-400 [&&::-webkit-progress-bar]:rounded-2xl [&::-webkit-progress-value]:rounded-2xl 
+  [&&::-moz-progress-bar]:bg-green-400 [&&::-moz-progress-bar]:rounded-2xl;
 }
 
 .CircularProgressbar-path {
-  stroke: #00c950;
+  stroke: #05df72;
 }
 
 .CircularProgressbar-trail {
@@ -70,6 +70,8 @@
   gap: 0.75rem;
   border-radius: 1rem;
   background-color: #ffffff;
+  flex-grow: 1;
+  height: 10rem;
 }
 
 .income-card_title {
@@ -79,6 +81,7 @@
 .income-card_prog-bar {
   border-radius: 0.75rem;
   height: 0.25rem;
+  width: 100%;
 }
 
 .circular-prog-card {
@@ -94,8 +97,8 @@
 }
 
 .circular-prog-bar {
-  height: 3.75rem;
-  width: 3.75rem;
+  height: 100%;
+  width: 100%;
 }
 
 .saving-goals {
@@ -140,7 +143,7 @@
   border-radius: 0.75rem;
   height: 0.5rem;
   border-radius: 0.75rem;
-  width: 25rem;
+  width: 100%;
 }
 
 .saving-goal_amount {

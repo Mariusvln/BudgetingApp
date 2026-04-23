@@ -1,12 +1,15 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.DeleteAccountRequest;
 import com.example.demo.dto.MeResponse;
 import com.example.demo.dto.UpdateProfileRequest;
 import com.example.demo.entity.User;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.UserActivityService;
 import com.example.demo.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -20,6 +23,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/users")
 @CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
+@Valid
 public class UserController {
 
     private final UserRepository userRepository;
@@ -61,7 +65,7 @@ public class UserController {
     }
 
     @PutMapping("/me")
-    public MeResponse updateMyProfile(@RequestBody UpdateProfileRequest request,
+    public MeResponse updateMyProfile(@Valid @RequestBody UpdateProfileRequest request,
                                       Authentication authentication,
                                       HttpServletResponse response) {
         if (authentication == null || !authentication.isAuthenticated()) {
@@ -103,12 +107,47 @@ public class UserController {
     public void deleteUser(@PathVariable Long id) {
         userRepository.findById(id).ifPresent(user -> {
             activityService.log(
-                    user.getName(),
+                    user.getName() != null ? user.getName() : user.getEmail(),
                     user.getEmail(),
                     "Deleted user with id " + user.getId()
             );
 
             userRepository.deleteById(id);
         });
+    }
+
+    private void clearAccessTokenCookie(HttpServletResponse response) {
+        Cookie cookie = new Cookie("access_token", "");
+        cookie.setHttpOnly(true);
+        cookie.setSecure(cookieSecure);
+        cookie.setPath("/");
+        cookie.setMaxAge(0);
+
+        if (cookieDomain != null && !cookieDomain.isBlank()) {
+            cookie.setDomain(cookieDomain);
+        }
+
+        response.addCookie(cookie);
+    }
+
+    @DeleteMapping("/me")
+    public ResponseEntity<?> deleteMyAccount(@Valid @RequestBody DeleteAccountRequest request,
+                                             Authentication authentication,
+                                             HttpServletResponse response) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+        }
+
+        String currentEmail = authentication.getName();
+
+        try {
+            userService.deleteOwnAccount(currentEmail, request.password());
+
+            clearAccessTokenCookie(response);
+
+            return ResponseEntity.noContent().build();
+        } catch (RuntimeException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
     }
 }

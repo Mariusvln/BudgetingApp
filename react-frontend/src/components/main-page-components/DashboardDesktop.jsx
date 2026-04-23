@@ -7,15 +7,14 @@ import TransactionNav from "../TransactionNav"
 const DashboardDesktop = () => {
   const percentage = 40;
   return (
-    <div className="flex justify-between gap-7 desktop-display">
-      <TransactionNav />
-      <div className="flex flex-col gap-5 justify-center items-center">
-        <section className="flex gap-5.5">
+    <div className="grow desktop-display mr-5.5">
+      <div className="grow">
+        <section className="flex gap-5.5 grow mb-5.5">
           <BalanceCard/>
           <MonthlyGrowth/>
         </section>
-        <div className="flex gap-5">
-          <section className="income-cards_grid">
+        <div className="flex grow gap-5">
+          <section className="income-cards_grid basis-[450px] grow">
             <div className="income-card flex_center">
               <p className="gray-text semibold">Total Income</p>
               <h3 className="income-card_title bold_font h3_style black-text">
@@ -54,15 +53,17 @@ const DashboardDesktop = () => {
                 <p className="gray-text semibold">Savings Ratio</p>
                 <h3 className="my-1 bold_font h3_style black-text">40.8%</h3>
               </div>
+              <div className="min-h-[30%] min-w-[30%]">
               <div className="circular-prog-bar">
                 <CircularProgressbar
                   value={percentage}
                   className="CircularProgressbar-trail"
                 />
               </div>
+              </div>
             </div>
           </section>
-          <section className="saving-goals">
+          <section className="saving-goals grow-2 basis-[400px]">
             <div className="saving-goal">
               <h4 className="h4_style black-text">Saving Goals</h4>
               <button className="add-button black-text">+</button>
@@ -93,7 +94,6 @@ const DashboardDesktop = () => {
           </section>
         </div>
       </div>
-      <div></div>
     </div>
   );
 };
