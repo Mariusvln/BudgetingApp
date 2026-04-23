@@ -1,22 +1,42 @@
 import ReactDom from "react-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 
-const IncomeEditForm = ({ id, description, category, amount, date, show, onTransactionAdded }) => {
+const IncomeEditForm = ({
+  id,
+  description,
+  category,
+  amount,
+  date,
+  show,
+  onTransactionAdded,
+  categories = [],
+}) => {
   const [loading, setLoading] = useState(false);
 
   const {
     register,
     handleSubmit,
+    setValue,
+    watch,
     formState: { errors },
   } = useForm({
     defaultValues: {
       description: description ?? "",
       amount: amount ?? "",
       date: date ?? "",
-      category: String(category ?? "1"),
+      category: String(category ?? ""),
     },
   });
+
+  useEffect(() => {
+    setValue("description", description ?? "");
+    setValue("amount", amount ?? "");
+    setValue("date", date ?? "");
+    setValue("category", String(category ?? ""));
+  }, [description, amount, date, category, setValue]);
+
+  const selectedCategory = watch("category");
 
   const handleSave = async (formData) => {
     const { description, amount, date, category } = formData;
@@ -84,6 +104,7 @@ const IncomeEditForm = ({ id, description, category, amount, date, show, onTrans
         onSubmit={handleSubmit(handleSave)}
       >
         <p>{id}</p>
+
         <label>
           Date:
           <input
@@ -93,6 +114,7 @@ const IncomeEditForm = ({ id, description, category, amount, date, show, onTrans
             {...register("date")}
           />
         </label>
+
         <label>
           Description:
           <input
@@ -102,14 +124,28 @@ const IncomeEditForm = ({ id, description, category, amount, date, show, onTrans
             {...register("description")}
           />
         </label>
+
         <label>
           Category:
-          <select className="border border-black ml-2" {...register("category")}>
-            <option value="1">Food</option>
-            <option value="2">Rent</option>
-            <option value="3">Salary</option>
+          <select
+            className="border border-black ml-2"
+            {...register("category")}
+            value={selectedCategory || ""}
+          >
+            {categories.length === 0 ? (
+              <option value="" disabled>
+                No income categories available
+              </option>
+            ) : (
+              categories.map((cat) => (
+                <option key={cat.id} value={cat.id}>
+                  {cat.name}
+                </option>
+              ))
+            )}
           </select>
         </label>
+
         <label>
           Amount:
           <input
@@ -126,7 +162,11 @@ const IncomeEditForm = ({ id, description, category, amount, date, show, onTrans
             })}
           />
         </label>
-        {errors.amount?.message && <p className="text-red-500">{errors.amount?.message}</p>}
+
+        {errors.amount?.message && (
+          <p className="text-red-500">{errors.amount?.message}</p>
+        )}
+
         <div className="flex gap-2 mt-2">
           <button
             className="bg-green-500 py-1 px-2 text-white rounded-lg font-bold hover:bg-green-600"
@@ -135,6 +175,7 @@ const IncomeEditForm = ({ id, description, category, amount, date, show, onTrans
           >
             Submit
           </button>
+
           <button
             type="button"
             className="bg-red-500 py-1 px-2 text-white rounded-lg font-bold hover:bg-red-600"

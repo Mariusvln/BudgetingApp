@@ -1,4 +1,4 @@
-import Transaction from "./Transaction"
+import Transaction from "./Transaction";
 
 function IncomeRecentTable({
   transactions,
@@ -7,7 +7,8 @@ function IncomeRecentTable({
   dateEnd,
   setDateStart,
   setDateEnd,
-  onTransactionAdded
+  onTransactionAdded,
+  categories = [],
 }) {
   return (
     <div className="card bg-base-100 border border-base-200 shadow-sm">
@@ -64,13 +65,22 @@ function IncomeRecentTable({
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan="5" className="text-center py-8">
+                  <td colSpan="6" className="text-center py-8">
                     <span className="loading loading-spinner loading-md text-primary"></span>
                   </td>
                 </tr>
               ) : (
                 transactions.map((t) => (
-                  <Transaction id={t.id} description={t.description} category={t.category} amount={t.amount} date={t.date} onTransactionAdded={onTransactionAdded}/>
+                  <Transaction
+                    key={t.id}
+                    id={t.id}
+                    description={t.description}
+                    category={t.category}
+                    amount={t.amount}
+                    date={t.date}
+                    onTransactionAdded={onTransactionAdded}
+                    categories={categories}
+                  />
                 ))
               )}
             </tbody>

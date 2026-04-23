@@ -1,26 +1,35 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-function ExpenseAddPanel({ onTransactionAdded }) {
-  // Helper for today's date
+function ExpenseAddPanel({ onTransactionAdded, categories = [] }) {
   const getTodayDate = () => new Date().toISOString().split('T')[0];
 
-  // 1. Create states for all form fields
   const [date, setDate] = useState(getTodayDate());
   const [amount, setAmount] = useState("");
   const [description, setDescription] = useState("");
-  const [category, setCategory] = useState("1"); // Defaulting to category ID 1
+  const [category, setCategory] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // 2. Function to send data to your Java Backend
+  useEffect(() => {
+    if (categories.length > 0) {
+      setCategory(String(categories[0].id));
+    } else {
+      setCategory("");
+    }
+  }, [categories]);
+
   const handleSave = async () => {
     if (!amount || !description) {
       alert("Please fill in all fields");
       return;
     }
 
+    if (!category) {
+      alert("Please select a category");
+      return;
+    }
+
     setLoading(true);
 
-    // This matches the JSON structure your Java backend expects
     const expense = {
       description: description,
       amount: parseFloat(amount),
@@ -41,18 +50,16 @@ function ExpenseAddPanel({ onTransactionAdded }) {
       });
 
       if (response.ok) {
-        // --- THIS IS THE KEY ADDITION ---
-        // Call the refresh function passed from IncomesPage
         if (onTransactionAdded) {
-            onTransactionAdded();
+          onTransactionAdded();
         }
-        
+
         alert("Expense saved successfully!");
-        
-        // Reset fields
+
         setAmount("");
         setDescription("");
         setDate(getTodayDate());
+        setCategory(categories.length > 0 ? String(categories[0].id) : "");
       } else {
         const errorData = await response.text();
         alert("Server error: " + errorData);
@@ -70,7 +77,7 @@ function ExpenseAddPanel({ onTransactionAdded }) {
       <div className="card bg-base-100 border border-base-200">
         <div className="card-body">
           <h2 className="font-semibold text-lg">Quick Add</h2>
-          <p className="text-sm text-gray-500 mb-4">Easily log a new expensse</p>
+          <p className="text-sm text-gray-500 mb-4">Easily log a new expense</p>
 
           <div className="flex flex-col gap-3">
             <input
@@ -96,27 +103,40 @@ function ExpenseAddPanel({ onTransactionAdded }) {
               onChange={(e) => setDescription(e.target.value)}
             />
 
-            <select 
+            <select
               className="select select-bordered"
               value={category}
               onChange={(e) => setCategory(e.target.value)}
             >
-              <option value="1">Food</option>
-              <option value="2">Rent</option>
-              <option value="3">Salary</option>
+              {categories.length === 0 ? (
+                <option value="" disabled>
+                  No expense categories available
+                </option>
+              ) : (
+                categories.map((cat) => (
+                  <option key={cat.id} value={cat.id}>
+                    {cat.name}
+                  </option>
+                ))
+              )}
             </select>
 
-            <button 
+            <button
               onClick={handleSave}
-              disabled={loading}
+              disabled={loading || categories.length === 0}
               className={`btn bg-linear-to-r from-[#13EC6D] to-[#0BB855] hover:bg-linear-to-r hover:from-[#0BB855] hover:via-[#13EC6D] hover:to-[#0BB855] text-white ${loading ? 'opacity-50' : ''}`}
             >
               {loading ? "Saving..." : "Add Expense"}
             </button>
 
-            <button 
+            <button
               className="btn btn-ghost"
-              onClick={() => { setAmount(""); setDescription(""); setDate(getTodayDate()); }}
+              onClick={() => {
+                setAmount("");
+                setDescription("");
+                setDate(getTodayDate());
+                setCategory(categories.length > 0 ? String(categories[0].id) : "");
+              }}
             >
               Clear Fields
             </button>
