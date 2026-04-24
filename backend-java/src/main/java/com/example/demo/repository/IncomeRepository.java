@@ -8,7 +8,8 @@ import org.springframework.data.repository.query.Param;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.example.demo.entity.User;
+
 public interface IncomeRepository extends JpaRepository<Income, Long> {
-
-
+    void deleteByUser(User user);
 }
