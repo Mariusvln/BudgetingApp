@@ -37,12 +37,12 @@ function AnalyticChart() {
     try {
       const incomeResponse = await fetch(
         `http://localhost:8080/api/app/fetchIncomesFromDateStartToDateFinish?dateStart=${dateStart}&dateEnd=${dateEnd}`,
-        { credentials: "include" }
+        { credentials: "include" },
       );
 
       const expenseResponse = await fetch(
         `http://localhost:8080/api/app/fetchExpensesFromDateStartToDateFinish?dateStart=${dateStart}&dateEnd=${dateEnd}`,
-        { credentials: "include" }
+        { credentials: "include" },
       );
 
       if (!incomeResponse.ok || !expenseResponse.ok) {
@@ -98,7 +98,7 @@ function AnalyticChart() {
       width: 3,
     },
     xaxis: {
-      categories: dates,
+      categories: dates.map((_, index) => `Day: ${index + 1}`),
     },
     yaxis: {
       labels: {
