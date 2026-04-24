@@ -26,7 +26,7 @@ public class ExpenseService {
     private final UserRepository userRepository;
 
     public Expense addExpense(String email, ExpenseRequest request) {
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found"));;
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found"));
         Expense expense = fromDTO(request, user);
         return expenseRepository.save(expense);
     }
@@ -55,19 +55,43 @@ public class ExpenseService {
         expenseRepository.deleteById(expenseId);
     }
 
-    public List<Expense> showAllIncomes(){
-        return expenseRepository.findAll();
-    }
-
     public BigDecimal fetchAllGivenIncomes(){
-        List<Expense> incomes = showAllIncomes();
+        List<Expense> expenses = showAllExpenses();
 
-        BigDecimal total = incomes.stream().map(Expense::getAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal total = expenses.stream().map(Expense::getAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
         return total;
     }
 
+    public List<Expense> showAllExpenses(){
+        return expenseRepository.findAll();
+    }
+
+    public List<Expense>  fetchAllExpensesByUser(String email){
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found"));
+        List<Expense> expenses = expenseRepository.findByUser(user);
+
+
+//        BigDecimal total = expenses.stream().map(Expense::getAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
+        return expenses;
+    }
+
+    // fetchExpensesByUserFromDateStartToDateEnd
+    public List<Expense> fetchExpensesByUserFromDateStartToDateEnd(String email, LocalDate dateStart, LocalDate dateEnd){
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found"));
+        List<Expense> incomes = expenseRepository.findByUser(user);
+
+        List<Expense> filtered = new ArrayList<>();
+        for (Expense r : incomes) {
+            if (!r.getDate().isBefore(dateStart) && !r.getDate().isAfter(dateEnd)) {
+                filtered.add(r);
+            }
+        }
+
+        return filtered;
+    }
+
     public List<Expense> fetchAllGivenIncomesFromDateStartToDateEnd(LocalDate dateStart, LocalDate dateEnd){
-        List<Expense> incomes = showAllIncomes();
+        List<Expense> incomes = showAllExpenses();
 
         List<Expense> filtered = new ArrayList<>();
         for (Expense r : incomes) {
@@ -79,7 +103,7 @@ public class ExpenseService {
         return filtered;
     }
     public List<Expense> fetchExpensesBySearch(String searchTitle){
-        return showAllIncomes().stream()
+        return showAllExpenses().stream()
                 .filter(e -> e.getDescription().toLowerCase().contains(searchTitle.toLowerCase()))
                 .collect(Collectors.toList());
     }

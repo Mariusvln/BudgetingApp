@@ -5,7 +5,7 @@ const ExportIncomeButton = () => {
 
   const downloadFile = async (type) => {
     const response = await fetch(
-      `http://localhost:8080/api/app/exportIncomes?type=${type}`
+      `http://localhost:8080/api/app/incomes/exportIncomes?type=${type}`
     );
 
     const blob = await response.blob();

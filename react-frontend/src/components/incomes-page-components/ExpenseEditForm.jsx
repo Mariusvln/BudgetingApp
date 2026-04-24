@@ -48,7 +48,7 @@ const ExpenseEditForm = ({
     };
 
     try {
-      const response = await fetch("http://localhost:8080/api/app/updateExpense", {
+      const response = await fetch("http://localhost:8080/api/app/expenses/", {
         method: "PUT",
         credentials: "include",
         headers: {

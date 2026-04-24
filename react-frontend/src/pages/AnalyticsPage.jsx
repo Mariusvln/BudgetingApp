@@ -1,4 +1,4 @@
-import AnaliticChart from "../components/analitics-page-components/AnalyticChart";
+import AnaliticChart from "../components/analitics-page-components/AnalyticChartMonthly";
 import TransactionNav from "../components/TransactionNav";
 import AnalyticsHeader from "../components/analitics-page-components/AnalyticsHeader";
 
