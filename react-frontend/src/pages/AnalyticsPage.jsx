@@ -5,7 +5,7 @@ import AnalyticsHeader from "../components/analitics-page-components/AnalyticsHe
 const AnalyticsPage = () => {
   return (
     <>
-      <div className="flex min-h-screen bg-gray-100">
+      <div className="flex min-h-screen bg-base-200">
         <div className="w-64">
           <TransactionNav />
         </div>
