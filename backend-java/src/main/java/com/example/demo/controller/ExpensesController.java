@@ -38,8 +38,8 @@ public class ExpensesController {
     }
 
     @PutMapping("/")
-    public RegisterResponse updateExpense(@Valid @RequestBody Expense updated) {
-        expenses.updateExpense(updated);
+    public RegisterResponse updateExpense(@Valid @RequestBody Expense updated, Authentication authentication) {
+        expenses.updateExpense(authentication.getName(), updated);
         return new RegisterResponse("OK");
     }
 

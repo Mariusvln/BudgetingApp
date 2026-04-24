@@ -47,8 +47,17 @@ public class ExpenseService {
 //        Expense expense = fromDTO(givenExpenseRequest);
 //        return expenseRepository.save(expense);
 //    }
-    public Expense updateExpense(Expense updated) {
-    return expenseRepository.save(updated);
+    public Expense updateExpense(String email, Expense updated) {
+        Expense existing = expenseRepository.findById(updated.getId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Expense not found"));
+
+        existing.setDescription(updated.getDescription());
+        existing.setAmount(updated.getAmount());
+        existing.setDate(updated.getDate());
+        existing.setCategory(updated.getCategory());
+        existing.setProcessType(updated.getProcessType());
+
+        return expenseRepository.save(existing);
 }
 
     public void deleteIncome(Long expenseId){

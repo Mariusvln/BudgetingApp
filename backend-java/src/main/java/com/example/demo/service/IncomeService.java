@@ -46,8 +46,18 @@ public class IncomeService {
         return income;
     }
 
-    public Income updateIncome(Income updated) {
-        return incomeRepository.save(updated);
+    public Income updateIncome(String email, Income updated) {
+        Income existing = incomeRepository.findById(updated.getId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Income not found"));
+
+
+        existing.setDescription(updated.getDescription());
+        existing.setAmount(updated.getAmount());
+        existing.setDate(updated.getDate());
+        existing.setCategory(updated.getCategory());
+        existing.setProcessType(updated.getProcessType());
+
+        return incomeRepository.save(existing);
     }
 
     public void deleteIncome(Long expenseId){
