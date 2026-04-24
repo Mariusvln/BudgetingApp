@@ -2,13 +2,14 @@ package com.example.demo.service;
 
 import com.example.demo.entity.Role;
 import com.example.demo.entity.User;
+import com.example.demo.repository.ExpenseRepository;
+import com.example.demo.repository.IncomeRepository;
 import com.example.demo.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.naming.InvalidNameException;
-import java.security.InvalidKeyException;
 import java.util.Optional;
 
 @Service
@@ -16,6 +17,8 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final IncomeRepository incomeRepository;
+    private final ExpenseRepository expenseRepository;
     private final PasswordEncoder encoder;
     private final UserActivityService activityService;
 
@@ -42,10 +45,10 @@ public class UserService {
     }
 
     public User authenticate(String username, String email, String password) {
-        User user = userRepository.findByEmail(email).filter(u -> u.getName().matches(username))
+        User user = userRepository.findByEmail(email)
+                .filter(u -> u.getName().matches(username))
                 .filter(u -> encoder.matches(password, u.getPassword()))
                 .orElse(null);
-
 
         if (user != null) {
             activityService.log(
@@ -132,6 +135,7 @@ public class UserService {
         );
     }
 
+    @Transactional
     public void deleteOwnAccount(String currentEmail, String password) {
         User user = userRepository.findByEmail(currentEmail)
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -149,6 +153,9 @@ public class UserService {
                 user.getEmail(),
                 "User deleted own account"
         );
+
+        expenseRepository.deleteByUser(user);
+        incomeRepository.deleteByUser(user);
 
         userRepository.delete(user);
     }
