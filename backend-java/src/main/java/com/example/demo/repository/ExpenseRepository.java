@@ -9,8 +9,9 @@ import org.springframework.data.repository.query.Param;
 import java.time.LocalDate;
 import java.util.List;
 
-public interface ExpenseRepository extends JpaRepository<Expense, Long> {
+import com.example.demo.entity.User;
 
+<<<<<<< HEAD
     List<Expense> findByUser(User user);
 
 //    @Query("""
@@ -24,4 +25,8 @@ public interface ExpenseRepository extends JpaRepository<Expense, Long> {
 //            @Param("startDate") LocalDate startDate,
 //            @Param("endDate") LocalDate endDate
 //    );
+=======
+public interface ExpenseRepository extends JpaRepository<Expense, Long> {
+    void deleteByUser(User user);
+>>>>>>> main
 }
