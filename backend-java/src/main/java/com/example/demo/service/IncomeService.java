@@ -46,23 +46,58 @@ public class IncomeService {
         return income;
     }
 
-    public Income updateIncome(Income updated) {
-        return incomeRepository.save(updated);
+    public Income updateIncome(String email, Income updated) {
+        Income existing = incomeRepository.findById(updated.getId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Income not found"));
+
+
+        existing.setDescription(updated.getDescription());
+        existing.setAmount(updated.getAmount());
+        existing.setDate(updated.getDate());
+        existing.setCategory(updated.getCategory());
+        existing.setProcessType(updated.getProcessType());
+
+        return incomeRepository.save(existing);
     }
 
     public void deleteIncome(Long expenseId){
         incomeRepository.deleteById(expenseId);
     }
 
-    public List<Income> showAllIncomes(){
-        return incomeRepository.findAll();
-    }
 
     public BigDecimal fetchAllGivenIncomes(){
         List<Income> incomes = showAllIncomes();
 
         BigDecimal total = incomes.stream().map(Income::getAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
         return total;
+    }
+
+    public List<Income> showAllIncomes(){
+        return incomeRepository.findAll();
+    }
+
+    public List<Income>  fetchAllIncomesByUser(String email){
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found"));
+        List<Income> incomes = incomeRepository.findByUser(user);
+
+
+//        BigDecimal total = expenses.stream().map(Expense::getAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
+        return incomes;
+    }
+
+    // fetchIncomesByUserFromDateStartToDateEnd
+    public List<Income> fetchIncomesByUserFromDateStartToDateEnd(String email, LocalDate dateStart, LocalDate dateEnd){
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found"));
+        List<Income> incomes = incomeRepository.findByUser(user);
+
+        List<Income> filtered = new ArrayList<>();
+        for (Income r : incomes) {
+            if (!r.getDate().isBefore(dateStart) && !r.getDate().isAfter(dateEnd)) {
+                filtered.add(r);
+            }
+        }
+
+        return filtered;
     }
 
     public List<Income> fetchAllGivenIncomesFromDateStartToDateEnd(LocalDate dateStart, LocalDate dateEnd){

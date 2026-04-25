@@ -24,26 +24,26 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/app/")
+@RequestMapping("/api/app/expenses/")
 @RequiredArgsConstructor
 @Valid
 public class ExpensesController {
 
     private final ExpenseService expenses;
 
-    @PostMapping("/addExpense")
+    @PostMapping("/")
     public RegisterResponse addExpense(@Valid @RequestBody ExpenseRequest expense, Authentication authentication) {
         expenses.addExpense(authentication.getName(), expense);
         return new RegisterResponse("OK");
     }
 
-    @PutMapping("/updateExpense")
-    public RegisterResponse updateExpense(@Valid @RequestBody Expense updated) {
-        expenses.updateExpense(updated);
+    @PutMapping("/")
+    public RegisterResponse updateExpense(@Valid @RequestBody Expense updated, Authentication authentication) {
+        expenses.updateExpense(authentication.getName(), updated);
         return new RegisterResponse("OK");
     }
 
-    @DeleteMapping ("/deleteExpense")
+    @DeleteMapping ("/")
     public RegisterResponse deleteExpense(@Valid @RequestParam Long expenseId) {
         expenses.deleteIncome(expenseId);
         return new RegisterResponse("OK");
@@ -59,14 +59,6 @@ public class ExpensesController {
                 .collect(Collectors.toList());
     }
 
-
-    @GetMapping("/showAllExpenses")
-    public List<ExpenseResponse> showAllIncomes() {
-        List<Expense> resultIncomes = expenses.showAllIncomes();
-
-        return mapUsersToDTOs(resultIncomes);
-    }
-
     @GetMapping("/calculateExpenses")
     public RegisterResponse calculateIncomes() {
         BigDecimal total = expenses.fetchAllGivenIncomes();
@@ -75,13 +67,35 @@ public class ExpensesController {
         return new RegisterResponse(total.toString());
     }
 
-    @GetMapping("/fetchExpensesFromDateStartToDateFinish")
+    @GetMapping("/showAllExpenses")
+    public List<ExpenseResponse> showAllExpenses() {
+        List<Expense> resultIncomes = expenses.showAllExpenses();
+
+        return mapUsersToDTOs(resultIncomes);
+    }
+
+    @GetMapping("/fetchAllFromDateStartToDateFinish")
     public List<Expense> fetchIncomesFromDateStartToDateFinish(@RequestParam LocalDate dateStart, @RequestParam LocalDate dateEnd) {
         List<Expense> total = expenses.fetchAllGivenIncomesFromDateStartToDateEnd(dateStart, dateEnd);
 
         return total;
     }
-@GetMapping("/searchExpenses")
+
+    @GetMapping("/")
+    public List<ExpenseResponse> fetchAllExpensesByUser(Authentication authentication) {
+        List<Expense> resultExpenses = expenses.fetchAllExpensesByUser(authentication.getName());
+
+        return mapUsersToDTOs(resultExpenses);
+    }
+
+    @GetMapping("/fromDateStartToDateFinish")
+    public List<Expense> fetchExpensesByUserFromDateStartToDateFinish(@RequestParam LocalDate dateStart, @RequestParam LocalDate dateEnd, Authentication authentication) {
+        List<Expense> total = expenses.fetchExpensesByUserFromDateStartToDateEnd(authentication.getName(), dateStart, dateEnd);
+
+        return total;
+    }
+
+    @GetMapping("/searchExpenses")
     public List<ExpenseResponse> fetchExpensesBySearch(@RequestParam String title) {
        
         List<Expense> filteredExpenses = expenses.fetchExpensesBySearch(title);
@@ -96,7 +110,7 @@ public class ExpensesController {
             HttpServletResponse response
     ) throws IOException {
 
-        List<Expense> expensesList = expenses.showAllIncomes();
+        List<Expense> expensesList = expenses.showAllExpenses();
 
         if (type.equalsIgnoreCase("excel")) {
             exportExcel(expensesList, response);

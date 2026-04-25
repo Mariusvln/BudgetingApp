@@ -56,7 +56,7 @@ const IncomeEditForm = ({
     };
 
     try {
-      const response = await fetch("http://localhost:8080/api/app/updateIncome", {
+      const response = await fetch("http://localhost:8080/api/app/incomes/", {
         method: "PUT",
         credentials: "include",
         headers: {

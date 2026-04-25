@@ -22,26 +22,26 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/app/")
+@RequestMapping("/api/app/incomes/")
 @RequiredArgsConstructor
 @Valid
 public class IncomeController {
 
     private final IncomeService incomes;
 
-    @PostMapping("/addIncome")
+    @PostMapping("/")
     public RegisterResponse addIncome(@Valid @RequestBody IncomeRequest income, Authentication authentication) {
         incomes.addIncome(authentication.getName(), income);
         return new RegisterResponse("OK");
     }
 
-    @PutMapping("/updateIncome")
-    public RegisterResponse updateIncome(@Valid @RequestBody Income updated) {
-        incomes.updateIncome(updated);
+    @PutMapping("/")
+    public RegisterResponse updateIncome(@Valid @RequestBody Income updated, Authentication authentication) {
+        incomes.updateIncome(authentication.getName(), updated);
         return new RegisterResponse("OK");
     }
 
-    @DeleteMapping ("/deleteIncome")
+    @DeleteMapping ("/")
     public RegisterResponse deleteIncome(@Valid @RequestParam Long expenseId) {
         incomes.deleteIncome(expenseId);
         return new RegisterResponse("OK");
@@ -64,19 +64,26 @@ public class IncomeController {
         return mapUsersToDTOs(resultIncomes);
     }
 
-    @GetMapping("/fetchIncomes")
-    public RegisterResponse calculateIncomes() {
-        BigDecimal total = incomes.fetchAllGivenIncomes();
 
-
-        return new RegisterResponse(total.toString());
-    }
-
-    @GetMapping("/fetchIncomesFromDateStartToDateFinish")
-    public List<Income> calculateIncomesFromDateStartToDateFinish(@RequestParam LocalDate dateStart, @RequestParam LocalDate dateEnd) {
+    @GetMapping("/allFromDateStartToDateFinish")
+    public List<Income> fetchIncomesFromDateStartToDateFinish(@RequestParam LocalDate dateStart, @RequestParam LocalDate dateEnd) {
         List<Income> total = incomes.fetchAllGivenIncomesFromDateStartToDateEnd(dateStart, dateEnd);
 
         return total;
+    }
+
+    @GetMapping("/")
+    public List<IncomeResponse> fetchAllIncomesByUser(Authentication authentication) {
+        List<Income> resultIncomes = incomes.fetchAllIncomesByUser(authentication.getName());
+
+        return mapUsersToDTOs(resultIncomes);
+    }
+
+    @GetMapping("/fromDateStartToDateFinish")
+    public List<Income> fetchIncomesByUserFromDateStartToDateFinish(@RequestParam LocalDate dateStart, @RequestParam LocalDate dateEnd, Authentication authentication) {
+            List<Income> incomesList = incomes.fetchIncomesByUserFromDateStartToDateEnd(authentication.getName(), dateStart, dateEnd);
+
+        return incomesList;
     }
 
     @GetMapping("/exportIncomes")
