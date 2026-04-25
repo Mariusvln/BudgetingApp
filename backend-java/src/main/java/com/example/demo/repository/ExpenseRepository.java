@@ -10,10 +10,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 import com.example.demo.entity.User;
-<<<<<<< HEAD
-
-<<<<<<< HEAD
-    List<Expense> findByUser(User user);
 
 //    @Query("""
 //        SELECT c.name as categoryName, SUM(e.amount) as totalAmount
@@ -26,13 +22,8 @@ import com.example.demo.entity.User;
 //            @Param("startDate") LocalDate startDate,
 //            @Param("endDate") LocalDate endDate
 //    );
-=======
 public interface ExpenseRepository extends JpaRepository<Expense, Long> {
+    List<Expense> findByUser(User user);
     void deleteByUser(User user);
->>>>>>> main
-=======
 
-public interface ExpenseRepository extends JpaRepository<Expense, Long> {
-    void deleteByUser(User user);
->>>>>>> main
 }
