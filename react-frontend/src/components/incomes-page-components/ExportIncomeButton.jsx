@@ -6,7 +6,11 @@ const ExportIncomeButton = () => {
   const downloadFile = async (type) => {
     try {
       const response = await fetch(
+<<<<<<< HEAD
         `http://localhost:8080/api/app/incomes/exportIncomes?type=${type}`,
+=======
+        `http://localhost:8080/api/app/exportIncomes?type=${type}`,
+>>>>>>> main
         {
           credentials: "include",
         }

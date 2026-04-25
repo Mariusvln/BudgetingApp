@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import com.example.demo.entity.User;
+<<<<<<< HEAD
 
 <<<<<<< HEAD
     List<Expense> findByUser(User user);
@@ -26,6 +27,11 @@ import com.example.demo.entity.User;
 //            @Param("endDate") LocalDate endDate
 //    );
 =======
+public interface ExpenseRepository extends JpaRepository<Expense, Long> {
+    void deleteByUser(User user);
+>>>>>>> main
+=======
+
 public interface ExpenseRepository extends JpaRepository<Expense, Long> {
     void deleteByUser(User user);
 >>>>>>> main
