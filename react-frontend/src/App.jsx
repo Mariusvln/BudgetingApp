@@ -9,6 +9,7 @@ import RegisterPage from "./pages/RegisterPage";
 import ProfilePage from "./pages/ProfilePage";
 import AnalyticsPage from "./pages/AnalyticsPage";
 import AdminPage from "./pages/AdminPage";
+import BudgetingPage from "./pages/BudgetingPage";
 
 
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router";
@@ -36,6 +37,7 @@ function App() {
             <Route path="/dashboard" element={<TransactionsPage />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/logout" element={<Logout />} />
+            <Route path="/budgeting" element={<BudgetingPage />} />
           </Route>
         </Routes>
       </AuthProvider>

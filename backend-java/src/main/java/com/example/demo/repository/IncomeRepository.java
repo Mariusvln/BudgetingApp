@@ -12,14 +12,8 @@ import java.util.List;
 import com.example.demo.entity.User;
 
 public interface IncomeRepository extends JpaRepository<Income, Long> {
-<<<<<<< HEAD
-<<<<<<< HEAD
 
     List<Income> findByUser(User user);
-=======
     void deleteByUser(User user);
->>>>>>> main
-=======
-    void deleteByUser(User user);
->>>>>>> main
+
 }

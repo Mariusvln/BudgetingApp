@@ -6,14 +6,18 @@ import ExpenseAddPanel from "../components/incomes-page-components/ExpenseAddPan
 import ExportButton from "../components/profile-page-components/ExportButton";
 
 function ExpensesPage() {
-  const getToday = () => {
-    return new Date().toISOString().split("T")[0];
+  const formatDate = (date) => {
+    return date.toISOString().split("T")[0];
   };
 
-  const getDaysAgo = (days) => {
-    const date = new Date();
-    date.setDate(date.getDate() - days);
-    return date.toISOString().split("T")[0];
+  const getMonthStart = () => {
+    const now = new Date();
+    return formatDate(new Date(now.getFullYear(), now.getMonth(), 1));
+  };
+
+  const getMonthEnd = () => {
+    const now = new Date();
+    return formatDate(new Date(now.getFullYear(), now.getMonth() + 1, 0));
   };
 
   const [transactions, setTransactions] = useState([]);
@@ -21,8 +25,8 @@ function ExpensesPage() {
 
   const [categories, setCategories] = useState([]);
 
-  const [dateStart, setDateStart] = useState(() => getDaysAgo(7));
-  const [dateEnd, setDateEnd] = useState(() => getToday());
+  const [dateStart, setDateStart] = useState(() => getMonthStart());
+  const [dateEnd, setDateEnd] = useState(() => getMonthEnd());
 
   const fetchExpenses = useCallback(
     async (start = dateStart, end = dateEnd) => {

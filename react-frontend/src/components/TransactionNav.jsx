@@ -1,38 +1,56 @@
 import { useAuth } from "../contexts/AuthContext";
+import budgetIcon from "../assets/images/icons/budget.png";
+import adminIcon from "../assets/images/icons/admin.png";
+import expenseIcon from "../assets/images/icons/expense.png";
+import homeIcon from "../assets/images/icons/home-icon.svg";
+import transactionIcon from "../assets/images/icons/transaction-icon.svg";
+import analyticsIcon from "../assets/images/icons/analytics-icon.svg";
+import incomeIcon from "../assets/images/icons/rent-icon.svg";
+import userIcon from "../assets/images/icons/user-icon.svg";
 
 function TransactionNav() {
   const { user } = useAuth();
 
   const navItems = [
     {
-      label: "Main",
-      href: "http://localhost:5173/main",
-      icon: "./src/assets/images/icons/home-icon.svg",
+      label: "Budgeting",
+      href: "http://localhost:5173/budgeting",
+      icon: budgetIcon,
     },
+    // {
+    //   label: "Main",
+    //   href: "http://localhost:5173/main",
+    //   icon: homeIcon,
+    // },
     {
       label: "Transactions",
       href: "http://localhost:5173/dashboard",
-      icon: "./src/assets/images/icons/transaction-icon.svg",
+      icon: transactionIcon,
     },
     {
       label: "Analytics",
       href: "http://localhost:5173/analytics",
-      icon: "./src/assets/images/icons/analytics-icon.svg",
+      icon: analyticsIcon,
     },
     {
       label: "Incomes",
       href: "http://localhost:5173/incomes",
-      icon: "./src/assets/images/icons/rent-icon.svg",
+      icon: incomeIcon,
     },
     {
       label: "Expenses",
       href: "http://localhost:5173/expenses",
-      icon: "./src/assets/images/icons/rent-icon.svg",
+      icon: expenseIcon,
     },
     {
       label: "Profile",
       href: "http://localhost:5173/profile",
-      icon: "./src/assets/images/icons/user-icon.svg",
+      icon: userIcon,
+    },
+        {
+      label: "Admin",
+      href: "http://localhost:5173/admin",
+      icon: adminIcon,
     },
   ];
 

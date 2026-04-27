@@ -83,29 +83,44 @@ const IncomeEditForm = ({
   };
 
   return ReactDom.createPortal(
-    <div className="fixed top-0 bottom-0 left-0 right-0 bg-[#000000b3] z-1000]">
+    <div className="fixed inset-0 z-50 grid place-items-center bg-black/40 p-4 backdrop-blur-[2px]">
       <form
-        className="fixed top-[50%] left-[50%] -translate-x-2/4 -translate-y-2/4 bg-[white] z-1000 inset-y-2/4 flex flex-col justify-center gap-5 border border-black py-40 px-30"
+        className="w-full max-w-[560px] rounded-[20px] bg-white p-6 shadow-[0_20px_60px_rgba(16,24,40,0.18)]"
         onSubmit={handleSubmit(handleSave)}
       >
-        <p>{id}</p>
+        <div className="mb-6 flex items-center justify-between">
+          <div>
+            <h3 className="text-[22px] font-semibold text-[#101828]">
+              Edit Income
+            </h3>
+            <p className="mt-1 text-sm text-[#667085]">Transaction #{id}</p>
+          </div>
+        </div>
 
-        <label>
-          Date:
+        <label className="mb-4 block">
+          <span className="mb-2 block text-sm font-medium text-[#344054]">
+            Date
+          </span>
           <input
             type="date"
             id="date"
-            className="border border-black ml-2"
+            className="w-full rounded-xl border border-[#d0d5dd] px-3 py-2.5 text-[#101828] focus:border-[#86efac] focus:outline-none"
             {...register("date")}
           />
         </label>
 
-        <label>
-          Description:
+        <label className="mb-2 block">
+          <span className="mb-2 block text-sm font-medium text-[#344054]">
+            Description
+          </span>
           <input
             type="text"
             id="description"
-            className={`border w-80 ml-2 ${errors.description?.message ? `border-black` : `border-red-500`}`}
+            className={`w-full rounded-xl border px-3 py-2.5 text-[#101828] focus:outline-none ${
+              errors.description?.message
+                ? "border-[#e5484d] focus:border-[#e5484d]"
+                : "border-[#d0d5dd] focus:border-[#86efac]"
+            }`}
             {...register("description", {
               maxLength: {value: 50, message: "Description is too long"}
             })
@@ -114,13 +129,15 @@ const IncomeEditForm = ({
         </label>
 
         {errors.description?.message && (
-          <p className="text-red-500">{errors.description?.message}</p>
+          <p className="mb-3 text-xs text-[#e5484d]">{errors.description?.message}</p>
         )}
 
-        <label>
-          Category:
+        <label className="mb-4 block">
+          <span className="mb-2 block text-sm font-medium text-[#344054]">
+            Category
+          </span>
           <select
-            className="border border-black ml-2"
+            className="w-full rounded-xl border border-[#d0d5dd] px-3 py-2.5 text-[#101828] focus:border-[#86efac] focus:outline-none"
             {...register("category")}
             value={selectedCategory || ""}
           >
@@ -138,12 +155,18 @@ const IncomeEditForm = ({
           </select>
         </label>
 
-        <label>
-          Amount:
+        <label className="mb-2 block">
+          <span className="mb-2 block text-sm font-medium text-[#344054]">
+            Amount
+          </span>
           <input
             type="number"
             id="amount"
-            className={`border w-80 ml-2 ${errors.amount?.message ? `border-black` : `border-red-500`}`}
+            className={`w-full rounded-xl border px-3 py-2.5 text-[#101828] focus:outline-none ${
+              errors.amount?.message
+                ? "border-[#e5484d] focus:border-[#e5484d]"
+                : "border-[#d0d5dd] focus:border-[#86efac]"
+            }`}
             {...register("amount", {
               required: "Please input your income amount, letters and symbols not allowed",
               validate: (value) => {
@@ -156,24 +179,23 @@ const IncomeEditForm = ({
         </label>
 
         {errors.amount?.message && (
-          <p className="text-red-500">{errors.amount?.message}</p>
+          <p className="mb-3 text-xs text-[#e5484d]">{errors.amount?.message}</p>
         )}
 
-        <div className="flex gap-2 mt-2">
-          <button
-            className="bg-green-500 py-1 px-2 text-white rounded-lg font-bold hover:bg-green-600"
-            type="submit"
-            disabled={loading}
-          >
-            Submit
-          </button>
-
+        <div className="mt-6 flex justify-end gap-3">
           <button
             type="button"
-            className="bg-red-500 py-1 px-2 text-white rounded-lg font-bold hover:bg-red-600"
+            className="rounded-xl border border-[#d0d5dd] px-4 py-2.5 text-sm font-medium text-[#344054] hover:bg-[#f9fafb]"
             onClick={show}
           >
             Cancel
+          </button>
+          <button
+            className="rounded-xl bg-[#16a34a] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#15803d]"
+            type="submit"
+            disabled={loading}
+          >
+            {loading ? "Saving..." : "Save Changes"}
           </button>
         </div>
       </form>

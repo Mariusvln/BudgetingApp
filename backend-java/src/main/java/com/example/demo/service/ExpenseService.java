@@ -111,6 +111,12 @@ public class ExpenseService {
 
         return filtered;
     }
+
+    public BigDecimal calculateAllGivenExpenses(List<Expense> expenses){
+        BigDecimal total = expenses.stream().map(Expense::getAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
+        return total;
+    }
+
     public List<Expense> fetchExpensesBySearch(String searchTitle){
         return showAllExpenses().stream()
                 .filter(e -> e.getDescription().toLowerCase().contains(searchTitle.toLowerCase()))
