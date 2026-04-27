@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
-public class Expense {
+public class Expense extends Categories{
 
 
     @Id

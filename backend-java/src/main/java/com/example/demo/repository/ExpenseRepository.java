@@ -11,19 +11,7 @@ import java.util.List;
 
 import com.example.demo.entity.User;
 
-//    @Query("""
-//        SELECT c.name as categoryName, SUM(e.amount) as totalAmount
-//        FROM Expense e
-//        JOIN e.category c
-//        WHERE e.date BETWEEN :startDate AND :endDate
-//        GROUP BY c.name
-//    """)
-//    List<CategoryExpenseSummary> findTotalExpensesByCategory(
-//            @Param("startDate") LocalDate startDate,
-//            @Param("endDate") LocalDate endDate
-//    );
 public interface ExpenseRepository extends JpaRepository<Expense, Long> {
     List<Expense> findByUser(User user);
     void deleteByUser(User user);
-
 }

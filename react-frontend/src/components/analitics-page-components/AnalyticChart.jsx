@@ -1,71 +1,60 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Chart from "react-apexcharts";
 
-function AnalyticChart() {
-  const today = new Date();
-
-  const [selectedYear, setSelectedYear] = useState(today.getFullYear());
-  const [selectedMonth, setSelectedMonth] = useState(today.getMonth());
-
+function AnalyticChart({ dateStart, dateEnd }) {
   const [incomeData, setIncomeData] = useState([]);
   const [expenseData, setExpenseData] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const formatDate = (year, month, day) => {
-    const realMonth = String(month + 1).padStart(2, "0");
-    const realDay = String(day).padStart(2, "0");
-
-    return `${year}-${realMonth}-${realDay}`;
-  };
-
-  const getDaysInMonth = (year, month) => {
-    return new Date(year, month + 1, 0).getDate();
-  };
-
-  const daysInMonth = getDaysInMonth(selectedYear, selectedMonth);
-
-  const dateStart = formatDate(selectedYear, selectedMonth, 1);
-  const dateEnd = formatDate(selectedYear, selectedMonth, daysInMonth);
-
-  const dates = Array.from({ length: daysInMonth }, (_, index) => {
-    return formatDate(selectedYear, selectedMonth, index + 1);
-  });
-
-  const fetchAnalyticsData = async () => {
+  const fetchAnalyticsData = useCallback(async () => {
     setLoading(true);
 
     try {
-      const incomeResponse = await fetch(
-        `http://localhost:8080/api/app/fetchIncomesFromDateStartToDateFinish?dateStart=${dateStart}&dateEnd=${dateEnd}`,
-        { credentials: "include" },
-      );
-
-      const expenseResponse = await fetch(
-        `http://localhost:8080/api/app/fetchExpensesFromDateStartToDateFinish?dateStart=${dateStart}&dateEnd=${dateEnd}`,
-        { credentials: "include" },
-      );
+      const [incomeResponse, expenseResponse] = await Promise.all([
+        fetch(
+          `http://localhost:8080/api/app/incomes/fromDateStartToDateFinish?dateStart=${dateStart}&dateEnd=${dateEnd}`,
+          { credentials: "include" },
+        ),
+        fetch(
+          `http://localhost:8080/api/app/expenses/fromDateStartToDateFinish?dateStart=${dateStart}&dateEnd=${dateEnd}`,
+          { credentials: "include" },
+        ),
+      ]);
 
       if (!incomeResponse.ok || !expenseResponse.ok) {
         throw new Error("Failed to fetch analytics data");
       }
 
-      const incomes = await incomeResponse.json();
-      const expenses = await expenseResponse.json();
+      const [incomes, expenses] = await Promise.all([
+        incomeResponse.json(),
+        expenseResponse.json(),
+      ]);
 
       setIncomeData(incomes);
       setExpenseData(expenses);
     } catch (error) {
       console.error("Error fetching analytics data:", error);
+      setIncomeData([]);
+      setExpenseData([]);
     } finally {
       setLoading(false);
     }
-  };
+  }, [dateEnd, dateStart]);
 
   useEffect(() => {
     fetchAnalyticsData();
-  }, [selectedYear, selectedMonth]);
+  }, [fetchAnalyticsData]);
 
-  const sumByDate = (transactions, dates) => {
+  const dates = [];
+  const currentDate = new Date(dateStart);
+  const lastDate = new Date(dateEnd);
+
+  while (currentDate <= lastDate) {
+    dates.push(currentDate.toISOString().split("T")[0]);
+    currentDate.setDate(currentDate.getDate() + 1);
+  }
+
+  const sumByDate = (transactions) => {
     return dates.map((date) => {
       return transactions
         .filter((transaction) => transaction.date === date)
@@ -76,11 +65,11 @@ function AnalyticChart() {
   const series = [
     {
       name: "Income",
-      data: sumByDate(incomeData, dates),
+      data: sumByDate(incomeData),
     },
     {
       name: "Expenses",
-      data: sumByDate(expenseData, dates),
+      data: sumByDate(expenseData),
     },
   ];
 
@@ -98,7 +87,10 @@ function AnalyticChart() {
       width: 3,
     },
     xaxis: {
-      categories: dates.map((_, index) => `Day: ${index + 1}`),
+      categories: dates.map((date) => {
+        const day = new Date(date).getDate();
+        return `Day: ${day}`;
+      }),
     },
     yaxis: {
       labels: {
@@ -112,44 +104,12 @@ function AnalyticChart() {
     },
   };
 
-  const goToPreviousMonth = () => {
-    if (selectedMonth === 0) {
-      setSelectedMonth(11);
-      setSelectedYear(selectedYear - 1);
-    } else {
-      setSelectedMonth(selectedMonth - 1);
-    }
-  };
-
-  const goToNextMonth = () => {
-    if (selectedMonth === 11) {
-      setSelectedMonth(0);
-      setSelectedYear(selectedYear + 1);
-    } else {
-      setSelectedMonth(selectedMonth + 1);
-    }
-  };
-
   return (
-    <div className="w-[95%] bg-base-100 rounded-4xl p-10 m-auto">
-      <div className="flex items-center justify-between mb-6">
-        <button
-          onClick={goToPreviousMonth}
-          className="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300"
-        >
-          Previous month
-        </button>
-
+    <div className="m-auto w-[95%] rounded-4xl bg-base-100 p-10">
+      <div className="mb-6 flex items-center justify-center">
         <h2 className="text-xl font-semibold">
-          {dateStart} — {dateEnd}
+          {dateStart} - {dateEnd}
         </h2>
-
-        <button
-          onClick={goToNextMonth}
-          className="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300"
-        >
-          Next month
-        </button>
       </div>
 
       {loading ? (

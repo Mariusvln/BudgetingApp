@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
-public class Income {
+public class Income extends Categories{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
