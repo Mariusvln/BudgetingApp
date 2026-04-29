@@ -52,24 +52,24 @@ const ThemeSelector = () => {
         text: "#0f172a",
       },
     },
-    {
-      name: "retro",
-      preview: {
-        bg: "#e4d8b4",
-        surface: "#f4ebd0",
-        primary: "#ef9995",
-        text: "#7d7259",
-      },
-    },
-    {
-      name: "cyberpunk",
-      preview: {
-        bg: "#1a103d",
-        surface: "#2a145e",
-        primary: "#ff7598",
-        text: "#fcee09",
-      },
-    },
+    // {
+    //   name: "retro",
+    //   preview: {
+    //     bg: "#e4d8b4",
+    //     surface: "#f4ebd0",
+    //     primary: "#ef9995",
+    //     text: "#7d7259",
+    //   },
+    // },
+    // {
+    //   name: "cyberpunk",
+    //   preview: {
+    //     bg: "#1a103d",
+    //     surface: "#2a145e",
+    //     primary: "#ff7598",
+    //     text: "#fcee09",
+    //   },
+    // },
     {
       name: "valentine",
       preview: {
@@ -79,51 +79,51 @@ const ThemeSelector = () => {
         text: "#7c2d3a",
       },
     },
-    {
-      name: "aqua",
-      preview: {
-        bg: "#162033",
-        surface: "#1f2a44",
-        primary: "#09ecf3",
-        text: "#e0fbff",
-      },
-    },
-    {
-      name: "synthwave",
-      preview: {
-        bg: "#241b47",
-        surface: "#2d1b69",
-        primary: "#e779c1",
-        text: "#58c7f3",
-      },
-    },
-    {
-      name: "coffee",
-      preview: {
-        bg: "#20161f",
-        surface: "#2a1f29",
-        primary: "#ddb787",
-        text: "#f5e9dc",
-      },
-    },
-    {
-      name: "luxury",
-      preview: {
-        bg: "#171618",
-        surface: "#1f1e21",
-        primary: "#dca54c",
-        text: "#f5f5f5",
-      },
-    },
-    {
-      name: "mint-ice-cream",
-      preview: {
-        bg: "#ecfdf5",
-        surface: "#d2f4ea",
-        primary: "#6ee7b7",
-        text: "#134e4a",
-      },
-    },
+    // {
+    //   name: "aqua",
+    //   preview: {
+    //     bg: "#162033",
+    //     surface: "#1f2a44",
+    //     primary: "#09ecf3",
+    //     text: "#e0fbff",
+    //   },
+    // },
+    // {
+    //   name: "synthwave",
+    //   preview: {
+    //     bg: "#241b47",
+    //     surface: "#2d1b69",
+    //     primary: "#e779c1",
+    //     text: "#58c7f3",
+    //   },
+    // },
+    // {
+    //   name: "coffee",
+    //   preview: {
+    //     bg: "#20161f",
+    //     surface: "#2a1f29",
+    //     primary: "#ddb787",
+    //     text: "#f5e9dc",
+    //   },
+    // },
+    // {
+    //   name: "luxury",
+    //   preview: {
+    //     bg: "#171618",
+    //     surface: "#1f1e21",
+    //     primary: "#dca54c",
+    //     text: "#f5f5f5",
+    //   },
+    // },
+    // {
+    //   name: "mint-ice-cream",
+    //   preview: {
+    //     bg: "#ecfdf5",
+    //     surface: "#d2f4ea",
+    //     primary: "#6ee7b7",
+    //     text: "#134e4a",
+    //   },
+    // },
   ];
 
   const checkDropdownPosition = () => {

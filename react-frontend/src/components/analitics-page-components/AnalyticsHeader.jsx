@@ -86,9 +86,9 @@ function AnalyticsHeader({ dateStart, dateEnd }) {
 
   return (
     <div className="ml-5 p-10">
-      <h1 className="text-2xl font-bold text-gray-900">Welcome back, Alex</h1>
+      {/* <h1 className="text-2xl font-bold text-gray-900">Welcome back, Alex</h1> */}
 
-      <p className="mt-1 text-gray-500">
+      {/* <p className="mt-1 text-gray-500">
         {loading ? (
           "Loading analytics..."
         ) : (
@@ -105,7 +105,7 @@ function AnalyticsHeader({ dateStart, dateEnd }) {
             compared to the previous period.
           </>
         )}
-      </p>
+      </p> */}
     </div>
   );
 }
