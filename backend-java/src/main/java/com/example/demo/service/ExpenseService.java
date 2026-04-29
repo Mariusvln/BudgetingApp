@@ -2,10 +2,8 @@ package com.example.demo.service;
 
 import com.example.demo.dto.ExpenseRequest;
 import com.example.demo.entity.Expense;
-import com.example.demo.entity.Income;
 import com.example.demo.entity.User;
 import com.example.demo.repository.ExpenseRepository;
-import com.example.demo.repository.IncomeRepository;
 import com.example.demo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -87,10 +85,10 @@ public class ExpenseService {
     // fetchExpensesByUserFromDateStartToDateEnd
     public List<Expense> fetchExpensesByUserFromDateStartToDateEnd(String email, LocalDate dateStart, LocalDate dateEnd){
         User user = userRepository.findByEmail(email).orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found"));
-        List<Expense> incomes = expenseRepository.findByUser(user);
+        List<Expense> expenses = expenseRepository.findByUser(user);
 
         List<Expense> filtered = new ArrayList<>();
-        for (Expense r : incomes) {
+        for (Expense r : expenses) {
             if (!r.getDate().isBefore(dateStart) && !r.getDate().isAfter(dateEnd)) {
                 filtered.add(r);
             }
@@ -100,10 +98,10 @@ public class ExpenseService {
     }
 
     public List<Expense> fetchAllGivenExpensesFromDateStartToDateEnd(LocalDate dateStart, LocalDate dateEnd){
-        List<Expense> incomes = showAllExpenses();
+        List<Expense> expenses = showAllExpenses();
 
         List<Expense> filtered = new ArrayList<>();
-        for (Expense r : incomes) {
+        for (Expense r : expenses) {
             if (!r.getDate().isBefore(dateStart) && !r.getDate().isAfter(dateEnd)) {
                 filtered.add(r);
             }
