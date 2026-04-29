@@ -83,11 +83,11 @@ function ExpensesPage() {
       <TransactionNav />
 
       <div className="flex-1 p-6">
-        <input
+        {/* <input
           type="text"
           placeholder="Search expenses"
           className="w-full max-w-xl px-4 py-2 mb-4 border border-gray-300 rounded-lg bg-base-100 focus:outline-none focus:ring-2 focus:ring-primary"
-        />
+        /> */}
 
         <IncomeHeader />
 

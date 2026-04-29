@@ -38,7 +38,7 @@ const ExportIncomeButton = () => {
     <div className="relative">
       <button
         onClick={() => setOpen(!open)}
-        className="px-4 py-2 bg-purple-500 text-white rounded-lg"
+        className="px-6 py-2 rounded-lg bg-blue-500 text-white shadow"
       >
         Export ▼
       </button>

@@ -42,8 +42,8 @@ public class IncomeController {
     }
 
     @DeleteMapping ("/")
-    public RegisterResponse deleteIncome(@Valid @RequestParam Long expenseId) {
-        incomes.deleteIncome(expenseId);
+    public RegisterResponse deleteIncome(@Valid @RequestParam Long incomeId) {
+        incomes.deleteIncome(incomeId);
         return new RegisterResponse("OK");
     }
 

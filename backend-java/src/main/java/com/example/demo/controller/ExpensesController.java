@@ -2,9 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.*;
 import com.example.demo.entity.Expense;
-import com.example.demo.entity.Income;
 import com.example.demo.service.ExpenseService;
-import com.example.demo.service.IncomeService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -45,7 +43,7 @@ public class ExpensesController {
 
     @DeleteMapping ("/")
     public RegisterResponse deleteExpense(@Valid @RequestParam Long expenseId) {
-        expenses.deleteIncome(expenseId);
+        expenses.deleteExpense(expenseId);
         return new RegisterResponse("OK");
     }
 
@@ -60,8 +58,8 @@ public class ExpensesController {
     }
 
     @GetMapping("/calculateExpenses")
-    public RegisterResponse calculateIncomes() {
-        BigDecimal total = expenses.fetchAllGivenIncomes();
+    public RegisterResponse calculateExpenses() {
+        BigDecimal total = expenses.fetchAllGivenExpenses();
 
 
         return new RegisterResponse(total.toString());
@@ -69,14 +67,14 @@ public class ExpensesController {
 
     @GetMapping("/showAllExpenses")
     public List<ExpenseResponse> showAllExpenses() {
-        List<Expense> resultIncomes = expenses.showAllExpenses();
+        List<Expense> resultExpenses = expenses.showAllExpenses();
 
-        return mapUsersToDTOs(resultIncomes);
+        return mapUsersToDTOs(resultExpenses);
     }
 
     @GetMapping("/fetchAllFromDateStartToDateFinish")
-    public List<Expense> fetchIncomesFromDateStartToDateFinish(@RequestParam LocalDate dateStart, @RequestParam LocalDate dateEnd) {
-        List<Expense> total = expenses.fetchAllGivenIncomesFromDateStartToDateEnd(dateStart, dateEnd);
+    public List<Expense> fetchExpensesFromDateStartToDateFinish(@RequestParam LocalDate dateStart, @RequestParam LocalDate dateEnd) {
+        List<Expense> total = expenses.fetchAllGivenExpensesFromDateStartToDateEnd(dateStart, dateEnd);
 
         return total;
     }
