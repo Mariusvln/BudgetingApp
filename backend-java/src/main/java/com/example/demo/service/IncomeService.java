@@ -60,8 +60,8 @@ public class IncomeService {
         return incomeRepository.save(existing);
     }
 
-    public void deleteIncome(Long expenseId){
-        incomeRepository.deleteById(expenseId);
+    public void deleteIncome(Long incomeId){
+        incomeRepository.deleteById(incomeId);
     }
 
 
