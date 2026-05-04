@@ -19,20 +19,22 @@ const BalanceCard = () => {
 
   const fetchBalance = async () => {
       try {
-        const incomeResponse = await fetch(
-          `http://localhost:8080/api/app/fetchIncomes`,
-          {credentials: "include"},
-        );
-
-        const expenseResponse = await fetch(
-          `http://localhost:8080/api/app/fetchExpenses`,
-          {credentials: "include"},
-        )
+        const [incomeResponse, expenseResponse] = await Promise.all([
+          fetch(`http://localhost:8080/api/app/incomes/showAllIncomes`, {
+            credentials: "include",
+          }),
+          fetch(`http://localhost:8080/api/app/expenses/showAllExpenses`, {
+            credentials: "include",
+          }),
+        ]);
 
         if (!incomeResponse.ok || !expenseResponse.ok) throw new Error("Network response was not okay");
-        const [incomesResponse, expensesResponse] = await Promise.all
+        const [incomesResponse, expensesResponse] = await Promise.all([
+          incomeResponse.json(),
+          expenseResponse.json(),
+        ]);
         setIncomes(incomesResponse);
-        setExpenses(expensesResponse)
+        setExpenses(expensesResponse);
       } catch (error) {
         console.error("Error fetching incomes:", error)
       }
@@ -40,8 +42,8 @@ const BalanceCard = () => {
 
   const calculateBalance = () => {
     let balance = 0
-    const incomesSum = incomes.reduce((partialSum, a) => partialSum + a, 0)
-    const expensesSum = expenses.reduce((partialSum, a) => partialSum + a, 0)
+    const incomesSum = incomes.reduce((partialSum, a) => partialSum + a.amount, 0)
+    const expensesSum = expenses.reduce((partialSum, a) => partialSum + a.amount, 0)
     balance = (incomesSum - expensesSum);
     return balance;
   }
