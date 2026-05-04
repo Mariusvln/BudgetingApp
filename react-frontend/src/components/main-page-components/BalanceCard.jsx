@@ -3,19 +3,29 @@ import "../../assets/styles/Dashboard.css";
 
 const BalanceCard = () => {
 
-  const [categories, setCategories] = useState([]);
   const [incomes, setIncomes] = useState([]);
   const [expenses, setExpenses] = useState([]);
+  const [monthlyExpenses, setMonthlyExpenses] = useState([])
 
-  const getMonthStart = () => {
-    const date = new Date();
-    return new Date(date.getFullYear(), date.getMonth(), 1);
-  }
+  const formatDate = (date) => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
 
-  const getCurrentMonthDay = () => {
-    const date = new Date();
-    return new Date(date.getFullYear(), date.getMonth(), date.getDate());
-  }
+  const getDateRange = () => {
+  const today = new Date();
+  return {
+    start: formatDate(new Date(today.getFullYear(), today.getMonth(), 1)),
+    end: formatDate(new Date(today.getFullYear(), today.getMonth() + 1, 0)),
+  };
+};
+
+  const dateRange = getDateRange();
+  const dateStart = dateRange.start;
+  const dateEnd = dateRange.end
+
 
   const fetchBalance = async () => {
       try {
@@ -40,6 +50,29 @@ const BalanceCard = () => {
       }
     }
 
+  const fetchMonthlyExpenses = async () => {
+    try {
+      const expensesResponse = await fetch(
+          `http://localhost:8080/api/app/incomes/fromDateStartToDateFinish?dateStart=${dateStart}&dateEnd=${dateEnd}`,
+          { credentials: "include" },
+      );
+      if (!expensesResponse.ok) {
+        throw new Error("Failed to fetch Monthly Expenses data")
+      }
+      const monthlyExpenses = await expensesResponse.json();
+      setMonthlyExpenses(monthlyExpenses)
+    } catch (error) {
+      console.log("Error fetching Monthly Expenses data:", error)
+      setMonthlyExpenses([])
+    }
+  }
+
+  const formatCurrency = (value) =>
+  new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+  }).format(Number(value) || 0);
+
   const calculateBalance = () => {
     let balance = 0
     const incomesSum = incomes.reduce((partialSum, a) => partialSum + a.amount, 0)
@@ -48,8 +81,14 @@ const BalanceCard = () => {
     return balance;
   }
 
+  const calculateSpending = () => {
+    let spending = 0
+    spending = monthlyExpenses.reduce((partialSum, a) => partialSum + a.amount, 0)
+    return spending
+  }
+
   useEffect(() => {
-    fetchBalance();
+    fetchBalance(), fetchMonthlyExpenses();
   }, [])
 
     return (
@@ -60,11 +99,11 @@ const BalanceCard = () => {
           </div>
           <div>
           <p className="tracking-wide semibold text-[#0F172AB2]">Total Balance</p>
-          <h1 className="bold-font text-6xl black-text tracking-tight">${calculateBalance()}</h1>
+          <h1 className="bold-font text-6xl black-text tracking-tight">{formatCurrency(calculateBalance())}</h1>
           </div>
           <div>
           <h5 className="semibold text-lg mt-3 text-[#0F172AB2]">MONTHLY SPENDING</h5>
-          <h4 className="black-text bold-font text-2xl">$3,120.40</h4>
+          <h4 className="black-text bold-font text-2xl">{formatCurrency(calculateSpending())}</h4>
           </div>
         </div>
     )
