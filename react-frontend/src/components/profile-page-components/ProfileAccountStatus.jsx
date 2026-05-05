@@ -1,19 +1,20 @@
 function ProfileAccountStatus() {
   return (
-    <div className="bg-base-100 rounded-2xl shadow p-6">
-      <h3 className="text-lg font-semibold mb-4">Account Status</h3>
+    <div className="rounded-3xl bg-base-100 p-5 shadow-sm sm:p-6">
+      <h3 className="mb-4 text-lg font-bold">Account Status</h3>
 
-      <div className="flex items-center gap-3">
-        <div className="w-10 h-10 bg-green-100 text-green-700 rounded-full flex items-center justify-center">
+      <div className="flex items-center gap-4">
+        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-green-100 text-lg font-bold text-green-700">
           ✓
         </div>
+
         <div>
-          <p className="font-medium">Two-Factor Auth</p>
-          <p className="text-sm text-green-600">Enabled & Secure</p>
+          <p className="font-semibold">Two-Factor Auth</p>
+          <p className="mt-1 text-sm text-green-600">Enabled and secure</p>
         </div>
       </div>
     </div>
   );
 }
 
-export default ProfileAccountStatus
+export default ProfileAccountStatus;
