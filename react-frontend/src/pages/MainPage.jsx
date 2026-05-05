@@ -52,14 +52,14 @@ const MainPage = () => {
         ]);
         setIncomes(incomesResponse);
         setExpenses(expensesResponse);
-        const incomesSum = incomes.reduce(
-        (partialSum, a) => partialSum + a.amount,
-        0,
-      );
-      const expensesSum = expenses.reduce(
-        (partialSum, a) => partialSum + a.amount,
-        0,
-      );
+        const incomesSum = incomesResponse.reduce(
+          (partialSum, a) => partialSum + a.amount,
+          0,
+        );
+        const expensesSum = expensesResponse.reduce(
+          (partialSum, a) => partialSum + a.amount,
+          0,
+        );
       setBalance(incomesSum - expensesSum);
       } catch (error) {
         console.error("Error fetching incomes:", error);
@@ -77,10 +77,8 @@ const MainPage = () => {
         }
         const monthlyExpense = await expensesResponse.json();
         setMonthlyExpenses(monthlyExpense);
-        setSpending(monthlyExpenses.reduce(
-        (partialSum, a) => partialSum + a.amount,
-        0,
-      ));
+        setSpending(
+          monthlyExpense.reduce((partialSum, a) => partialSum + a.amount, 0),);
       } catch (error) {
         console.log("Error fetching Monthly Expenses data:", error);
         setMonthlyExpenses([]);

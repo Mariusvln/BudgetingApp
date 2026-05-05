@@ -4,8 +4,8 @@ const BalanceCard = ({formatCurrency, balance, monthlySpending}) => {
 
   return (
     <div className="balance-card-bg p-[32px] min-h-[240px] flex flex-col grow-30 basis-[600px] justify-center gap-[5%]">
-      <div class="flex items-center gap-1.5 text-sm text-center black-text semibold bg-[#0000001a] pl-3 py-0.5 w-23 rounded-2xl">
-        <span class="badge size-2 p-0 mt-0.5 bg-black"></span>
+      <div className="flex items-center gap-1.5 text-sm text-center black-text semibold bg-[#0000001a] pl-3 py-0.5 w-23 rounded-2xl">
+        <span className="badge size-2 p-0 mt-0.5 bg-black"></span>
         SYNCED
       </div>
       <div>
