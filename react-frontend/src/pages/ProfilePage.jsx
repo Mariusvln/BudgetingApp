@@ -33,6 +33,7 @@ const ProfilePage = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+
     setFormData((prev) => ({
       ...prev,
       [name]: value,
@@ -47,7 +48,7 @@ const ProfilePage = () => {
       const res = await axios.put(
         "http://localhost:8080/api/users/me",
         formData,
-        { withCredentials: true },
+        { withCredentials: true }
       );
 
       setUser(res.data);
@@ -61,57 +62,88 @@ const ProfilePage = () => {
   };
 
   if (!user) {
-    return <div className="p-8">Loading profile...</div>;
+    return (
+      <div className="min-h-screen bg-base-200 px-4 py-8 text-base-content">
+        Loading profile...
+      </div>
+    );
   }
 
   return (
-    <div className="flex min-h-screen bg-base-200">
-      <div className="w-64">
-        <TransactionNav />
+    <div className="min-h-screen bg-base-200 text-base-content">
+      <div className="hidden md:block fixed left-0 top-0 h-screen w-64">
+        <TransactionNav variant="desktop" />
       </div>
 
-      <div className="flex-1 p-8">
-        <h1 className="text-3xl font-bold mb-2">Profile Settings</h1>
-        <p className="text-gray-500 mb-6">
-          Manage your personal information and application preferences.
-        </p>
+      <main className="min-h-screen px-4 pt-5 pb-28 sm:px-6 md:ml-64 md:px-8 md:py-8">
+        <div className="mx-auto w-full max-w-6xl">
+          <div className="mb-5 flex items-center justify-between gap-4 md:mb-8">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-green-600 md:hidden">
+                FinVue
+              </p>
 
-        <ProfileHeader user={user} />
+              <h1 className="text-2xl font-bold leading-tight sm:text-3xl">
+                Profile
+              </h1>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <ProfilePersonalInformation
-            formData={formData}
-            onChange={handleChange}
-          />
-
-          <div className="space-y-6">
-            <ProfileNotifications />
-            <ProfileAccountStatus />
-            <DeleteAccountSection />
+              <p className="mt-1 max-w-xl text-sm text-gray-500 sm:text-base">
+                Manage your personal information and application preferences.
+              </p>
+            </div>
           </div>
+
+          <ProfileHeader user={user} />
+
+          <div className="grid grid-cols-1 gap-5 lg:grid-cols-3 lg:gap-6">
+            <ProfilePersonalInformation
+              formData={formData}
+              onChange={handleChange}
+            />
+
+            <div className="space-y-5 lg:space-y-6">
+              <ProfileNotifications />
+              <ProfileAccountStatus />
+              <DeleteAccountSection />
+            </div>
+          </div>
+
+          <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-3 sm:items-center md:mt-6">
+            <button
+              onClick={logout}
+              className="h-11 rounded-xl border border-base-300 bg-base-100 px-5 text-sm font-semibold shadow-sm transition hover:bg-base-200"
+            >
+              Sign Out
+            </button>
+
+            <ThemeSelector />
+
+            <button
+              onClick={handleSave}
+              disabled={saving}
+              className="h-11 rounded-xl bg-green-500 px-5 text-sm font-semibold text-white shadow-sm transition hover:bg-green-600 disabled:opacity-50 sm:hidden"
+            >
+              {saving ? "Saving..." : "Save Changes"}
+            </button>
+
+            <button
+              onClick={handleSave}
+              disabled={saving}
+              className="hidden h-11 rounded-xl bg-green-500 px-5 text-sm font-semibold text-white shadow-sm transition hover:bg-green-600 disabled:opacity-50 sm:block"
+            >
+              {saving ? "Saving..." : "Save Changes"}
+            </button>
+          </div>
+
+          {message && (
+            <p className="mt-4 rounded-xl bg-base-100 px-4 py-3 text-sm text-gray-600 shadow-sm">
+              {message}
+            </p>
+          )}
         </div>
+      </main>
 
-        <div className="flex gap-4 mt-2 items-center">
-          <button
-            onClick={logout}
-            className="px-6 py-2 h-11 rounded-lg border border-base-300 bg-base-100"
-          >
-            Sign Out
-          </button>
-
-          <ThemeSelector />
-
-          <button
-            onClick={handleSave}
-            disabled={saving}
-            className="px-6 py-2 rounded-lg bg-green-500 text-white shadow disabled:opacity-50"
-          >
-            {saving ? "Saving..." : "Save Changes"}
-          </button>
-        </div>
-
-        {message && <p className="mt-4 text-sm text-gray-600">{message}</p>}
-      </div>
+      <TransactionNav variant="mobile" />
     </div>
   );
 };

@@ -4,31 +4,31 @@ import { useTheme } from "../../contexts/useTheme";
 function ThemePreviewCard({ preview }) {
   return (
     <div
-      className="w-14 h-10 rounded-lg border border-black/10 p-1.5 shrink-0"
+      className="h-10 w-14 shrink-0 rounded-lg border border-black/10 p-1.5"
       style={{ backgroundColor: preview.bg }}
     >
       <div
-        className="w-full h-full rounded-md p-1 flex flex-col justify-between"
+        className="flex h-full w-full flex-col justify-between rounded-md p-1"
         style={{ backgroundColor: preview.surface }}
       >
         <div className="flex items-center gap-1">
           <span
-            className="w-2 h-2 rounded-full"
+            className="h-2 w-2 rounded-full"
             style={{ backgroundColor: preview.primary }}
           />
           <span
-            className="h-1 rounded-full w-6 opacity-80"
+            className="h-1 w-6 rounded-full opacity-80"
             style={{ backgroundColor: preview.text }}
           />
         </div>
 
         <div className="space-y-1">
           <div
-            className="h-1.5 rounded-full w-full opacity-90"
+            className="h-1.5 w-full rounded-full opacity-90"
             style={{ backgroundColor: preview.text }}
           />
           <div
-            className="h-1.5 rounded-full w-3/5"
+            className="h-1.5 w-3/5 rounded-full"
             style={{ backgroundColor: preview.primary }}
           />
         </div>
@@ -52,24 +52,6 @@ const ThemeSelector = () => {
         text: "#0f172a",
       },
     },
-    // {
-    //   name: "retro",
-    //   preview: {
-    //     bg: "#e4d8b4",
-    //     surface: "#f4ebd0",
-    //     primary: "#ef9995",
-    //     text: "#7d7259",
-    //   },
-    // },
-    // {
-    //   name: "cyberpunk",
-    //   preview: {
-    //     bg: "#1a103d",
-    //     surface: "#2a145e",
-    //     primary: "#ff7598",
-    //     text: "#fcee09",
-    //   },
-    // },
     {
       name: "valentine",
       preview: {
@@ -79,51 +61,6 @@ const ThemeSelector = () => {
         text: "#7c2d3a",
       },
     },
-    // {
-    //   name: "aqua",
-    //   preview: {
-    //     bg: "#162033",
-    //     surface: "#1f2a44",
-    //     primary: "#09ecf3",
-    //     text: "#e0fbff",
-    //   },
-    // },
-    // {
-    //   name: "synthwave",
-    //   preview: {
-    //     bg: "#241b47",
-    //     surface: "#2d1b69",
-    //     primary: "#e779c1",
-    //     text: "#58c7f3",
-    //   },
-    // },
-    // {
-    //   name: "coffee",
-    //   preview: {
-    //     bg: "#20161f",
-    //     surface: "#2a1f29",
-    //     primary: "#ddb787",
-    //     text: "#f5e9dc",
-    //   },
-    // },
-    // {
-    //   name: "luxury",
-    //   preview: {
-    //     bg: "#171618",
-    //     surface: "#1f1e21",
-    //     primary: "#dca54c",
-    //     text: "#f5f5f5",
-    //   },
-    // },
-    // {
-    //   name: "mint-ice-cream",
-    //   preview: {
-    //     bg: "#ecfdf5",
-    //     surface: "#d2f4ea",
-    //     primary: "#6ee7b7",
-    //     text: "#134e4a",
-    //   },
-    // },
   ];
 
   const checkDropdownPosition = () => {
@@ -131,7 +68,7 @@ const ThemeSelector = () => {
 
     const rect = dropdownRef.current.getBoundingClientRect();
     const spaceBelow = window.innerHeight - rect.bottom;
-    const estimatedMenuHeight = 360;
+    const estimatedMenuHeight = 260;
 
     setOpenUp(spaceBelow < estimatedMenuHeight);
   };
@@ -147,19 +84,16 @@ const ThemeSelector = () => {
   }, []);
 
   return (
-    <div
-      ref={dropdownRef}
-      className={`dropdown ${openUp ? "dropdown-top" : ""}`}
-    >
+    <div ref={dropdownRef} className={`dropdown ${openUp ? "dropdown-top" : ""}`}>
       <div
         tabIndex={0}
         role="button"
-        className="h-11 min-w-55 px-4 rounded-xl border border-base-300 bg-base-100 shadow-sm hover:shadow-md transition-all duration-200 flex items-center justify-between gap-3 cursor-pointer"
+        className="flex h-11 w-full cursor-pointer items-center justify-between gap-3 rounded-xl border border-base-300 bg-base-100 px-4 shadow-sm transition-all duration-200 hover:shadow-md sm:min-w-55"
         onClick={checkDropdownPosition}
       >
         <div className="min-w-0">
-          <p className="text-xs text-gray-500 leading-none">Theme</p>
-          <p className="text-sm font-medium truncate capitalize">{theme}</p>
+          <p className="text-xs leading-none text-gray-500">Theme</p>
+          <p className="truncate text-sm font-medium capitalize">{theme}</p>
         </div>
 
         <svg
@@ -175,9 +109,9 @@ const ThemeSelector = () => {
 
       <ul
         tabIndex={0}
-        className="dropdown-content mt-2 bg-base-100 rounded-2xl z-20 w-80 p-2 shadow-2xl border border-base-300 max-h-80 overflow-y-auto"
+        className="dropdown-content z-50 mt-2 max-h-80 w-[calc(100vw-2rem)] overflow-y-auto rounded-2xl border border-base-300 bg-base-100 p-2 shadow-2xl sm:w-80"
       >
-        <div className="px-3 pt-2 pb-2 text-xs uppercase tracking-wide text-gray-400">
+        <div className="px-3 pb-2 pt-2 text-xs uppercase tracking-wide text-gray-400">
           Choose theme
         </div>
 
@@ -185,19 +119,19 @@ const ThemeSelector = () => {
           <li key={t.name}>
             <button
               onClick={() => setTheme(t.name)}
-              className={`w-full flex items-center justify-between px-3 py-3 rounded-xl text-sm transition-all duration-150 ${
+              className={`flex w-full items-center justify-between rounded-xl px-3 py-3 text-sm transition-all duration-150 ${
                 theme === t.name
                   ? "bg-green-500 text-white shadow-sm"
-                  : "hover:bg-base-200 text-base-content"
+                  : "text-base-content hover:bg-base-200"
               }`}
             >
-              <div className="flex items-center gap-3 min-w-0">
+              <div className="flex min-w-0 items-center gap-3">
                 <ThemePreviewCard preview={t.preview} />
-                <span className="truncate capitalize font-medium">{t.name}</span>
+                <span className="truncate font-medium capitalize">{t.name}</span>
               </div>
 
               {theme === t.name && (
-                <span className="text-xs font-semibold opacity-90 shrink-0">
+                <span className="shrink-0 text-xs font-semibold opacity-90">
                   Active
                 </span>
               )}
