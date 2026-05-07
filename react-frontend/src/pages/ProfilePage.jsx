@@ -8,9 +8,21 @@ import ProfileNotifications from "../components/profile-page-components/ProfileN
 import ProfilePersonalInformation from "../components/profile-page-components/ProfilePersonalInformation";
 import ThemeSelector from "../components/profile-page-components/ThemeSelector";
 import { useAuth } from "../contexts/AuthContext";
+import { useTheme } from "../contexts/useTheme";
 
 const ProfilePage = () => {
   const { user, setUser, logout } = useAuth();
+  const { theme } = useTheme();
+
+  const isValentineTheme = theme === "valentine";
+
+  const accentTextClass = isValentineTheme
+    ? "text-pink-800"
+    : "text-green-600";
+
+  const saveButtonClass = isValentineTheme
+    ? "bg-pink-700 hover:bg-pink-800"
+    : "bg-green-500 hover:bg-green-600";
 
   const [formData, setFormData] = useState({
     name: "",
@@ -71,7 +83,7 @@ const ProfilePage = () => {
 
   return (
     <div className="min-h-screen bg-base-200 text-base-content">
-      <div className="hidden md:block fixed left-0 top-0 h-screen w-64">
+      <div className="fixed left-0 top-0 hidden h-screen w-64 md:block">
         <TransactionNav variant="desktop" />
       </div>
 
@@ -79,7 +91,9 @@ const ProfilePage = () => {
         <div className="mx-auto w-full max-w-6xl">
           <div className="mb-5 flex items-center justify-between gap-4 md:mb-8">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-green-600 md:hidden">
+              <p
+                className={`text-xs font-semibold uppercase tracking-[0.18em] md:hidden ${accentTextClass}`}
+              >
                 FinVue
               </p>
 
@@ -87,7 +101,7 @@ const ProfilePage = () => {
                 Profile
               </h1>
 
-              <p className="mt-1 max-w-xl text-sm text-gray-500 sm:text-base">
+              <p className="mt-1 max-w-xl text-sm text-base-content/60 sm:text-base">
                 Manage your personal information and application preferences.
               </p>
             </div>
@@ -121,7 +135,7 @@ const ProfilePage = () => {
             <button
               onClick={handleSave}
               disabled={saving}
-              className="h-11 rounded-xl bg-green-500 px-5 text-sm font-semibold text-white shadow-sm transition hover:bg-green-600 disabled:opacity-50 sm:hidden"
+              className={`h-11 rounded-xl px-5 text-sm font-semibold text-white shadow-sm transition disabled:opacity-50 sm:hidden ${saveButtonClass}`}
             >
               {saving ? "Saving..." : "Save Changes"}
             </button>
@@ -129,14 +143,14 @@ const ProfilePage = () => {
             <button
               onClick={handleSave}
               disabled={saving}
-              className="hidden h-11 rounded-xl bg-green-500 px-5 text-sm font-semibold text-white shadow-sm transition hover:bg-green-600 disabled:opacity-50 sm:block"
+              className={`hidden h-11 rounded-xl px-5 text-sm font-semibold text-white shadow-sm transition disabled:opacity-50 sm:block ${saveButtonClass}`}
             >
               {saving ? "Saving..." : "Save Changes"}
             </button>
           </div>
 
           {message && (
-            <p className="mt-4 rounded-xl bg-base-100 px-4 py-3 text-sm text-gray-600 shadow-sm">
+            <p className="mt-4 rounded-xl bg-base-100 px-4 py-3 text-sm text-base-content/70 shadow-sm">
               {message}
             </p>
           )}

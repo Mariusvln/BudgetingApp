@@ -79,7 +79,7 @@ function IncomesPage() {
   const incomeCategories = categories.filter((cat) => cat.type === "INCOME");
 
   return (
-    <div className="flex bg-base-200 min-h-screen">
+    <div className="ml-64 flex bg-base-200 min-h-screen">
       <TransactionNav />
 
       <div className="flex-1 p-6">
