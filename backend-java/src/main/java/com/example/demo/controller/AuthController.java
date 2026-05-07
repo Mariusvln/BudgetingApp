@@ -6,6 +6,8 @@ import com.example.demo.dto.MeResponse;
 import com.example.demo.dto.RegisterRequest;
 import com.example.demo.dto.RegisterResponse;
 import com.example.demo.entity.User;
+import com.example.demo.exception.ApiException;
+import com.example.demo.exception.InvalidCredentialsException;
 import com.example.demo.service.JwtService;
 import com.example.demo.service.UserService;
 import jakarta.servlet.http.Cookie;
@@ -42,8 +44,8 @@ public class AuthController {
         try {
             users.register(request.username(), request.email(), request.password());
             return ResponseEntity.ok(new RegisterResponse("OK"));
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (ApiException ex) {
+            return ResponseEntity.status(ex.getStatus()).body(ex.getMessage());
         }
     }
 
@@ -51,7 +53,7 @@ public class AuthController {
     public LoginResponse login(@Valid @RequestBody LoginRequest request, HttpServletResponse response) {
         User user = users.authenticate(request.username(), request.email(), request.password());
         if (user == null) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Bad creds");
+            throw new InvalidCredentialsException();
         }
 
         String token = jwtService.generateAccessToken(user.getEmail(), user.getRole().name());

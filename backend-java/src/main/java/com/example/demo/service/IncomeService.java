@@ -5,12 +5,14 @@ import com.example.demo.dto.IncomeRequest;
 import com.example.demo.entity.Expense;
 import com.example.demo.entity.Income;
 import com.example.demo.entity.User;
+import com.example.demo.exception.InvalidDateRangeException;
+import com.example.demo.exception.ResourceNotFoundException;
+import com.example.demo.exception.UserNotFoundException;
 import com.example.demo.repository.IncomeRepository;
 import com.example.demo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
+
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -29,7 +31,7 @@ public class IncomeService {
     }
 
     public Income addIncome(String email, IncomeRequest request) {
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found"));;
+        User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
         Income income = fromDTO(request, user);
         return incomeRepository.save(income);
     }
@@ -48,7 +50,7 @@ public class IncomeService {
 
     public Income updateIncome(String email, Income updated) {
         Income existing = incomeRepository.findById(updated.getId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Income not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Income", updated.getId()));
 
 
         existing.setDescription(updated.getDescription());
@@ -77,7 +79,7 @@ public class IncomeService {
     }
 
     public List<Income>  fetchAllIncomesByUser(String email){
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found"));
+        User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
         List<Income> incomes = incomeRepository.findByUser(user);
 
 
@@ -87,7 +89,10 @@ public class IncomeService {
 
     // fetchIncomesByUserFromDateStartToDateEnd
     public List<Income> fetchIncomesByUserFromDateStartToDateEnd(String email, LocalDate dateStart, LocalDate dateEnd){
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found"));
+        User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
+        if (dateStart.isAfter(dateEnd)) {
+            throw new InvalidDateRangeException();
+        }
         List<Income> incomes = incomeRepository.findByUser(user);
 
         List<Income> filtered = new ArrayList<>();

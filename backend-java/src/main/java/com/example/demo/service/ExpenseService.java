@@ -3,12 +3,13 @@ package com.example.demo.service;
 import com.example.demo.dto.ExpenseRequest;
 import com.example.demo.entity.Expense;
 import com.example.demo.entity.User;
+import com.example.demo.exception.InvalidDateRangeException;
+import com.example.demo.exception.ResourceNotFoundException;
+import com.example.demo.exception.UserNotFoundException;
 import com.example.demo.repository.ExpenseRepository;
 import com.example.demo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -24,7 +25,7 @@ public class ExpenseService {
     private final UserRepository userRepository;
 
     public Expense addExpense(String email, ExpenseRequest request) {
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found"));
+        User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
         Expense expense = fromDTO(request, user);
         return expenseRepository.save(expense);
     }
@@ -47,7 +48,7 @@ public class ExpenseService {
 //    }
     public Expense updateExpense(String email, Expense updated) {
         Expense existing = expenseRepository.findById(updated.getId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Expense not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Expense", updated.getId()));
 
         existing.setDescription(updated.getDescription());
         existing.setAmount(updated.getAmount());
@@ -74,7 +75,7 @@ public class ExpenseService {
     }
 
     public List<Expense>  fetchAllExpensesByUser(String email){
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found"));
+        User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
         List<Expense> expenses = expenseRepository.findByUser(user);
 
 
@@ -84,7 +85,10 @@ public class ExpenseService {
 
     // fetchExpensesByUserFromDateStartToDateEnd
     public List<Expense> fetchExpensesByUserFromDateStartToDateEnd(String email, LocalDate dateStart, LocalDate dateEnd){
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found"));
+        User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
+        if (dateStart.isAfter(dateEnd)) {
+            throw new InvalidDateRangeException();
+        }
         List<Expense> expenses = expenseRepository.findByUser(user);
 
         List<Expense> filtered = new ArrayList<>();
