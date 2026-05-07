@@ -1,4 +1,6 @@
 import { useAuth } from "../contexts/AuthContext";
+import { useTheme } from "../contexts/useTheme";
+
 import budgetIcon from "../assets/images/icons/budget.png";
 import adminIcon from "../assets/images/icons/admin.png";
 import expenseIcon from "../assets/images/icons/expense.png";
@@ -9,6 +11,29 @@ import userIcon from "../assets/images/icons/user-icon.svg";
 
 function TransactionNav() {
   const { user } = useAuth();
+  const { theme } = useTheme();
+
+  const isValentineTheme = theme === "valentine";
+
+  const logoClass = isValentineTheme
+    ? "from-[#831843] to-[#BE185D]"
+    : "from-[#22C55E] to-[#15803D]";
+
+  const activeLinkClass = isValentineTheme
+    ? "bg-pink-100 text-pink-900 shadow-sm"
+    : "bg-green-50 text-green-700 shadow-sm";
+
+  const activeIconClass = isValentineTheme
+    ? "bg-pink-200"
+    : "bg-green-100";
+
+  const mobileActiveLinkClass = isValentineTheme
+    ? "bg-pink-100 text-pink-900"
+    : "bg-green-50 text-green-700";
+
+  const mobileActiveIconClass = isValentineTheme
+    ? "bg-pink-200"
+    : "bg-green-100";
 
   const navItems = [
     {
@@ -49,7 +74,7 @@ function TransactionNav() {
   ];
 
   const mobileNavItems = navItems.filter((item) =>
-    ["Budgeting", "Transactions", "Incomes", "Profile"].includes(item.label)
+    ["Budgeting", "Transactions", "Profile", "Admin"].includes(item.label),
   );
 
   const currentPath = window.location.pathname;
@@ -70,14 +95,19 @@ function TransactionNav() {
     <>
       <aside className="fixed left-0 top-0 z-40 hidden h-screen w-64 flex-col border-r border-base-300 bg-base-100 md:flex">
         <div className="border-b border-base-200 px-6 py-6">
-          <h1 className="bg-linear-to-r from-[#22C55E] to-[#15803D] bg-clip-text text-3xl font-bold text-transparent">
+          <h1
+            className={`bg-linear-to-r ${logoClass} bg-clip-text text-3xl font-bold text-transparent`}
+          >
             FinVue
           </h1>
-          <p className="mt-1 text-sm text-gray-400">Finance dashboard</p>
+
+          <p className="mt-1 text-sm text-base-content/50">
+            Finance dashboard
+          </p>
         </div>
 
         <div className="flex-1 overflow-y-auto px-4 py-5">
-          <p className="mb-4 px-2 text-xs font-semibold uppercase tracking-[0.2em] text-gray-400">
+          <p className="mb-4 px-2 text-xs font-semibold uppercase tracking-[0.2em] text-base-content/40">
             Navigation
           </p>
 
@@ -91,14 +121,14 @@ function TransactionNav() {
                     href={item.href}
                     className={`group flex items-center gap-3 rounded-2xl px-4 py-3 transition-all duration-200 ${
                       isActive
-                        ? "bg-green-50 text-green-700 shadow-sm"
-                        : "text-gray-700 hover:bg-base-200"
+                        ? activeLinkClass
+                        : "text-base-content hover:bg-base-200"
                     }`}
                   >
                     <div
                       className={`flex h-10 w-10 items-center justify-center rounded-xl ${
                         isActive
-                          ? "bg-green-100"
+                          ? activeIconClass
                           : "bg-base-200 group-hover:bg-base-300"
                       }`}
                     >
@@ -124,7 +154,7 @@ function TransactionNav() {
         <div className="border-t border-base-200 p-4">
           <div className="rounded-2xl bg-base-200 p-4 shadow-sm">
             <div className="flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gray-200 text-sm font-bold ring ring-base-300 ring-offset-2 ring-offset-base-100">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-base-300 text-sm font-bold ring ring-base-300 ring-offset-2 ring-offset-base-100">
                 {getInitials(user?.name)}
               </div>
 
@@ -132,7 +162,8 @@ function TransactionNav() {
                 <p className="truncate text-sm font-semibold text-base-content">
                   {user?.name || "No name"}
                 </p>
-                <p className="truncate text-xs text-gray-500">
+
+                <p className="truncate text-xs text-base-content/50">
                   {user?.email || "No email"}
                 </p>
               </div>
@@ -152,13 +183,13 @@ function TransactionNav() {
                   href={item.href}
                   className={`flex flex-col items-center justify-center gap-1 rounded-2xl px-2 py-2 text-[11px] font-semibold transition ${
                     isActive
-                      ? "bg-green-50 text-green-700"
-                      : "text-gray-500 hover:bg-base-200"
+                      ? mobileActiveLinkClass
+                      : "text-base-content/60 hover:bg-base-200"
                   }`}
                 >
                   <span
                     className={`flex h-9 w-9 items-center justify-center rounded-xl ${
-                      isActive ? "bg-green-100" : "bg-base-200"
+                      isActive ? mobileActiveIconClass : "bg-base-200"
                     }`}
                   >
                     <img

@@ -1,3 +1,5 @@
+import { useTheme } from "../../contexts/useTheme";
+
 function getInitials(name) {
   if (!name || !name.trim()) return "U";
 
@@ -22,6 +24,18 @@ function formatMemberSince(createdAt) {
 }
 
 function ProfileHeader({ user }) {
+  const { theme } = useTheme();
+
+  const isValentineTheme = theme === "valentine";
+
+  const avatarClass = isValentineTheme
+    ? "bg-pink-100 text-pink-800"
+    : "bg-green-100 text-green-700";
+
+  const badgeClass = isValentineTheme
+    ? "bg-pink-100 text-pink-800"
+    : "bg-green-100 text-green-700";
+
   const initials = getInitials(user?.name);
   const memberSince = formatMemberSince(user?.createdAt);
   const location = user?.location?.trim() ? user.location : "Location not set";
@@ -30,7 +44,9 @@ function ProfileHeader({ user }) {
     <div className="mb-5 rounded-3xl bg-base-100 p-5 shadow-sm sm:p-6 md:mb-6">
       <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-4 sm:gap-6">
-          <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-green-100 text-xl font-bold text-green-700 sm:h-20 sm:w-20 sm:rounded-full">
+          <div
+            className={`flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl text-xl font-bold sm:h-20 sm:w-20 sm:rounded-full ${avatarClass}`}
+          >
             {initials}
           </div>
 
@@ -39,18 +55,20 @@ function ProfileHeader({ user }) {
               {user?.name || "Unknown User"}
             </h2>
 
-            <span className="mt-2 inline-flex rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-700 sm:text-sm">
+            <span
+              className={`mt-2 inline-flex rounded-full px-3 py-1 text-xs font-semibold sm:text-sm ${badgeClass}`}
+            >
               FinVue Member
             </span>
 
-            <p className="mt-2 text-sm text-gray-500">
+            <p className="mt-2 text-sm text-base-content/60">
               Member since {memberSince}
             </p>
           </div>
         </div>
 
-        <div className="rounded-2xl bg-base-200 px-4 py-3 text-sm text-gray-600 sm:text-right">
-          <p className="text-xs uppercase tracking-wide text-gray-400">
+        <div className="rounded-2xl bg-base-200 px-4 py-3 text-sm text-base-content/70 sm:text-right">
+          <p className="text-xs uppercase tracking-wide text-base-content/40">
             Location
           </p>
           <p className="font-semibold text-base-content">{location}</p>

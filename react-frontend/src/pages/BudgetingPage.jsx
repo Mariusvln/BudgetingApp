@@ -183,7 +183,7 @@ const BudgetSummary = ({ totalEarned, totalSpent, totalLimit }) => {
   const remainingBudget = totalLimit - totalSpent;
 
   return (
-    <div className="rounded-[16px] border border-[#edf0f2] bg-white px-10 py-7">
+    <div className="rounded-[16px] border border-[#edf0f2] bg-base-100 px-10 py-7">
       <p className="text-[11px] text-center font-medium tracking-[0.08em] text-[#98a2b3]">
         REMAINING BALANCE
       </p>
@@ -506,12 +506,12 @@ const Categories = ({
         Categories
       </h2>
 
-      <div className="mb-6 flex w-full rounded-[12px] bg-[#f2f4f7] p-2">
+      <div className="mb-6 flex w-full rounded-[12px] bg-base-200 p-2">
         <button
           onClick={() => setActive("expenses")}
           className={`flex-1 rounded-[10px] py-3.5 text-[13px] font-medium transition ${
             active === "expenses"
-              ? "bg-white text-[#1db954] shadow-sm"
+              ? "bg-base-100 text-[#1db954] shadow-sm"
               : "text-[#98a2b3]"
           }`}
         >
@@ -699,7 +699,7 @@ const BudgetingPage = () => {
         <TransactionNav />
       </div>
 
-      <div className="flex-1 bg-[#f6f7fb] py-14 px-6 flex justify-center">
+      <div className="flex-1 bg-base-200 py-14 px-6 flex justify-center">
         <div className="w-[65%]">
           <h1 className="text-[36px] font-semibold text-[#15803d] text-center mb-10 tracking-tight">
             Budgeting

@@ -6,19 +6,33 @@ import AdminUserActivity from "../components/admin-page-components/AdminUserActi
 
 const AdminPage = () => {
   return (
-    <div className="flex min-h-screen items-stretch bg-base-200">
-      <div className="w-64">
-        <TransactionNav />
-      </div>
+    <div className="min-h-screen bg-base-200 text-base-content">
+      <TransactionNav />
 
-      <div className="flex-1 p-6 space-y-6">
-        <h1 className="text-3xl font-bold">Admin Management</h1>
+      <main className="min-h-screen px-4 pt-5 pb-28 sm:px-6 md:ml-64 md:px-8 md:py-8">
+        <div className="mx-auto w-full max-w-7xl">
+          <div className="mb-5 md:mb-8">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-green-600 md:hidden">
+              FinVue
+            </p>
 
-        <AdminCategories />
-        <AdminUsers />
-        <AdminEvents />
-        <AdminUserActivity />
-      </div>
+            <h1 className="text-2xl font-bold leading-tight sm:text-3xl">
+              Admin Management
+            </h1>
+
+            <p className="mt-1 max-w-2xl text-sm text-gray-500 sm:text-base">
+              Manage categories, users, events and user activity.
+            </p>
+          </div>
+
+          <div className="space-y-5 md:space-y-6">
+            <AdminCategories />
+            <AdminUsers />
+            <AdminEvents />
+            <AdminUserActivity />
+          </div>
+        </div>
+      </main>
     </div>
   );
 };

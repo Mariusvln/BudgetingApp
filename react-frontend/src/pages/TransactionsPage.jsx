@@ -5,7 +5,7 @@ import TransactionAddPanel from "../components/transaction-page-components/Trans
 
 function TransactionsPage() {
   return (
-    <div className="flex bg-base-200">
+    <div className=" ml-64 flex bg-base-200">
       <TransactionNav />
 
       <div className="flex-1 p-6">
