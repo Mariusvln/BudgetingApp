@@ -5,6 +5,7 @@ import com.example.demo.dto.IncomeRequest;
 import com.example.demo.entity.Expense;
 import com.example.demo.entity.Income;
 import com.example.demo.entity.User;
+import com.example.demo.exception.ForbiddenResourceAccessException;
 import com.example.demo.exception.InvalidDateRangeException;
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.exception.UserNotFoundException;
@@ -49,9 +50,13 @@ public class IncomeService {
     }
 
     public Income updateIncome(String email, Income updated) {
+        User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
         Income existing = incomeRepository.findById(updated.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Income", updated.getId()));
 
+        if (!existing.getUser().getId().equals(user.getId())) {
+            throw new ForbiddenResourceAccessException("Income does not belong to user");
+        }
 
         existing.setDescription(updated.getDescription());
         existing.setAmount(updated.getAmount());

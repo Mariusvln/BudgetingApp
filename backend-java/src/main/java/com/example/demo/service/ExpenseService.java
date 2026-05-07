@@ -3,6 +3,7 @@ package com.example.demo.service;
 import com.example.demo.dto.ExpenseRequest;
 import com.example.demo.entity.Expense;
 import com.example.demo.entity.User;
+import com.example.demo.exception.ForbiddenResourceAccessException;
 import com.example.demo.exception.InvalidDateRangeException;
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.exception.UserNotFoundException;
@@ -47,8 +48,13 @@ public class ExpenseService {
 //        return expenseRepository.save(expense);
 //    }
     public Expense updateExpense(String email, Expense updated) {
+        User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
         Expense existing = expenseRepository.findById(updated.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Expense", updated.getId()));
+
+        if (!existing.getUser().getId().equals(user.getId())) {
+            throw new ForbiddenResourceAccessException("Expense does not belong to user");
+        }
 
         existing.setDescription(updated.getDescription());
         existing.setAmount(updated.getAmount());
