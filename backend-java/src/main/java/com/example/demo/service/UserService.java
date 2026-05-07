@@ -2,6 +2,9 @@ package com.example.demo.service;
 
 import com.example.demo.entity.Role;
 import com.example.demo.entity.User;
+import com.example.demo.exception.EmailAlreadyUsedException;
+import com.example.demo.exception.InvalidCredentialsException;
+import com.example.demo.exception.UserNotFoundException;
 import com.example.demo.repository.ExpenseRepository;
 import com.example.demo.repository.IncomeRepository;
 import com.example.demo.repository.UserRepository;
@@ -24,7 +27,7 @@ public class UserService {
 
     public User register(String name, String email, String password) {
         if (userRepository.existsByEmail(email)) {
-            throw new RuntimeException("Email is already in use");
+            throw new EmailAlreadyUsedException();
         }
 
         User u = new User();
@@ -63,7 +66,7 @@ public class UserService {
 
     public User updateProfile(String currentEmail, String newName, String newEmail, String newLocation) {
         User user = userRepository.findByEmail(currentEmail)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(UserNotFoundException::new);
 
         String oldName = user.getName();
         String oldEmail = user.getEmail();
@@ -72,7 +75,7 @@ public class UserService {
         if (newEmail != null && !newEmail.trim().equalsIgnoreCase(user.getEmail())) {
             boolean emailTaken = userRepository.existsByEmail(newEmail.trim());
             if (emailTaken) {
-                throw new RuntimeException("Email is already in use");
+                throw new EmailAlreadyUsedException();
             }
             user.setEmail(newEmail.trim());
         }
@@ -138,14 +141,14 @@ public class UserService {
     @Transactional
     public void deleteOwnAccount(String currentEmail, String password) {
         User user = userRepository.findByEmail(currentEmail)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(UserNotFoundException::new);
 
         if (password == null || password.isBlank()) {
-            throw new RuntimeException("Password is required");
+            throw new InvalidCredentialsException();
         }
 
         if (!encoder.matches(password, user.getPassword())) {
-            throw new RuntimeException("Incorrect password");
+            throw new InvalidCredentialsException();
         }
 
         activityService.log(

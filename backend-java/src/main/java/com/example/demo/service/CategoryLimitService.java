@@ -3,13 +3,16 @@ package com.example.demo.service;
 import com.example.demo.dto.CategoryLimitRequest;
 import com.example.demo.entity.CategoryLimit;
 import com.example.demo.entity.User;
+import com.example.demo.exception.ForbiddenResourceAccessException;
+import com.example.demo.exception.InvalidCategoryException;
+import com.example.demo.exception.ResourceNotFoundException;
+import com.example.demo.exception.UserNotFoundException;
 import com.example.demo.repository.CategoryLimitRepository;
 import com.example.demo.repository.CategoryRepository;
 import com.example.demo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
+
 
 import java.util.List;
 
@@ -25,26 +28,27 @@ public class CategoryLimitService {
     public CategoryLimit fromDTO(CategoryLimitRequest dto, User user) {
         CategoryLimit categoryLimit = new CategoryLimit();
         categoryLimit.setUser(user);
-        categoryLimit.setCategory(categoryRepository.findById(dto.getCategory()).get());
+        categoryLimit.setCategory(categoryRepository.findById(dto.getCategory())
+                .orElseThrow(() -> new InvalidCategoryException("Category not found: " + dto.getCategory())));
         categoryLimit.setMaxLimit(dto.getMaxLimit());
 
         return categoryLimit;
     }
 
     public CategoryLimit addCategoryLimit(String email, CategoryLimitRequest request) {
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found"));
+        User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
         CategoryLimit categoryLimit = fromDTO(request, user);
         return categoryLimitRepository.save(categoryLimit);
     }
 
     public CategoryLimit updateCategoryLimit(String email, Long id, CategoryLimitRequest request) {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found"));
+                .orElseThrow(UserNotFoundException::new);
         CategoryLimit existing = categoryLimitRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category limit not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Category limit", id));
 
         if (!existing.getUser().getId().equals(user.getId())) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Category limit does not belong to user");
+            throw new ForbiddenResourceAccessException("Category limit does not belong to user");
         }
 
         existing.setMaxLimit(request.getMaxLimit());
@@ -53,12 +57,12 @@ public class CategoryLimitService {
 
     public void deleteCategoryLimit(String email, Long id) {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found"));
+                .orElseThrow(UserNotFoundException::new);
         CategoryLimit existing = categoryLimitRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category limit not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Category limit", id));
 
         if (!existing.getUser().getId().equals(user.getId())) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Category limit does not belong to user");
+            throw new ForbiddenResourceAccessException("Category limit does not belong to user");
         }
 
         categoryLimitRepository.delete(existing);
@@ -69,7 +73,7 @@ public class CategoryLimitService {
     }
 
     public List<CategoryLimit>  fetchAllCategoryLimitsByUser(String email){
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found"));
+        User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
         List<CategoryLimit> listOfCategoryLimits = categoryLimitRepository.findByUser(user);
 
 

@@ -74,28 +74,24 @@ public class UserController {
 
         String currentEmail = authentication.getName();
 
-        try {
-            User updated = userService.updateProfile(
-                    currentEmail,
-                    request.name(),
-                    request.email(),
-                    request.location()
-            );
+        User updated = userService.updateProfile(
+                currentEmail,
+                request.name(),
+                request.email(),
+                request.location()
+        );
 
-            String token = jwtService.generateAccessToken(updated.getEmail(), updated.getRole().name());
-            addAccessTokenCookie(response, token);
+        String token = jwtService.generateAccessToken(updated.getEmail(), updated.getRole().name());
+        addAccessTokenCookie(response, token);
 
-            return new MeResponse(
-                    updated.getId(),
-                    updated.getName(),
-                    updated.getEmail(),
-                    updated.getRole().name(),
-                    updated.getLocation(),
-                    updated.getCreatedAt()
-            );
-        } catch (RuntimeException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
-        }
+        return new MeResponse(
+                updated.getId(),
+                updated.getName(),
+                updated.getEmail(),
+                updated.getRole().name(),
+                updated.getLocation(),
+                updated.getCreatedAt()
+        );
     }
 
     @GetMapping
@@ -140,14 +136,8 @@ public class UserController {
 
         String currentEmail = authentication.getName();
 
-        try {
-            userService.deleteOwnAccount(currentEmail, request.password());
-
-            clearAccessTokenCookie(response);
-
-            return ResponseEntity.noContent().build();
-        } catch (RuntimeException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
-        }
+        userService.deleteOwnAccount(currentEmail, request.password());
+        clearAccessTokenCookie(response);
+        return ResponseEntity.noContent().build();
     }
 }
