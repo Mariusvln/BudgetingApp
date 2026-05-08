@@ -5,13 +5,13 @@ import TransactionAddPanel from "../components/transaction-page-components/Trans
 
 function TransactionsPage() {
   return (
-    <div className="flex min-h-screen bg-base-200 md:ml-64">
+    <div className="transactions-page flex min-h-screen bg-base-200 md:ml-64">
       <TransactionNav />
 
-      <div className="flex-1 p-6 pb-28 md:pb-6">
+      <div className="transactions-page__content flex-1 p-6 pb-28 md:pb-6">
         {/* <TransactionHeader /> */}
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
           <div className="lg:col-span-2">
             <TransactionRecentTable />
           </div>
