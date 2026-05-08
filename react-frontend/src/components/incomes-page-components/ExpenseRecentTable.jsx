@@ -10,8 +10,149 @@ function ExpenseRecentTable({
   onTransactionAdded,
   categories = [],
 }) {
+  const formatMobileDate = (dateValue) => {
+    const date = new Date(dateValue);
+    const today = new Date();
+    const yesterday = new Date();
+
+    yesterday.setDate(today.getDate() - 1);
+
+    const isSameDay = (left, right) =>
+      left.getFullYear() === right.getFullYear() &&
+      left.getMonth() === right.getMonth() &&
+      left.getDate() === right.getDate();
+
+    if (Number.isNaN(date.getTime())) return "Today";
+    if (isSameDay(date, today)) return "Today";
+    if (isSameDay(date, yesterday)) return "Yesterday";
+
+    return new Intl.DateTimeFormat("en-US", {
+      month: "short",
+      day: "numeric",
+    }).format(date);
+  };
+
+  const formatAmount = (amount) =>
+    `-$${(Number(amount) || 0).toLocaleString("en-US", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })}`;
+
+  const getCategoryName = (categoryId) =>
+    categories.find((cat) => Number(cat.id) === Number(categoryId))?.name ||
+    `Category #${categoryId}`;
+
+  const getMobileIconType = (transaction) => {
+    const text =
+      `${getCategoryName(transaction.category)} ${transaction.description || ""}`.toLowerCase();
+
+    if (
+      text.includes("food") ||
+      text.includes("drink") ||
+      text.includes("coffee")
+    ) {
+      return "food";
+    }
+
+    if (
+      text.includes("transport") ||
+      text.includes("uber") ||
+      text.includes("trip")
+    ) {
+      return "transport";
+    }
+
+    return "calendar";
+  };
+
+  const ExpenseMobileIcon = ({ type }) => {
+    if (type === "food") {
+      return (
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M7 4v7" />
+          <path d="M5 4v7" />
+          <path d="M9 4v7" />
+          <path d="M5 11h4" />
+          <path d="M7 11v9" />
+          <path d="M16 4v16" />
+          <path d="M16 4c2.2 1.3 3.2 3 3.2 5.4 0 1.9-.9 3.2-3.2 3.2" />
+        </svg>
+      );
+    }
+
+    if (type === "transport") {
+      return (
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M5 12l1.6-4.2A2 2 0 0 1 8.5 6.5h7a2 2 0 0 1 1.9 1.3L19 12" />
+          <path d="M5 12h14v5H5z" />
+          <path d="M7 17v1.5" />
+          <path d="M17 17v1.5" />
+          <circle cx="8" cy="14.5" r="1" />
+          <circle cx="16" cy="14.5" r="1" />
+        </svg>
+      );
+    }
+
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <rect x="5" y="5" width="14" height="16" rx="2" />
+        <path d="M8 3v4" />
+        <path d="M16 3v4" />
+        <path d="M8 10h8" />
+      </svg>
+    );
+  };
+
+  const mobileTransactions = transactions.slice(0, 10);
+
   return (
-    <div className="card bg-base-100 border border-base-200 shadow-sm">
+    <>
+      <section className="transactions-mobile lg:hidden">
+        <div className="transactions-mobile__header">
+          <h2>Expenses</h2>
+          <button type="button">See All</button>
+        </div>
+
+        <div className="transactions-mobile__list">
+          {loading ? (
+            <div className="transactions-mobile__empty">Loading expenses...</div>
+          ) : mobileTransactions.length === 0 ? (
+            <div className="transactions-mobile__empty">No expenses found</div>
+          ) : (
+            mobileTransactions.map((transaction) => {
+              const categoryName = getCategoryName(transaction.category);
+              const iconType = getMobileIconType(transaction);
+
+              return (
+                <article
+                  className="transactions-mobile__item"
+                  key={transaction.id}
+                >
+                  <div
+                    className={`transactions-mobile__icon transactions-mobile__icon--${iconType}`}
+                  >
+                    <ExpenseMobileIcon type={iconType} />
+                  </div>
+
+                  <div className="transactions-mobile__details">
+                    <h3>{transaction.description || "No description"}</h3>
+                    <p>
+                      {categoryName} <span>&middot;</span>{" "}
+                      {formatMobileDate(transaction.date)}
+                    </p>
+                  </div>
+
+                  <p className="transactions-mobile__amount">
+                    {formatAmount(transaction.amount)}
+                  </p>
+                </article>
+              );
+            })
+          )}
+        </div>
+      </section>
+
+      <div className="card hidden border border-base-200 bg-base-100 shadow-sm lg:block">
       <div className="card-body">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
           <div>
@@ -94,6 +235,7 @@ function ExpenseRecentTable({
         </div>
       </div>
     </div>
+    </>
   );
 }
 
