@@ -3,9 +3,12 @@ import "../../assets/styles/Dashboard.css";
 import BalanceCard from "./BalanceCard"
 import MonthlyGrowth from "./MonthlyGrowth"
 import TransactionNav from "../TransactionNav"
+import IncomeCard from "./IncomeCard";
 
 const DashboardDesktop = (props) => {
   const percentage = 40;
+  const incomeCards = ["Total Income", "Total Expenses", "Monthly Savings"]
+  const progressBarStyles = ["progress-bar-green", "progress-bar-orange"]
   return (
     <div className="grow desktop-display mr-5.5">
       <div className="grow">
@@ -15,39 +18,9 @@ const DashboardDesktop = (props) => {
         </section>
         <div className="flex grow gap-5">
           <section className="income-cards_grid basis-[450px] grow">
-            <div className="income-card flex_center">
-              <p className="gray-text semibold">Total Income</p>
-              <h3 className="income-card_title bold_font h3_style black-text">
-                $8,500.00
-              </h3>
-              <progress
-                max="100"
-                value="80"
-                className="income-card_prog-bar progress-bar-green"
-              ></progress>
-            </div>
-            <div className="income-card flex_center">
-              <p className="gray-text semibold">Total Expenses</p>
-              <h3 className="income-card_title bold_font h3_style black-text">
-                $4,200.00
-              </h3>
-              <progress
-                max="100"
-                value="40"
-                className="income-card_prog-bar bold_font progress-bar-orange"
-              ></progress>
-            </div>
-            <div className="income-card flex_center">
-              <p className="gray-text semibold">Monthly Savings</p>
-              <h3 className="income-card_title bold_font h3_style black-text">
-                $4,300.00
-              </h3>
-              <progress
-                max="100"
-                value="60"
-                className="income-card_prog-bar progress-bar-green"
-              ></progress>
-            </div>
+            <IncomeCard header={incomeCards[0]} progressStyle={progressBarStyles[0]} money={props.incomes} percentage={80}/>
+            <IncomeCard header={incomeCards[1]} progressStyle={progressBarStyles[1]} money={props.expenses} percentage={40}/>
+            <IncomeCard header={incomeCards[2]} progressStyle={progressBarStyles[0]} money={"$4,300.00"} percentage={60}/>
             <div className="circular-prog-card flex_center">
               <div className="flex flex-col">
                 <p className="gray-text semibold">Savings Ratio</p>
