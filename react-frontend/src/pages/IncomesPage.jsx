@@ -79,10 +79,10 @@ function IncomesPage() {
   const incomeCategories = categories.filter((cat) => cat.type === "INCOME");
 
   return (
-    <div className="ml-64 flex bg-base-200 min-h-screen">
+    <div className="flex min-h-screen bg-base-200 md:ml-64">
       <TransactionNav />
 
-      <div className="flex-1 p-6">
+      <div className="flex-1 p-6 pb-28 md:pb-6">
         {/* <input
           type="text"
           placeholder="Search incomes"
