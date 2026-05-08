@@ -8,9 +8,8 @@ import { useEffect, useState } from "react";
 
 const MainPage = () => {
 
-    const [incomes, setIncomes] = useState([]);
-    const [expenses, setExpenses] = useState([]);
-    const [monthlyExpenses, setMonthlyExpenses] = useState([]);
+    const [incomes, setIncomes] = useState(0);
+    const [expenses, setExpenses] = useState(0);
     const [balance, setBalance] = useState(0);
     const [monthlySpending, setSpending] = useState(0);
   
@@ -50,8 +49,6 @@ const MainPage = () => {
           incomeResponse.json(),
           expenseResponse.json(),
         ]);
-        setIncomes(incomesResponse);
-        setExpenses(expensesResponse);
         const incomesSum = incomesResponse.reduce(
           (partialSum, a) => partialSum + a.amount,
           0,
@@ -60,9 +57,13 @@ const MainPage = () => {
           (partialSum, a) => partialSum + a.amount,
           0,
         );
-      setBalance(incomesSum - expensesSum);
+        setIncomes(incomesSum)
+        setExpenses(expensesSum)
+        setBalance(incomesSum - expensesSum);
       } catch (error) {
         console.error("Error fetching incomes:", error);
+        setIncomes(0);
+        setExpenses(0);
       }
     };
   
@@ -76,12 +77,11 @@ const MainPage = () => {
           throw new Error("Failed to fetch Monthly Expenses data");
         }
         const monthlyExpense = await expensesResponse.json();
-        setMonthlyExpenses(monthlyExpense);
         setSpending(
           monthlyExpense.reduce((partialSum, a) => partialSum + a.amount, 0),);
       } catch (error) {
         console.log("Error fetching Monthly Expenses data:", error);
-        setMonthlyExpenses([]);
+        setSpending(0);
       }
     };
   
@@ -97,13 +97,15 @@ const MainPage = () => {
 
   return (
     <div className="flex">
+      <div className="w-64 nav-display">
       <TransactionNav/>
+      </div>
       <div className="h-screen flex flex-col bg-[#f3f4f6] pl-[3%] grow">
       <DashboardHeaderMobile/>
       <DashboardHeaderDesktop />
     <main className="main_layout">
       <DashboardMobile/>
-      <DashboardDesktop formatCurrency={formatCurrency} balance={balance} monthlySpending={monthlySpending}/>
+      <DashboardDesktop formatCurrency={formatCurrency} balance={balance} monthlySpending={monthlySpending} incomes={formatCurrency(incomes)} expenses={formatCurrency(expenses)}/>
     </main>
     </div>
     </div>

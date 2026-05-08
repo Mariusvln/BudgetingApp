@@ -4,3 +4,9 @@
   background-color: #f3f4f6;
   flex-direction: column;
 }
+
+@media (max-width: 929px) {
+  .nav-display {
+    display: none;
+  }
+}
