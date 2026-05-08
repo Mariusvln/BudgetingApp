@@ -73,10 +73,6 @@ function TransactionNav() {
     },
   ];
 
-  const mobileNavItems = navItems.filter((item) =>
-    ["Budgeting", "Transactions", "Profile", "Admin"].includes(item.label),
-  );
-
   const currentPath = window.location.pathname;
 
   function getInitials(name) {
@@ -172,13 +168,13 @@ function TransactionNav() {
         </div>
       </aside>
 
-      <nav className="fixed inset-x-0 bottom-0 z-50 border-t border-base-300 bg-base-100/95 px-3 pb-3 pt-2 shadow-2xl backdrop-blur md:hidden">
-        <ul className="grid grid-cols-4 gap-1">
-          {mobileNavItems.map((item) => {
+      <nav className="fixed inset-x-0 bottom-0 z-50 overflow-x-auto border-t border-base-300 bg-base-100/95 px-3 pb-3 pt-2 shadow-2xl backdrop-blur md:hidden">
+        <ul className="flex min-w-max gap-1">
+          {navItems.map((item) => {
             const isActive = currentPath === item.href;
 
             return (
-              <li key={item.label}>
+              <li key={item.label} className="w-24 shrink-0">
                 <a
                   href={item.href}
                   className={`flex flex-col items-center justify-center gap-1 rounded-2xl px-2 py-2 text-[11px] font-semibold transition ${

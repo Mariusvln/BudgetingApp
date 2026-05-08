@@ -124,15 +124,6 @@ const ProfilePage = () => {
 
           <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-3 sm:items-center md:mt-6">
             <button
-              onClick={logout}
-              className="h-11 rounded-xl border border-base-300 bg-base-100 px-5 text-sm font-semibold shadow-sm transition hover:bg-base-200"
-            >
-              Sign Out
-            </button>
-
-            <ThemeSelector />
-
-            <button
               onClick={handleSave}
               disabled={saving}
               className={`h-11 rounded-xl px-5 text-sm font-semibold text-white shadow-sm transition disabled:opacity-50 sm:hidden ${saveButtonClass}`}
@@ -146,6 +137,15 @@ const ProfilePage = () => {
               className={`hidden h-11 rounded-xl px-5 text-sm font-semibold text-white shadow-sm transition disabled:opacity-50 sm:block ${saveButtonClass}`}
             >
               {saving ? "Saving..." : "Save Changes"}
+            </button>
+
+            <ThemeSelector />
+
+            <button
+              onClick={logout}
+              className="h-11 rounded-xl border border-base-300 bg-base-100 px-5 text-sm font-semibold shadow-sm transition hover:bg-base-200"
+            >
+              Sign Out
             </button>
           </div>
 
