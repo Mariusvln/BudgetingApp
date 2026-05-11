@@ -27,6 +27,7 @@ function IncomesPage() {
 
   const [dateStart, setDateStart] = useState(() => getMonthStart());
   const [dateEnd, setDateEnd] = useState(() => getMonthEnd());
+  const [isAddIncomeModalOpen, setIsAddIncomeModalOpen] = useState(false);
 
   const fetchIncomes = useCallback(
     async (start = dateStart, end = dateEnd) => {
@@ -93,6 +94,47 @@ function IncomesPage() {
           <IncomeHeader />
         </div>
 
+        <h2 className="mb-4 text-center text-2xl font-bold text-base-content lg:hidden">
+          Incomes History
+        </h2>
+
+        <div className="mb-4 rounded-2xl border border-base-300 bg-base-100 p-4 shadow-sm lg:hidden">
+          <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-base-content/60">
+            Date Range
+          </p>
+          <div className="grid grid-cols-2 gap-2">
+            <label className="flex flex-col gap-1">
+              <span className="text-xs font-medium text-base-content/70">From</span>
+              <input
+                type="date"
+                className="input input-bordered h-11 rounded-xl bg-base-200/60 text-sm"
+                value={dateStart}
+                onChange={(e) => setDateStart(e.target.value)}
+              />
+            </label>
+
+            <label className="flex flex-col gap-1">
+              <span className="text-xs font-medium text-base-content/70">To</span>
+              <input
+                type="date"
+                className="input input-bordered h-11 rounded-xl bg-base-200/60 text-sm"
+                value={dateEnd}
+                onChange={(e) => setDateEnd(e.target.value)}
+              />
+            </label>
+          </div>
+        </div>
+
+        <div className="mb-4 lg:hidden">
+          <button
+            type="button"
+            className="btn h-11 w-full rounded-xl border-0 bg-[#22c55e] text-white hover:bg-[#16a34a]"
+            onClick={() => setIsAddIncomeModalOpen(true)}
+          >
+            Add Income
+          </button>
+        </div>
+
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
           <div className="lg:col-span-2">
             <IncomeRecentTable
@@ -118,6 +160,37 @@ function IncomesPage() {
             />
           </div>
         </div>
+
+        {isAddIncomeModalOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-3 lg:hidden">
+            <button
+              type="button"
+              className="absolute inset-0 bg-black/45"
+              onClick={() => setIsAddIncomeModalOpen(false)}
+              aria-label="Close add income modal"
+            />
+            <div className="relative w-full max-w-sm overflow-hidden rounded-t-2xl bg-base-100 p-0">
+              <button
+                type="button"
+                className="absolute right-3 top-2 z-10 bg-transparent p-1 text-[1.2rem] leading-none text-base-content shadow-none hover:bg-transparent"
+                onClick={() => setIsAddIncomeModalOpen(false)}
+                aria-label="Close quick add income modal"
+              >
+                x
+              </button>
+              <div className="mb-2 mt-3 flex justify-center">
+                <div className="h-1.5 w-10 rounded-full bg-base-300" />
+              </div>
+              <IncomeAddPanel
+                onTransactionAdded={() => {
+                  fetchIncomes();
+                  setIsAddIncomeModalOpen(false);
+                }}
+                categories={incomeCategories}
+              />
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -291,7 +291,7 @@ const EditLimitModal = ({ open, onClose, category, onLimitUpdated }) => {
     <div className="fixed inset-0 z-50 grid place-items-center bg-black/30 p-4">
       <div className="w-full max-w-[420px] rounded-[16px] bg-white p-6">
         <h3 className="mb-4 text-[18px] font-semibold text-[#101828]">
-          Edit Limit
+          Edit Category Limit
         </h3>
 
         <div className="mb-4">
@@ -300,7 +300,7 @@ const EditLimitModal = ({ open, onClose, category, onLimitUpdated }) => {
           </label>
           <input
             type="text"
-            value={category.categoryName}
+            value={category?.categoryName ?? ""}
             disabled
             className="w-full rounded-[10px] border border-[#e5e7eb] bg-[#f9fafb] px-3 py-2 text-[14px] text-[#667085]"
           />
@@ -350,10 +350,10 @@ const DeleteLimitModal = ({ open, onClose, category, onLimitDeleted }) => {
 
   useEffect(() => {
     if (open) {
-      setSubmitting(false);
       setError("");
+      setSubmitting(false);
     }
-  }, [open]);
+  }, [open, category]);
 
   if (!open || !category) return null;
 
@@ -425,12 +425,30 @@ const DeleteLimitModal = ({ open, onClose, category, onLimitDeleted }) => {
   );
 };
 
+const ITEMS_PER_PAGE = 10;
 
-const CategoryCard = ({ category, onEdit, onDelete }) => {
+const formatItemDate = (date) =>
+  new Intl.DateTimeFormat("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  }).format(new Date(date));
+
+const CategoryCard = ({ category, onEdit, onDelete, expenses }) => {
   const { categoryName, spent, maxLimit } = category;
   const amount = spent;
   const limit = maxLimit;
   const over = spent > limit;
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const categoryItems = [...expenses].sort(
+    (a, b) => new Date(b.date) - new Date(a.date),
+  );
+  const pageCount = Math.max(1, Math.ceil(categoryItems.length / ITEMS_PER_PAGE));
+  const safeCurrentPage = Math.min(currentPage, pageCount);
+  const pageStart = (safeCurrentPage - 1) * ITEMS_PER_PAGE;
+  const paginatedItems = categoryItems.slice(pageStart, pageStart + ITEMS_PER_PAGE);
 
   return (
     <div className="bg-white rounded-[16px] px-6 py-5 border border-[#edf0f2] mb-4">
@@ -482,6 +500,73 @@ const CategoryCard = ({ category, onEdit, onDelete }) => {
           Over budget by {formatCurrency(spent - limit)}
         </p>
       )}
+
+      <button
+        type="button"
+        onClick={() => {
+          setIsExpanded((prev) => !prev);
+          setCurrentPage(1);
+        }}
+        className="mt-4 w-full rounded-[10px] border border-[#e5e7eb] py-2 text-[12px] font-medium text-[#667085]"
+      >
+        {isExpanded ? "Hide details" : "Show details"}
+      </button>
+
+      {isExpanded && (
+        <div className="mt-3 rounded-[10px] border border-[#edf0f2]">
+          {categoryItems.length === 0 ? (
+            <p className="px-3 py-3 text-[12px] text-[#98a2b3]">
+              No expenses in this category for selected month.
+            </p>
+          ) : (
+            <>
+              <ul className="divide-y divide-[#edf0f2]">
+                {paginatedItems.map((item) => (
+                  <li key={item.id} className="flex items-center justify-between px-3 py-2">
+                    <div>
+                      <p className="text-[12px] font-medium text-[#101828]">
+                        {item.description || item.note || item.title || "Expense"}
+                      </p>
+                      <p className="text-[11px] text-[#98a2b3]">
+                        {formatItemDate(item.date)}
+                      </p>
+                    </div>
+                    <p className="text-[12px] font-semibold text-[#101828]">
+                      {formatCurrency(item.amount)}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+
+              {pageCount > 1 && (
+                <div className="flex items-center justify-between border-t border-[#edf0f2] px-3 py-2 text-[12px]">
+                  <button
+                    type="button"
+                    onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}
+                    disabled={safeCurrentPage === 1}
+                    className="text-[#667085] disabled:opacity-40"
+                  >
+                    Previous
+                  </button>
+                  <span className="text-[#98a2b3]">
+                    Page {safeCurrentPage} of {pageCount}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setCurrentPage((page) => Math.min(pageCount, page + 1))
+                    }
+                    disabled={safeCurrentPage === pageCount}
+                    className="text-[#667085] disabled:opacity-40"
+                  >
+                    Next
+                  </button>
+                </div>
+              )}
+            </>
+          )}
+        </div>
+      )}
     </div>
   );
 };
@@ -490,6 +575,7 @@ const CategoryCard = ({ category, onEdit, onDelete }) => {
 const Categories = ({
   categories,
   modalCategories,
+  expenses,
   loading,
   onCategoryAdded,
   onLimitUpdated,
@@ -535,6 +621,9 @@ const Categories = ({
               category={category}
               onEdit={setEditingCategory}
               onDelete={setDeletingCategory}
+              expenses={expenses.filter(
+                (expense) => Number(expense.category) === Number(category.categoryId),
+              )}
             />
           ))
         ))}
@@ -640,10 +729,17 @@ const BudgetingPage = () => {
     fetchBudgetData();
   }, []);
 
+  const currentMonth = getMonthStart(new Date());
+
   const handleMonthChange = (direction) => {
     const nextMonth = addMonths(selectedMonth, direction);
 
+    if (nextMonth > currentMonth) {
+      return;
+    }
+
     if (
+      direction > 0 ||
       hasDataForMonth(expenses, nextMonth) ||
       hasDataForMonth(incomes, nextMonth)
     ) {
@@ -694,13 +790,11 @@ const BudgetingPage = () => {
   );
 
   return (
-    <div className="flex min-h-screen bg-base-200">
-      <div className="w-64">
-        <TransactionNav />
-      </div>
+    <div className="flex min-h-screen bg-base-200 md:ml-64">
+      <TransactionNav />
 
-      <div className="flex-1 bg-base-200 py-14 px-6 flex justify-center">
-        <div className="w-[65%]">
+      <div className="flex-1 bg-base-200 px-4 py-10 md:px-6 md:py-14">
+        <div className="mx-auto w-full max-w-5xl">
           <h1 className="text-[36px] font-semibold text-[#15803d] text-center mb-10 tracking-tight">
             Budgeting
           </h1>
@@ -732,6 +826,7 @@ const BudgetingPage = () => {
           <Categories
             categories={expenseCategories}
             modalCategories={expenseModalCategories}
+            expenses={visibleExpenses}
             loading={loading}
             onCategoryAdded={fetchBudgetData}
             onLimitUpdated={fetchBudgetData}
