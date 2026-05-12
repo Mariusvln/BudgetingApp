@@ -70,8 +70,13 @@ function TransactionNav() {
       label: "Admin",
       href: "/admin",
       icon: adminIcon,
+      adminOnly: true,
     },
   ];
+
+  const visibleNavItems = navItems.filter(
+    (item) => !item.adminOnly || user?.role === "ROLE_ADMIN",
+  );
 
   const currentPath = window.location.pathname;
 
@@ -108,7 +113,7 @@ function TransactionNav() {
           </p>
 
           <ul className="space-y-2">
-            {navItems.map((item) => {
+            {visibleNavItems.map((item) => {
               const isActive = currentPath === item.href;
 
               return (
@@ -170,7 +175,7 @@ function TransactionNav() {
 
       <nav className="fixed inset-x-0 bottom-0 z-50 overflow-x-auto border-t border-base-300 bg-base-100/95 px-3 pb-3 pt-2 shadow-2xl backdrop-blur md:hidden">
         <ul className="flex min-w-max gap-1">
-          {navItems.map((item) => {
+          {visibleNavItems.map((item) => {
             const isActive = currentPath === item.href;
 
             return (
