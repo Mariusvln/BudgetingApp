@@ -13,7 +13,9 @@ function AdminUserActivity() {
 
           const trimmedSearch = search.trim();
           const url = trimmedSearch
-            ? `http://localhost:8080/api/activity/search?query=${encodeURIComponent(trimmedSearch)}`
+            ? `http://localhost:8080/api/activity/search?query=${encodeURIComponent(
+                trimmedSearch
+              )}`
             : "http://localhost:8080/api/activity";
 
           const res = await fetch(url);
@@ -39,9 +41,9 @@ function AdminUserActivity() {
   }, [search]);
 
   return (
-    <div className="card bg-base-100 shadow-sm">
-      <div className="card-body">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
+    <div className="card rounded-2xl bg-base-100 shadow-sm">
+      <div className="card-body p-5 sm:p-6">
+        <div className="mb-4 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>
             <h2 className="text-xl font-semibold">User Activity</h2>
             <p className="text-sm text-gray-500">
@@ -51,15 +53,15 @@ function AdminUserActivity() {
 
           <input
             type="text"
-            placeholder="Search by ID, username, email, description..."
-            className="input input-bordered w-full md:w-80 bg-[#F2F3FF] border-none rounded-xl"
+            placeholder="Search activity..."
+            className="input input-bordered w-full rounded-xl border-none bg-[#F2F3FF] md:w-96"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
 
         <div className="overflow-x-auto">
-          <table className="table">
+          <table className="table min-w-[900px]">
             <thead>
               <tr>
                 <th>ID</th>
@@ -73,7 +75,7 @@ function AdminUserActivity() {
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan="5" className="text-center py-8">
+                  <td colSpan="5" className="py-8 text-center">
                     <span className="loading loading-spinner loading-md text-primary"></span>
                   </td>
                 </tr>
@@ -89,7 +91,7 @@ function AdminUserActivity() {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="5" className="text-center py-8 text-gray-400">
+                  <td colSpan="5" className="py-8 text-center text-gray-400">
                     No activity found
                   </td>
                 </tr>

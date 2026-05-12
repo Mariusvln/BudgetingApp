@@ -79,19 +79,21 @@ function ExpensesPage() {
   const expenseCategories = categories.filter((cat) => cat.type === "EXPENSE");
 
   return (
-    <div className="flex bg-base-200 min-h-screen">
+    <div className="transactions-page flex min-h-screen bg-base-200 md:ml-64">
       <TransactionNav />
 
-      <div className="flex-1 p-6">
+      <div className="transactions-page__content flex-1 p-6 pb-28 md:pb-6">
         {/* <input
           type="text"
           placeholder="Search expenses"
           className="w-full max-w-xl px-4 py-2 mb-4 border border-gray-300 rounded-lg bg-base-100 focus:outline-none focus:ring-2 focus:ring-primary"
         /> */}
 
-        <IncomeHeader />
+        <div className="hidden lg:block">
+          <IncomeHeader />
+        </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
           <div className="lg:col-span-2">
             <ExpenseRecentTable
               transactions={transactions}
@@ -104,15 +106,17 @@ function ExpensesPage() {
               categories={expenseCategories}
             />
 
-            <div className="mt-4">
+            <div className="mt-4 hidden lg:block">
               <ExportButton />
             </div>
           </div>
 
-          <ExpenseAddPanel
-            onTransactionAdded={fetchExpenses}
-            categories={expenseCategories}
-          />
+          <div className="hidden lg:block">
+            <ExpenseAddPanel
+              onTransactionAdded={fetchExpenses}
+              categories={expenseCategories}
+            />
+          </div>
         </div>
       </div>
     </div>

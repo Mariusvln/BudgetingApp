@@ -47,6 +47,7 @@ const AdminUsers = () => {
       const name = (user.name || "").toLowerCase();
       const email = (user.email || "").toLowerCase();
       const role = (user.role || "").toLowerCase();
+
       return (
         name.includes(query) ||
         email.includes(query) ||
@@ -129,9 +130,7 @@ const AdminUsers = () => {
       const updated = await res.json();
 
       setUsers((prev) =>
-        prev.map((u) =>
-          u.id === editingUser.id ? { ...u, ...updated } : u
-        )
+        prev.map((u) => (u.id === editingUser.id ? { ...u, ...updated } : u))
       );
 
       closeEditModal();
@@ -153,30 +152,28 @@ const AdminUsers = () => {
 
   return (
     <>
-      <div className="card bg-base-100 shadow-sm">
-        <div className="card-body">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+      <div className="card rounded-2xl bg-base-100 shadow-sm">
+        <div className="card-body p-5 sm:p-6">
+          <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div>
               <h2 className="text-xl font-semibold">User Directory</h2>
               <p className="text-sm text-gray-500">
-                {loading
-                  ? "Loading..."
-                  : `Showing ${filteredUsers.length} users`}
+                {loading ? "Loading..." : `Showing ${filteredUsers.length} users`}
               </p>
             </div>
 
             <input
               type="text"
-              placeholder="Search (name, email, role...)"
-              className="input w-64 bg-[#F2F3FF] border-none rounded-xl"
+              placeholder="Search name, email, role..."
+              className="input w-full rounded-xl border-none bg-[#F2F3FF] md:w-80"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
 
           <div className="overflow-x-auto">
-            <table className="table">
-              <thead className="text-gray-500 text-sm">
+            <table className="table min-w-[760px]">
+              <thead className="text-sm text-gray-500">
                 <tr>
                   <th>ID</th>
                   <th>Name</th>
@@ -189,7 +186,7 @@ const AdminUsers = () => {
               <tbody>
                 {loading ? (
                   <tr>
-                    <td colSpan="5" className="text-center py-8">
+                    <td colSpan="5" className="py-8 text-center">
                       <span className="loading loading-spinner loading-md text-primary"></span>
                     </td>
                   </tr>
@@ -214,7 +211,7 @@ const AdminUsers = () => {
                           <button
                             onClick={() => openEditModal(user)}
                             disabled={actionLoadingId === user.id}
-                            className="inline-flex items-center gap-2 rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 hover:bg-blue-100 disabled:opacity-50"
+                            className="inline-flex items-center gap-2 rounded-xl border border-blue-200 bg-blue-50 px-3 py-2 text-sm font-medium text-blue-700 hover:bg-blue-100 disabled:opacity-50"
                           >
                             ✏️ Edit
                           </button>
@@ -222,9 +219,11 @@ const AdminUsers = () => {
                           <button
                             onClick={() => handleDeleteUser(user)}
                             disabled={actionLoadingId === user.id}
-                            className="inline-flex items-center gap-2 rounded-xl bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 disabled:opacity-50"
+                            className="inline-flex items-center gap-2 rounded-xl bg-red-600 px-3 py-2 text-sm font-medium text-white hover:bg-red-700 disabled:opacity-50"
                           >
-                            {actionLoadingId === user.id ? "Deleting..." : "🗑 Delete"}
+                            {actionLoadingId === user.id
+                              ? "Deleting..."
+                              : "🗑 Delete"}
                           </button>
                         </div>
                       </td>
@@ -232,7 +231,7 @@ const AdminUsers = () => {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="5" className="text-center py-8 text-gray-400">
+                    <td colSpan="5" className="py-8 text-center text-gray-400">
                       No users found
                     </td>
                   </tr>
@@ -244,9 +243,9 @@ const AdminUsers = () => {
       </div>
 
       {editingUser && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-          <div className="bg-white rounded-2xl shadow-lg w-full max-w-md p-6">
-            <h3 className="text-lg font-semibold mb-4">Edit User</h3>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
+          <div className="w-full max-w-md rounded-2xl bg-white p-5 shadow-lg sm:p-6">
+            <h3 className="mb-4 text-lg font-semibold">Edit User</h3>
 
             <div className="space-y-4">
               <input
@@ -266,7 +265,7 @@ const AdminUsers = () => {
               />
 
               <div>
-                <label className="block text-sm font-medium mb-2">Role</label>
+                <label className="mb-2 block text-sm font-medium">Role</label>
                 <select
                   className="select select-bordered w-full"
                   value={editRole}
@@ -278,9 +277,9 @@ const AdminUsers = () => {
               </div>
             </div>
 
-            <div className="flex justify-end gap-3 mt-6">
+            <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
               <button
-                className="btn"
+                className="btn rounded-xl"
                 onClick={closeEditModal}
                 disabled={actionLoadingId === editingUser.id}
               >
@@ -288,7 +287,7 @@ const AdminUsers = () => {
               </button>
 
               <button
-                className="btn bg-green-600 text-white hover:bg-green-700"
+                className="btn rounded-xl bg-green-600 text-white hover:bg-green-700"
                 onClick={handleSaveEdit}
                 disabled={actionLoadingId === editingUser.id}
               >
