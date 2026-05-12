@@ -24,7 +24,6 @@ const RegisterPage = () => {
       );
 
       await login({
-        username,
         email,
         password,
       });
