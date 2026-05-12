@@ -15,6 +15,13 @@ const AdminUsers = () => {
   const [editEmail, setEditEmail] = useState("");
   const [editRole, setEditRole] = useState("ROLE_USER");
 
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [createName, setCreateName] = useState("");
+  const [createEmail, setCreateEmail] = useState("");
+  const [createPassword, setCreatePassword] = useState("");
+  const [createRole, setCreateRole] = useState("ROLE_USER");
+  const [createError, setCreateError] = useState("");
+
   const [actionLoadingId, setActionLoadingId] = useState(null);
 
   const loadUsers = async () => {
@@ -73,6 +80,67 @@ const AdminUsers = () => {
     setEditName("");
     setEditEmail("");
     setEditRole("ROLE_USER");
+  };
+
+  const resetCreateForm = () => {
+    setCreateName("");
+    setCreateEmail("");
+    setCreatePassword("");
+    setCreateRole("ROLE_USER");
+    setCreateError("");
+  };
+
+  const openCreateModal = () => {
+    setSearch("");
+    resetCreateForm();
+    setIsCreateModalOpen(true);
+  };
+
+  const closeCreateModal = () => {
+    setIsCreateModalOpen(false);
+    resetCreateForm();
+  };
+
+  const handleCreateUser = async () => {
+    const trimmedName = createName.trim();
+    const trimmedEmail = createEmail.trim();
+
+    if (!trimmedName || !trimmedEmail || !createPassword || !createRole) {
+      setCreateError("Fill all fields");
+      return;
+    }
+
+    try {
+      setCreateError("");
+      setActionLoadingId("create-user");
+
+      const res = await fetch(`${API_BASE}/api/admin/users`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: trimmedName,
+          email: trimmedEmail,
+          password: createPassword,
+          role: createRole,
+        }),
+      });
+
+      if (!res.ok) {
+        throw new Error(`Create failed: ${res.status}`);
+      }
+
+      const created = await res.json();
+      setUsers((prev) => [...prev, created]);
+      closeCreateModal();
+    } catch (error) {
+      console.error("Create user error:", error);
+      setCreateError("Failed to create user");
+    } finally {
+      setActionLoadingId(null);
+    }
   };
 
   const handleDeleteUser = async (user) => {
@@ -185,11 +253,21 @@ const AdminUsers = () => {
       <div className="card rounded-2xl bg-base-100 shadow-sm">
         <div className="card-body p-5 sm:p-6">
           <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-            <div>
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+              <div>
               <h2 className="text-xl font-semibold">User Directory</h2>
               <p className="text-sm text-gray-500">
                 {loading ? "Loading..." : `Showing ${filteredUsers.length} users`}
               </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={openCreateModal}
+                className="inline-flex h-10 ml-3 items-center justify-center rounded-xl bg-green-600 px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-green-700"
+              >
+                Create User
+              </button>
             </div>
 
             <input
@@ -198,6 +276,8 @@ const AdminUsers = () => {
               className="input w-full rounded-xl border-none bg-[#F2F3FF] md:w-80"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
+              autoComplete="off"
+              name="admin-user-search"
             />
           </div>
 
@@ -272,6 +352,82 @@ const AdminUsers = () => {
         </div>
       </div>
 
+      {isCreateModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
+          <div className="w-full max-w-md rounded-2xl bg-white p-5 shadow-lg sm:p-6">
+            <h3 className="mb-4 text-lg font-semibold">Create User</h3>
+
+            <div className="space-y-4">
+              <input
+                type="text"
+                className="input input-bordered w-full"
+                value={createName}
+                onChange={(e) => setCreateName(e.target.value)}
+                placeholder="Username"
+                autoComplete="off"
+                name="create-user-name"
+              />
+
+              <input
+                type="email"
+                className="input input-bordered w-full"
+                value={createEmail}
+                onChange={(e) => setCreateEmail(e.target.value)}
+                placeholder="Email"
+                autoComplete="new-email"
+                name="create-user-email"
+              />
+
+              <input
+                type="password"
+                className="input input-bordered w-full"
+                value={createPassword}
+                onChange={(e) => setCreatePassword(e.target.value)}
+                placeholder="Password"
+                autoComplete="new-password"
+                name="create-user-password"
+              />
+
+              <div>
+                <label className="mb-2 block text-sm font-medium">Role</label>
+                <select
+                  className="select select-bordered w-full"
+                  value={createRole}
+                  onChange={(e) => setCreateRole(e.target.value)}
+                >
+                  <option value="ROLE_USER">USER</option>
+                  <option value="ROLE_ADMIN">ADMIN</option>
+                </select>
+              </div>
+            </div>
+
+            {createError && (
+              <p className="mt-4 text-sm font-medium text-red-600">
+                {createError}
+              </p>
+            )}
+
+            <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <button
+                className="btn rounded-xl bg-black text-white hover:bg-black/80"
+                onClick={closeCreateModal}
+                disabled={actionLoadingId === "create-user"}
+              >
+                Cancel
+              </button>
+
+              <button
+                className="btn rounded-xl bg-green-600 text-white hover:bg-green-700"
+                onClick={handleCreateUser}
+                disabled={actionLoadingId === "create-user"}
+              >
+                {actionLoadingId === "create-user" ? "Creating..." : "Create"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {editingUser && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
           <div className="w-full max-w-md rounded-2xl bg-white p-5 shadow-lg sm:p-6">
@@ -284,6 +440,8 @@ const AdminUsers = () => {
                 value={editName}
                 onChange={(e) => setEditName(e.target.value)}
                 placeholder="Name"
+                autoComplete="off"
+                name="edit-user-name"
               />
 
               <input
@@ -292,6 +450,8 @@ const AdminUsers = () => {
                 value={editEmail}
                 onChange={(e) => setEditEmail(e.target.value)}
                 placeholder="Email"
+                autoComplete="off"
+                name="edit-user-email"
                 disabled={editingUser.email?.toLowerCase() === DEFAULT_ADMIN_EMAIL}
               />
 
