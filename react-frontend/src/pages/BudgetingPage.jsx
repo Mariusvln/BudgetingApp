@@ -38,11 +38,23 @@ const ProgressBar = ({ value, limit, over }) => {
   const percent =
     safeLimit > 0 ? Math.min((safeValue / safeLimit) * 100, 100) : 0;
 
+  const [animatedPercent, setAnimatedPercent] = useState(0);
+
+    useEffect(() => {
+      setAnimatedPercent(0);
+
+      const frame = requestAnimationFrame(() => {
+        setAnimatedPercent(percent);
+      });
+
+      return () => cancelAnimationFrame(frame);
+    }, [percent]);
+
   return (
-    <div className="w-full h-[10px] rounded-full bg-[#edf0f2]">
+    <div className="w-full h-[10px] rounded-full bg-[#edf0f2] overflow-hidden">
       <div
-        className={`h-[10px] rounded-full ${over ? "bg-[#e5484d]" : "bg-[#1db954]"}`}
-        style={{ width: `${percent}%` }}
+        className={`h-[10px] rounded-full transition-[width] duration-1000 ease-out ${over ? "bg-[#e5484d]" : "bg-[#1db954]"}`}
+        style={{ width: `${animatedPercent}%` }}
       />
     </div>
   );
