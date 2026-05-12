@@ -5,9 +5,6 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 public record LoginRequest(
-        @NotEmpty(message = "Username" + emptyOrNull)
-        @Size(max = 53, message = "Username cannot have more than 53 characters")
-        String username,
         @NotEmpty(message = "Email" + emptyOrNull)
         @Pattern(regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$", message = "Invalid email address")
         @Size(max = 254, message = "Email address is tool long to exist")

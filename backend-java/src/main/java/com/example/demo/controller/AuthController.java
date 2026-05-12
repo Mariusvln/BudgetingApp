@@ -51,7 +51,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public LoginResponse login(@Valid @RequestBody LoginRequest request, HttpServletResponse response) {
-        User user = users.authenticate(request.username(), request.email(), request.password());
+        User user = users.authenticate(request.email(), request.password());
         if (user == null) {
             throw new InvalidCredentialsException();
         }
