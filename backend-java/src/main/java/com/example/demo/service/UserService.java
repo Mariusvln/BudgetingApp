@@ -25,16 +25,20 @@ public class UserService {
     private final PasswordEncoder encoder;
     private final UserActivityService activityService;
 
+    private static final String DEFAULT_ADMIN_EMAIL = "admin@gmail.com";
+
     public User register(String name, String email, String password) {
-        if (userRepository.existsByEmail(email)) {
+        String normalizedEmail = email.trim();
+
+        if (userRepository.existsByEmail(normalizedEmail)) {
             throw new EmailAlreadyUsedException();
         }
 
         User u = new User();
         u.setName(name);
-        u.setEmail(email.trim());
+        u.setEmail(normalizedEmail);
         u.setPassword(encoder.encode(password));
-        u.setRole(Role.ROLE_USER);
+        u.setRole(resolveRoleForNewUser(normalizedEmail));
 
         User saved = userRepository.save(u);
 
@@ -45,6 +49,16 @@ public class UserService {
         );
 
         return saved;
+    }
+
+    private Role resolveRoleForNewUser(String email) {
+        if (DEFAULT_ADMIN_EMAIL.equalsIgnoreCase(email)) {
+            return Role.ROLE_ADMIN;
+        }
+
+        return userRepository.countByEmailNot(DEFAULT_ADMIN_EMAIL) == 0
+                ? Role.ROLE_ADMIN
+                : Role.ROLE_USER;
     }
 
     public User authenticate(String username, String email, String password) {

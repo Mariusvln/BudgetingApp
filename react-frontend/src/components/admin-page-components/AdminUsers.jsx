@@ -1,8 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
+import { useAuth } from "../../contexts/AuthContext";
 
 const API_BASE = "http://localhost:8080";
+const DEFAULT_ADMIN_EMAIL = "admin@gmail.com";
 
 const AdminUsers = () => {
+  const { user: currentUser, setUser } = useAuth();
   const [users, setUsers] = useState([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
@@ -10,7 +13,7 @@ const AdminUsers = () => {
   const [editingUser, setEditingUser] = useState(null);
   const [editName, setEditName] = useState("");
   const [editEmail, setEditEmail] = useState("");
-  const [editRole, setEditRole] = useState("USER");
+  const [editRole, setEditRole] = useState("ROLE_USER");
 
   const [actionLoadingId, setActionLoadingId] = useState(null);
 
@@ -18,7 +21,9 @@ const AdminUsers = () => {
     try {
       setLoading(true);
 
-      const res = await fetch(`${API_BASE}/api/users`);
+      const res = await fetch(`${API_BASE}/api/admin/users`, {
+        credentials: "include",
+      });
 
       if (!res.ok) {
         throw new Error(`Users request failed: ${res.status}`);
@@ -60,14 +65,14 @@ const AdminUsers = () => {
     setEditingUser(user);
     setEditName(user.name || "");
     setEditEmail(user.email || "");
-    setEditRole(user.role || "USER");
+    setEditRole(user.role || "ROLE_USER");
   };
 
   const closeEditModal = () => {
     setEditingUser(null);
     setEditName("");
     setEditEmail("");
-    setEditRole("USER");
+    setEditRole("ROLE_USER");
   };
 
   const handleDeleteUser = async (user) => {
@@ -80,8 +85,9 @@ const AdminUsers = () => {
     try {
       setActionLoadingId(user.id);
 
-      const res = await fetch(`${API_BASE}/api/users/${user.id}`, {
+      const res = await fetch(`${API_BASE}/api/admin/users/${user.id}`, {
         method: "DELETE",
+        credentials: "include",
       });
 
       if (!res.ok) {
@@ -102,17 +108,37 @@ const AdminUsers = () => {
 
     const trimmedName = editName.trim();
     const trimmedEmail = editEmail.trim();
+    const isDefaultAdmin = editingUser.email?.toLowerCase() === DEFAULT_ADMIN_EMAIL;
+    const isEditingSelf = editingUser.id === currentUser?.id;
+    const isRemovingOwnAdminRole =
+      isEditingSelf &&
+      editingUser.role === "ROLE_ADMIN" &&
+      editRole !== "ROLE_ADMIN";
 
     if (!trimmedName || !trimmedEmail || !editRole) {
       alert("Fill all fields");
       return;
     }
 
+    if (isDefaultAdmin && editRole !== "ROLE_ADMIN") {
+      alert("Default admin role cannot be changed.");
+      return;
+    }
+
+    if (isRemovingOwnAdminRole) {
+      const confirmed = window.confirm(
+        "You are removing your own admin role. After saving, you can lose access to the Admin page. Are you sure?"
+      );
+
+      if (!confirmed) return;
+    }
+
     try {
       setActionLoadingId(editingUser.id);
 
-      const res = await fetch(`${API_BASE}/api/users/${editingUser.id}`, {
+      const res = await fetch(`${API_BASE}/api/admin/users/${editingUser.id}`, {
         method: "PUT",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
@@ -133,6 +159,10 @@ const AdminUsers = () => {
         prev.map((u) => (u.id === editingUser.id ? { ...u, ...updated } : u))
       );
 
+      if (isEditingSelf) {
+        setUser((prev) => (prev ? { ...prev, ...updated } : prev));
+      }
+
       closeEditModal();
     } catch (error) {
       console.error("Update error:", error);
@@ -143,7 +173,7 @@ const AdminUsers = () => {
   };
 
   const getRoleBadgeClass = (role) => {
-    if (role === "ADMIN") {
+    if (role === "ADMIN" || role === "ROLE_ADMIN") {
       return "bg-red-100 text-red-700 border-none";
     }
 
@@ -172,7 +202,7 @@ const AdminUsers = () => {
           </div>
 
           <div className="overflow-x-auto">
-            <table className="table min-w-[760px]">
+            <table className="table min-w-190">
               <thead className="text-sm text-gray-500">
                 <tr>
                   <th>ID</th>
@@ -262,6 +292,7 @@ const AdminUsers = () => {
                 value={editEmail}
                 onChange={(e) => setEditEmail(e.target.value)}
                 placeholder="Email"
+                disabled={editingUser.email?.toLowerCase() === DEFAULT_ADMIN_EMAIL}
               />
 
               <div>
@@ -270,10 +301,16 @@ const AdminUsers = () => {
                   className="select select-bordered w-full"
                   value={editRole}
                   onChange={(e) => setEditRole(e.target.value)}
+                  disabled={editingUser.email?.toLowerCase() === DEFAULT_ADMIN_EMAIL}
                 >
-                  <option value="USER">USER</option>
-                  <option value="ADMIN">ADMIN</option>
+                  <option value="ROLE_USER">USER</option>
+                  <option value="ROLE_ADMIN">ADMIN</option>
                 </select>
+                {editingUser.email?.toLowerCase() === DEFAULT_ADMIN_EMAIL && (
+                  <p className="mt-2 text-sm text-gray-500">
+                    Default admin role cannot be changed.
+                  </p>
+                )}
               </div>
             </div>
 

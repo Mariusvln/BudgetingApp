@@ -31,13 +31,16 @@ function App() {
           <Route path="/analytics" element={<AnalyticsPage />} />
           <Route path="/incomes" element={<IncomesPage />} />
           <Route path="/expenses" element={<ExpensesPage />} />
-          <Route path="/admin" element={<AdminPage />} />
 
           <Route element={<ProtectedRoute />}>
             <Route path="/dashboard" element={<TransactionsPage />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/logout" element={<Logout />} />
             <Route path="/budgeting" element={<BudgetingPage />} />
+          </Route>
+
+          <Route element={<ProtectedRoute requiredRole="ROLE_ADMIN" />}>
+            <Route path="/admin" element={<AdminPage />} />
           </Route>
         </Routes>
       </AuthProvider>
