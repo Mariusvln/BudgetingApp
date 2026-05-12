@@ -5,10 +5,10 @@ import "../../assets/styles/Dashboard.css";
 import AccountCard from "./AccountCard";
 import SavingGoal from "./SavingGoal";
 
-const DashboardMobile = () => {
+const DashboardMobile = ({balance}) => {
   return (
     <div className="flex_col flex_center gap-7 mobile-display">
-      <AccountCard/>
+      <AccountCard balance={balance}/>
       <SavingGoal/>
       <nav className="flex_between mx-2">
         <div>

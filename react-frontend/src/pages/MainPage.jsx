@@ -100,11 +100,11 @@ const MainPage = () => {
       <div className="w-64 nav-display">
       <TransactionNav/>
       </div>
-      <div className="h-screen flex flex-col bg-[#f3f4f6] pl-[3%] grow">
+      <div className="h-screen flex flex-col bg-[#f3f4f6] grow">
       <DashboardHeaderMobile/>
-      <DashboardHeaderDesktop />
+      <DashboardHeaderDesktop/>
     <main className="main_layout">
-      <DashboardMobile/>
+      <DashboardMobile balance={formatCurrency(balance)}/>
       <DashboardDesktop formatCurrency={formatCurrency} balance={balance} monthlySpending={monthlySpending} incomes={formatCurrency(incomes)} expenses={formatCurrency(expenses)}/>
     </main>
     </div>

@@ -2,7 +2,7 @@ import walletIcon from "../../assets/images/icons/wallet-icon.svg";
 import paperPlaneIcon from "../../assets/images/icons/paper-plane-icon.svg";
 import "../../assets/styles/Dashboard.css";
 
-const AccountCard = () => {
+const AccountCard = ({balance}) => {
     return (
         <section className="flex_col account-card">
                 <div className="flex_between">
@@ -15,7 +15,7 @@ const AccountCard = () => {
                     />
                   </button>
                 </div>
-                <h2 className="bold_font self-start h3_style white-text">$12,450.00</h2>
+                <h2 className="bold_font self-start h3_style white-text">{balance}</h2>
                 <hr className="my-5" />
                 <div className="flex_between">
                   <div className="flex_col flex_center">
