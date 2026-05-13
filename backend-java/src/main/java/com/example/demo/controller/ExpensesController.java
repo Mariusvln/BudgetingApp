@@ -1,7 +1,9 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.*;
+import com.example.demo.entity.Category;
 import com.example.demo.entity.Expense;
+import com.example.demo.repository.CategoryRepository;
 import com.example.demo.service.ExpenseService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -19,6 +21,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -28,6 +31,7 @@ import java.util.stream.Collectors;
 public class ExpensesController {
 
     private final ExpenseService expenses;
+    private final CategoryRepository categoryRepository;
 
     @PostMapping("/")
     public RegisterResponse addExpense(@Valid @RequestBody ExpenseRequest expense, Authentication authentication) {
@@ -105,19 +109,21 @@ public class ExpensesController {
     @GetMapping("/export")
     public void exportExpenses(
             @RequestParam(defaultValue = "csv") String type,
+            Authentication authentication,
             HttpServletResponse response
     ) throws IOException {
 
-        List<Expense> expensesList = expenses.showAllExpenses();
+        List<Expense> expensesList = expenses.fetchAllExpensesByUser(authentication.getName());
+        Map<Integer, String> categoryNames = getCategoryNames();
 
         if (type.equalsIgnoreCase("excel")) {
-            exportExcel(expensesList, response);
+            exportExcel(expensesList, categoryNames, response);
         } else {
-            exportCSV(expensesList, response);
+            exportCSV(expensesList, categoryNames, response);
         }
     }
 
-    private void exportCSV(List<Expense> expensesList, HttpServletResponse response) throws IOException {
+    private void exportCSV(List<Expense> expensesList, Map<Integer, String> categoryNames, HttpServletResponse response) throws IOException {
         response.setContentType("text/csv");
         response.setHeader("Content-Disposition", "attachment; filename=expenses.csv");
 
@@ -127,7 +133,7 @@ public class ExpensesController {
         for (Expense e : expensesList) {
             writer.println(
                     e.getDate() + " , " +
-                            e.getCategory() + " , " +
+                            getCategoryName(categoryNames, e.getCategory()) + " , " +
                             e.getAmount() + " , " +
                             e.getDescription()
             );
@@ -136,7 +142,7 @@ public class ExpensesController {
         writer.flush();
     }
 
-    private void exportExcel(List<Expense> expensesList, HttpServletResponse response) throws IOException {
+    private void exportExcel(List<Expense> expensesList, Map<Integer, String> categoryNames, HttpServletResponse response) throws IOException {
 
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         response.setHeader("Content-Disposition", "attachment; filename=expenses.xlsx");
@@ -154,13 +160,25 @@ public class ExpensesController {
         for (Expense e : expensesList) {
             Row row = sheet.createRow(rowNum++);
             row.createCell(0).setCellValue(e.getDate().toString());
-            row.createCell(1).setCellValue(e.getCategory());
+            row.createCell(1).setCellValue(getCategoryName(categoryNames, e.getCategory()));
             row.createCell(2).setCellValue(e.getAmount().doubleValue());
             row.createCell(3).setCellValue(e.getDescription());
         }
 
         workbook.write(response.getOutputStream());
         workbook.close();
+    }
+
+    private Map<Integer, String> getCategoryNames() {
+        return categoryRepository.findAll().stream()
+                .collect(Collectors.toMap(
+                        category -> category.getId().intValue(),
+                        Category::getName
+                ));
+    }
+
+    private String getCategoryName(Map<Integer, String> categoryNames, int categoryId) {
+        return categoryNames.getOrDefault(categoryId, "Category #" + categoryId);
     }
 }
 

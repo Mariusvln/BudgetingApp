@@ -1,7 +1,9 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.*;
+import com.example.demo.entity.Category;
 import com.example.demo.entity.Income;
+import com.example.demo.repository.CategoryRepository;
 import com.example.demo.service.IncomeService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -19,6 +21,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -28,6 +31,7 @@ import java.util.stream.Collectors;
 public class IncomeController {
 
     private final IncomeService incomes;
+    private final CategoryRepository categoryRepository;
 
     @PostMapping("/")
     public RegisterResponse addIncome(@Valid @RequestBody IncomeRequest income, Authentication authentication) {
@@ -89,19 +93,21 @@ public class IncomeController {
     @GetMapping("/exportIncomes")
     public void exportIncomes(
             @RequestParam(defaultValue = "csv") String type,
+            Authentication authentication,
             HttpServletResponse response
     ) throws IOException {
 
-        List<Income> incomesList = incomes.showAllIncomes();
+        List<Income> incomesList = incomes.fetchAllIncomesByUser(authentication.getName());
+        Map<Integer, String> categoryNames = getCategoryNames();
 
         if (type.equalsIgnoreCase("excel")) {
-            exportExcel(incomesList, response);
+            exportExcel(incomesList, categoryNames, response);
         } else {
-            exportCSV(incomesList, response);
+            exportCSV(incomesList, categoryNames, response);
         }
     }
 
-    private void exportCSV(List<Income> incomesList, HttpServletResponse response) throws IOException {
+    private void exportCSV(List<Income> incomesList, Map<Integer, String> categoryNames, HttpServletResponse response) throws IOException {
         response.setContentType("text/csv");
         response.setHeader("Content-Disposition", "attachment; filename=incomes.csv");
 
@@ -111,7 +117,7 @@ public class IncomeController {
         for (Income i : incomesList) {
             writer.println(
                     i.getDate() + "," +
-                            i.getCategory() + "," +
+                            getCategoryName(categoryNames, i.getCategory()) + "," +
                             i.getAmount() + "," +
                             i.getDescription()
             );
@@ -120,7 +126,7 @@ public class IncomeController {
         writer.flush();
     }
 
-    private void exportExcel(List<Income> incomesList, HttpServletResponse response) throws IOException {
+    private void exportExcel(List<Income> incomesList, Map<Integer, String> categoryNames, HttpServletResponse response) throws IOException {
 
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         response.setHeader("Content-Disposition", "attachment; filename=incomes.xlsx");
@@ -138,13 +144,25 @@ public class IncomeController {
         for (Income i : incomesList) {
             Row row = sheet.createRow(rowNum++);
             row.createCell(0).setCellValue(i.getDate().toString());
-            row.createCell(1).setCellValue(i.getCategory());
+            row.createCell(1).setCellValue(getCategoryName(categoryNames, i.getCategory()));
             row.createCell(2).setCellValue(i.getAmount().doubleValue());
             row.createCell(3).setCellValue(i.getDescription());
         }
 
         workbook.write(response.getOutputStream());
         workbook.close();
+    }
+
+    private Map<Integer, String> getCategoryNames() {
+        return categoryRepository.findAll().stream()
+                .collect(Collectors.toMap(
+                        category -> category.getId().intValue(),
+                        Category::getName
+                ));
+    }
+
+    private String getCategoryName(Map<Integer, String> categoryNames, int categoryId) {
+        return categoryNames.getOrDefault(categoryId, "Category #" + categoryId);
     }
 
 }
