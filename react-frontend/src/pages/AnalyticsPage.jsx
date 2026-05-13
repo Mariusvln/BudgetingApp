@@ -1,7 +1,6 @@
 import { useState } from "react";
 import AnaliticChart from "../components/analitics-page-components/AnalyticChart";
 import TransactionNav from "../components/TransactionNav";
-import AnalyticsHeader from "../components/analitics-page-components/AnalyticsHeader";
 
 const formatDate = (date) => {
   const year = date.getFullYear();
@@ -55,7 +54,6 @@ const AnalyticsPage = () => {
             </div>
           </div>
         </div>
-        <AnalyticsHeader dateStart={dateStart} dateEnd={dateEnd} />
         <AnaliticChart dateStart={dateStart} dateEnd={dateEnd} />
       </div>
     </div>
