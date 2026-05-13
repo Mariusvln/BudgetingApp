@@ -38,6 +38,11 @@ function IncomeAddPanel({ onTransactionAdded, categories = [] }) {
   const handleSave = async (formData) => {
     const { description, amount, date, category } = formData;
 
+    if (!amount) {
+      await appAlert.alert("Please fill in all fields", { type: "warning" });
+      return;
+    }
+
     if (!category) {
       await appAlert.alert("Please select a category", { type: "warning" });
       return;
@@ -87,6 +92,17 @@ function IncomeAddPanel({ onTransactionAdded, categories = [] }) {
     }
   };
 
+  const handleInvalid = async (formErrors) => {
+    if (formErrors.amount) {
+      await appAlert.alert("Please fill in all fields", { type: "warning" });
+      return;
+    }
+
+    if (formErrors.category) {
+      await appAlert.alert("Please select a category", { type: "warning" });
+    }
+  };
+
   return (
     <div className="w-full max-w-sm">
       <div className="card bg-base-100 border border-base-200">
@@ -98,7 +114,7 @@ function IncomeAddPanel({ onTransactionAdded, categories = [] }) {
 
           <form
             className="flex flex-col gap-3"
-            onSubmit={handleSubmit(handleSave)}
+            onSubmit={handleSubmit(handleSave, handleInvalid)}
             noValidate
           >
             <input
@@ -137,7 +153,7 @@ function IncomeAddPanel({ onTransactionAdded, categories = [] }) {
               placeholder="Description (e.g. Grass cutting)"
               className="input input-bordered"
               {...register("description", {
-                maxLength: {value: 50, message: "Description is too long"}
+                maxLength: { value: 50, message: "Description is too long" },
               })}
             />
             {errors.description?.message && (

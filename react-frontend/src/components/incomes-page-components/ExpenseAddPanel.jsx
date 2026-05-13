@@ -20,7 +20,7 @@ function ExpenseAddPanel({ onTransactionAdded, categories = [] }) {
   }, [categories]);
 
   const handleSave = async () => {
-    if (!amount || !description) {
+    if (!amount) {
       await appAlert.alert("Please fill in all fields", { type: "warning" });
       return;
     }

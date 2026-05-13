@@ -28,7 +28,7 @@ const ExpenseEditForm = ({
   }, [date, amount, description, category]);
 
   const handleSubmit = async () => {
-    if (!formAmount || !formDescription) {
+    if (!formAmount) {
       await appAlert.alert("Please fill in all fields", { type: "warning" });
       return;
     }
