@@ -2,7 +2,6 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 
 function TransactionRecentTable() {
   const [transactions, setTransactions] = useState([]);
-  const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("ALL");
 
@@ -58,55 +57,22 @@ function TransactionRecentTable() {
     setLoading(true);
 
     try {
-      const [incomeResponse, expenseResponse, categoryResponse] =
-        await Promise.all([
-          fetch("http://localhost:8080/api/app/incomes/", {
-            credentials: "include",
-          }),
-          fetch("http://localhost:8080/api/app/expenses/", {
-            credentials: "include",
-          }),
-          fetch("http://localhost:8080/api/categories", {
-            credentials: "include",
-          }),
-        ]);
+      const response = await fetch(
+        "http://localhost:8080/api/app/expenses/transactions-overview",
+        {
+          credentials: "include",
+        },
+      );
 
-      if (!incomeResponse.ok || !expenseResponse.ok || !categoryResponse.ok) {
+      if (!response.ok) {
         throw new Error("Failed to fetch transactions");
       }
 
-      const [incomeData, expenseData, categoryData] = await Promise.all([
-        incomeResponse.json(),
-        expenseResponse.json(),
-        categoryResponse.json(),
-      ]);
-
-      const mappedIncomes = (Array.isArray(incomeData) ? incomeData : []).map(
-        (transaction, index) => ({
-          ...transaction,
-          rowId: `income-${transaction.id ?? index}`,
-          transactionType: "INCOME",
-        }),
-      );
-
-      const mappedExpenses = (
-        Array.isArray(expenseData) ? expenseData : []
-      ).map((transaction, index) => ({
-        ...transaction,
-        rowId: `expense-${transaction.id ?? index}`,
-        transactionType: "EXPENSE",
-      }));
-
-      const combinedTransactions = [...mappedIncomes, ...mappedExpenses].sort(
-        (left, right) => new Date(right.date) - new Date(left.date),
-      );
-
-      setTransactions(combinedTransactions);
-      setCategories(Array.isArray(categoryData) ? categoryData : []);
+      const data = await response.json();
+      setTransactions(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error("Error fetching dashboard transactions:", error);
       setTransactions([]);
-      setCategories([]);
     } finally {
       setLoading(false);
     }
@@ -115,13 +81,6 @@ function TransactionRecentTable() {
   useEffect(() => {
     fetchTransactions();
   }, [fetchTransactions]);
-
-  const categoryMap = useMemo(() => {
-    return categories.reduce((map, category) => {
-      map[Number(category.id)] = category.name;
-      return map;
-    }, {});
-  }, [categories]);
 
   const filteredTransactions = useMemo(() => {
     if (activeTab === "ALL") {
@@ -134,11 +93,10 @@ function TransactionRecentTable() {
   }, [activeTab, transactions]);
 
   const getCategoryName = (transaction) =>
-    categoryMap[Number(transaction.category)] ||
     transaction.categoryName ||
     (transaction.transactionType === "INCOME"
       ? "Income"
-      : `Category ${transaction.category}`);
+      : "Expense");
 
   const getMobileIconType = (transaction) => {
     const text =
@@ -236,7 +194,7 @@ function TransactionRecentTable() {
               return (
                 <article
                   className="transactions-mobile__item"
-                  key={transaction.rowId}
+                  key={transaction.id}
                 >
                   <div
                     className={`transactions-mobile__icon transactions-mobile__icon--${iconType}`}
@@ -332,7 +290,7 @@ function TransactionRecentTable() {
                 </tr>
               ) : (
                 filteredTransactions.map((transaction) => (
-                  <tr key={transaction.rowId}>
+                  <tr key={transaction.id}>
                     <td className="text-sm text-gray-500">
                       {formatDate(transaction.date)}
                     </td>
@@ -343,8 +301,7 @@ function TransactionRecentTable() {
 
                     <td>
                       <span className="badge badge-soft badge-primary text-xs">
-                        {categoryMap[Number(transaction.category)] ||
-                          `Category ${transaction.category}`}
+                        {transaction.categoryName}
                       </span>
                     </td>
 

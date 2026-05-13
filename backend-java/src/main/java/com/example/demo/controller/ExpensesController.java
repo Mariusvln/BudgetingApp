@@ -3,8 +3,10 @@ package com.example.demo.controller;
 import com.example.demo.dto.*;
 import com.example.demo.entity.Category;
 import com.example.demo.entity.Expense;
+import com.example.demo.entity.Income;
 import com.example.demo.repository.CategoryRepository;
 import com.example.demo.service.ExpenseService;
+import com.example.demo.service.IncomeService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +33,7 @@ import java.util.stream.Collectors;
 public class ExpensesController {
 
     private final ExpenseService expenses;
+    private final IncomeService incomes;
     private final CategoryRepository categoryRepository;
 
     @PostMapping("/")
@@ -179,6 +182,51 @@ public class ExpensesController {
 
     private String getCategoryName(Map<Integer, String> categoryNames, int categoryId) {
         return categoryNames.getOrDefault(categoryId, "Category #" + categoryId);
+    }
+
+    @GetMapping("/transactions-overview")
+    public List<TransactionOverviewResponse> getTransactionsOverview(Authentication authentication) {
+        Map<Integer, String> categoryNames = getCategoryNames();
+
+        List<TransactionOverviewResponse> incomeTransactions = incomes
+                .fetchAllIncomesByUser(authentication.getName())
+                .stream()
+                .map(income -> mapIncomeOverview(income, categoryNames))
+                .toList();
+
+        List<TransactionOverviewResponse> expenseTransactions = expenses
+                .fetchAllExpensesByUser(authentication.getName())
+                .stream()
+                .map(expense -> mapExpenseOverview(expense, categoryNames))
+                .toList();
+
+        List<TransactionOverviewResponse> combined = new ArrayList<>();
+        combined.addAll(incomeTransactions);
+        combined.addAll(expenseTransactions);
+        combined.sort((left, right) -> right.date().compareTo(left.date()));
+        return combined;
+    }
+
+    private TransactionOverviewResponse mapIncomeOverview(Income income, Map<Integer, String> categoryNames) {
+        return new TransactionOverviewResponse(
+                "income-" + income.getId(),
+                "INCOME",
+                income.getDate(),
+                income.getDescription(),
+                getCategoryName(categoryNames, income.getCategory()),
+                income.getAmount()
+        );
+    }
+
+    private TransactionOverviewResponse mapExpenseOverview(Expense expense, Map<Integer, String> categoryNames) {
+        return new TransactionOverviewResponse(
+                "expense-" + expense.getId(),
+                "EXPENSE",
+                expense.getDate(),
+                expense.getDescription(),
+                getCategoryName(categoryNames, expense.getCategory()),
+                expense.getAmount()
+        );
     }
 }
 
