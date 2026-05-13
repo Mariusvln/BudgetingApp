@@ -1,12 +1,15 @@
 import walletIcon from "../../assets/images/icons/wallet-icon.svg";
 import paperPlaneIcon from "../../assets/images/icons/paper-plane-icon.svg";
 import "../../assets/styles/Dashboard.css";
+import { useAuth } from "../../contexts/AuthContext";
 
 const AccountCard = ({balance}) => {
+    const { user } = useAuth();
+
     return (
         <section className="flex_col account-card">
                 <div className="flex_between">
-                  <p className="small-text green-text">Main Account</p>
+                  <p className="small-text font-bold text-primary-content/75">Main Account</p>
                   <button>
                     <img
                       src={walletIcon}
@@ -20,7 +23,7 @@ const AccountCard = ({balance}) => {
                 <div className="flex_between">
                   <div className="flex_col flex_center">
                     <h4 className="semibold card_holder">CARD HOLDER</h4>
-                    <p className="bold_font white-text">USER</p>
+                    <p className="bold_font white-text">{user?.name || "USER"}</p>
                   </div>
                   <button className="button-radius1 transfer_button">
                     <div className="flex flex_center pb-1">

@@ -4,7 +4,10 @@
   display: flex;
   padding: 1.25rem;
   justify-content: space-between;
-  background-color: #ffffff;
+  border-bottom: 1px solid var(--color-base-300);
+  background-color: color-mix(in oklch, var(--color-base-100) 92%, transparent);
+  color: var(--color-base-content);
+  backdrop-filter: blur(14px);
 }
 
 .flex_gap5 {
@@ -23,37 +26,67 @@
 .header_nav_element {
   margin-top: 0.25rem;
   margin-bottom: 0.25rem;
-  background: #f1f5f9;
+  background: var(--color-base-200);
   border-radius: 2rem;
 }
 
 .header_nav_element:hover {
-  background-color: #d1d5db;
+  background-color: var(--color-base-300);
 }
 
 .progress-bar-orange {
-  @apply appearance-none border-none rounded-2xl overflow-hidden bg-gray-200
-  [&&::-webkit-progress-bar]:bg-gray-200 [&&::-webkit-progress-value]:bg-amber-500 [&&::-webkit-progress-bar]:rounded-2xl [&::-webkit-progress-value]:rounded-2xl 
-  [&&::-moz-progress-bar]:bg-amber-500 [&&::-moz-progress-bar]:rounded-2xl;
+  overflow: hidden;
+  appearance: none;
+  border: 0;
+  border-radius: 1rem;
+  background: var(--color-base-300);
 }
 
 .progress-bar-green {
-  @apply appearance-none border-none rounded-2xl overflow-hidden bg-gray-200
-  [&&::-webkit-progress-bar]:bg-gray-200 [&&::-webkit-progress-value]:bg-green-400 [&&::-webkit-progress-bar]:rounded-2xl [&::-webkit-progress-value]:rounded-2xl 
-  [&&::-moz-progress-bar]:bg-green-400 [&&::-moz-progress-bar]:rounded-2xl;
+  overflow: hidden;
+  appearance: none;
+  border: 0;
+  border-radius: 1rem;
+  background: var(--color-base-300);
+}
+
+.progress-bar-orange::-webkit-progress-bar,
+.progress-bar-green::-webkit-progress-bar {
+  border-radius: 1rem;
+  background: var(--color-base-300);
+}
+
+.progress-bar-orange::-webkit-progress-value {
+  border-radius: 1rem;
+  background: var(--color-warning);
+}
+
+.progress-bar-green::-webkit-progress-value {
+  border-radius: 1rem;
+  background: var(--color-primary);
+}
+
+.progress-bar-orange::-moz-progress-bar {
+  border-radius: 1rem;
+  background: var(--color-warning);
+}
+
+.progress-bar-green::-moz-progress-bar {
+  border-radius: 1rem;
+  background: var(--color-primary);
 }
 
 .CircularProgressbar-path {
-  stroke: #05df72;
+  stroke: var(--color-primary);
 }
 
 .CircularProgressbar-trail {
-  stroke: #f3f4f6;
+  stroke: var(--color-base-300);
   stroke-linecap: round;
 }
 
 .CircularProgressbar-background {
-  fill: #f3f4f6;
+  fill: var(--color-base-200);
 }
 
 .income-cards_grid {
@@ -68,10 +101,14 @@
   padding: 1rem;
   flex-direction: column;
   gap: 0.75rem;
-  border-radius: 1rem;
-  background-color: #ffffff;
+  justify-content: center;
+  border: 1px solid var(--color-base-300);
+  border-radius: 1.5rem;
+  background:
+    linear-gradient(180deg, color-mix(in oklch, var(--color-base-100) 94%, var(--color-primary)), var(--color-base-100));
+  box-shadow: 0 16px 36px color-mix(in oklch, var(--color-base-content) 7%, transparent);
   flex-grow: 1;
-  height: 10rem;
+  min-height: 11rem;
 }
 
 .income-card_title {
@@ -92,8 +129,11 @@
   padding-right: 1rem;
   gap: 2rem;
   align-items: center;
-  border-radius: 1rem;
-  background-color: #ffffff;
+  justify-content: space-between;
+  border: 1px solid var(--color-base-300);
+  border-radius: 1.5rem;
+  background: var(--color-base-100);
+  box-shadow: 0 16px 36px color-mix(in oklch, var(--color-base-content) 7%, transparent);
 }
 
 .circular-prog-bar {
@@ -107,8 +147,10 @@
   flex-direction: column;
   gap: 1rem;
   justify-content: space-between;
-  border-radius: 1rem;
-  background-color: #ffffff;
+  border: 1px solid var(--color-base-300);
+  border-radius: 1.5rem;
+  background: var(--color-base-100);
+  box-shadow: 0 16px 36px color-mix(in oklch, var(--color-base-content) 7%, transparent);
 }
 
 .h3_style {
@@ -126,12 +168,13 @@
   padding-left: 0.5rem;
   padding-right: 0.5rem;
   padding-bottom: 0.25rem;
-  background-color: #f3f4f6;
+  background-color: var(--color-base-200);
+  color: var(--color-base-content);
   border-radius: 2rem;
 }
 
 .add-button:hover {
-  background-color: #e5e7eb;
+  background-color: var(--color-base-300);
 }
 
 .saving-goal {
@@ -147,7 +190,7 @@
 }
 
 .saving-goal_amount {
-  color: #6b7280;
+  color: color-mix(in oklch, var(--color-base-content) 52%, var(--color-base-100));
 }
 
 
@@ -158,12 +201,13 @@
   padding-bottom: 0.75rem;
   border-radius: 0.75rem;
   font-weight: 700;
-  color: #ffffff;
+  background: var(--color-primary);
+  color: var(--color-primary-content);
   border-radius: 0.75rem;
 }
 
 .view-goals:hover {
-  background-color: #008235;
+  background-color: color-mix(in oklch, var(--color-primary) 88%, black);
 }
 
 .flex_between {
@@ -177,7 +221,7 @@
 }
 
 .black-text {
-  color: #000000;
+  color: var(--color-base-content);
 }
 
 .bold_font {
@@ -190,7 +234,7 @@
   line-height: 1.25rem;
   font-weight: 600;
   text-align: center;
-  color: #6b7280;
+  color: color-mix(in oklch, var(--color-base-content) 58%, var(--color-base-100));
 }
 
 .nav_button_style {
@@ -209,24 +253,29 @@
   border-radius: 0.75rem;
   font-size: 1.5rem;
   line-height: 2rem;
-  background: #dcfce7;
+  background: color-mix(in oklch, var(--color-primary) 14%, var(--color-base-100));
   border-radius: 0.75rem;
 }
 
 .nav_button_plus:hover {
-  background: #adffca;
+  background: color-mix(in oklch, var(--color-primary) 24%, var(--color-base-100));
 }
 
 .account-card {
   width: 22.5rem;
-  border-radius: 0.75rem;
+  overflow: hidden;
+  border: 1px solid color-mix(in oklch, var(--color-primary) 35%, var(--color-base-300));
+  border-radius: 1.25rem;
   padding: 2rem;
   align-self: center; 
-  @apply bg-linear-to-bl from-[#005C26] to-[#0F172A] to-60%;
+  background:
+    radial-gradient(circle at 14% 12%, rgb(255 255 255 / 0.24), transparent 9rem),
+    linear-gradient(145deg, color-mix(in oklch, var(--color-primary) 88%, black), color-mix(in oklch, var(--color-neutral) 88%, black));
+  box-shadow: 0 18px 42px color-mix(in oklch, var(--color-primary) 18%, transparent);
 }
 
 .green-text {
-  color: #00c753;
+  color: var(--color-primary);
 }
 
 .small-text {
@@ -240,7 +289,7 @@
 
 .wallet_button {
   padding: 0.5rem;
-  background: #e1e1ff1a;
+  background: rgb(255 255 255 / 0.16);
 }
 
 .semibold {
@@ -254,11 +303,12 @@
 
 .transfer_button {
   width: 7.5rem;
-  background-color: #00c950;
+  background-color: var(--color-primary-content);
+  color: var(--color-primary);
 }
 
 .transfer_button:hover {
-  background-color: #00a63e;
+  background-color: color-mix(in oklch, var(--color-primary-content) 88%, var(--color-primary));
 }
 
 .saving-goal_button {
@@ -293,20 +343,40 @@
 }
 
 .gray-text {
-  color: #6b7280;
+  color: color-mix(in oklch, var(--color-base-content) 58%, var(--color-base-100));
 }
 
 .balance-card-bg {
-  border-radius: 12px;
-  background: radial-gradient(141.42% 141.42% at 0% 0%, #66FFA6 0%, rgba(102, 255, 166, 0.00) 50%), radial-gradient(141.42% 70.71% at 50% 0%, #0C6 0%, rgba(0, 204, 102, 0.00) 50%), radial-gradient(141.42% 141.42% at 100% 0%, #096 0%, rgba(0, 153, 102, 0.00) 50%), #13EC6D;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.10), 0 4px 6px -4px rgba(0, 0, 0, 0.10);
+  position: relative;
+  border: 1px solid color-mix(in oklch, var(--color-primary) 35%, var(--color-base-300));
+  border-radius: 1.5rem;
+  background:
+    radial-gradient(circle at 16% 10%, rgb(255 255 255 / 0.34), transparent 18rem),
+    radial-gradient(circle at 95% 0%, color-mix(in oklch, var(--color-secondary) 80%, transparent), transparent 22rem),
+    linear-gradient(135deg, color-mix(in oklch, var(--color-primary) 92%, black), var(--color-primary));
+  box-shadow:
+    0 22px 60px color-mix(in oklch, var(--color-primary) 22%, transparent),
+    0 16px 36px color-mix(in oklch, var(--color-base-content) 8%, transparent);
+}
+
+.balance-card-bg::after {
+  position: absolute;
+  right: -6rem;
+  bottom: -8rem;
+  width: 18rem;
+  height: 18rem;
+  border-radius: 999px;
+  background: color-mix(in oklch, var(--color-base-100) 24%, transparent);
+  content: "";
 }
 
 .saving-goal_mobile {
   padding: 1rem; 
   gap: 1rem; 
-  border-radius: 0.75rem; 
-  background-color: #ffffff; 
+  border: 1px solid var(--color-base-300);
+  border-radius: 1.25rem; 
+  background-color: var(--color-base-100); 
   width: 22.5rem;
   align-self: center; 
+  box-shadow: 0 16px 36px color-mix(in oklch, var(--color-base-content) 7%, transparent);
 }

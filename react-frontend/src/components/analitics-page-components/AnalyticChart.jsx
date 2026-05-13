@@ -80,8 +80,11 @@ function AnalyticChart({ dateStart, dateEnd }) {
       toolbar: { show: false },
       zoom: { enabled: false },
     },
-    colors: ["#13EC6D", "#EA580C"],
+    colors: ["#22c55e", "#ef4444"],
     dataLabels: { enabled: false },
+    grid: {
+      borderColor: "rgba(148, 163, 184, 0.18)",
+    },
     stroke: {
       curve: "smooth",
       width: 3,
@@ -91,10 +94,18 @@ function AnalyticChart({ dateStart, dateEnd }) {
         const day = new Date(date).getDate();
         return `Day: ${day}`;
       }),
+      labels: {
+        style: {
+          colors: "#94a3b8",
+        },
+      },
     },
     yaxis: {
       labels: {
         formatter: (val) => (val >= 1000 ? `${val / 1000}k` : val),
+        style: {
+          colors: "#94a3b8",
+        },
       },
     },
     tooltip: {
@@ -105,17 +116,22 @@ function AnalyticChart({ dateStart, dateEnd }) {
   };
 
   return (
-    <div className="m-auto w-[95%] rounded-4xl bg-base-100 p-10">
-      <div className="mb-6 flex items-center justify-center">
-        <h2 className="text-xl font-semibold">
+    <div className="rounded-3xl border border-base-300 bg-base-100 p-5 shadow-sm sm:p-6 lg:p-8">
+      <div className="mb-6 flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-base-content/45">
+            Selected period
+          </p>
+          <h2 className="mt-1 text-xl font-bold">
           {dateStart} - {dateEnd}
-        </h2>
+          </h2>
+        </div>
       </div>
 
       {loading ? (
-        <p className="text-center text-gray-500">Loading analytics...</p>
+        <p className="py-20 text-center text-base-content/50">Loading analytics...</p>
       ) : (
-        <Chart options={options} series={series} type="area" height={700} />
+        <Chart options={options} series={series} type="area" height={620} />
       )}
     </div>
   );

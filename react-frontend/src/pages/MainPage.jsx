@@ -90,26 +90,26 @@ const MainPage = () => {
     }, []);
 
   return (
-    <div className="flex">
-      <div className="w-64 nav-display">
-      <TransactionNav/>
+    <div className="min-h-screen bg-base-200 text-base-content">
+      <TransactionNav />
+
+      <div className="min-h-screen pb-28 md:ml-64 md:pb-0">
+        <DashboardHeaderMobile />
+        <DashboardHeaderDesktop />
+
+        <main className="main_layout">
+          <DashboardMobile balance={formatCurrency(balance)} />
+          <DashboardDesktop
+            formatCurrency={formatCurrency}
+            balance={balance}
+            monthlySpending={monthlySpending}
+            incomes={formatCurrency(incomes)}
+            expenses={formatCurrency(expenses)}
+            incomeItems={incomeItems}
+            expenseItems={expenseItems}
+          />
+        </main>
       </div>
-      <div className="h-screen flex flex-col bg-[#f3f4f6] grow">
-      <DashboardHeaderMobile/>
-      <DashboardHeaderDesktop/>
-    <main className="main_layout">
-      <DashboardMobile balance={formatCurrency(balance)}/>
-      <DashboardDesktop
-        formatCurrency={formatCurrency}
-        balance={balance}
-        monthlySpending={monthlySpending}
-        incomes={formatCurrency(incomes)}
-        expenses={formatCurrency(expenses)}
-        incomeItems={incomeItems}
-        expenseItems={expenseItems}
-      />
-    </main>
-    </div>
     </div>
   );
 };

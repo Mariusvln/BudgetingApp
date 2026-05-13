@@ -157,18 +157,24 @@ function ExpenseRecentTable({
         </div>
       </section>
 
-      <div className="card hidden border border-base-200 bg-base-100 shadow-sm lg:block">
+      <div className="card hidden border border-base-300 bg-base-100 shadow-sm lg:block">
       <div className="card-body">
         <div className="mb-6 flex flex-col gap-4">
+          <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
           <div>
-          <div>
-            <h2 className="text-xl font-semibold">Expense History</h2>
-            <p className="text-sm text-gray-500">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">
+              Cash flow
+            </p>
+            <h2 className="mt-1 text-2xl font-bold tracking-tight">Expense History</h2>
+            <p className="text-sm text-base-content/60">
               {loading
                 ? "Loading..."
                 : `Showing ${transactions.length} of ${totalCount ?? transactions.length} entries`}
             </p>
           </div>
+            <div className="rounded-full bg-error/10 px-4 py-2 text-sm font-bold text-error">
+              Expenses
+            </div>
           </div>
 
           <div className="rounded-2xl bg-base-200/60 p-3">
@@ -245,7 +251,7 @@ function ExpenseRecentTable({
 
         <div className="overflow-x-auto">
           <table className="table">
-            <thead className="text-gray-500 text-sm">
+            <thead className="text-sm text-base-content/55">
               <tr>
                 <th>ID</th>
                 <th>Date</th>
@@ -281,7 +287,7 @@ function ExpenseRecentTable({
           </table>
 
           {!loading && transactions.length === 0 && (
-            <div className="text-center py-10 text-gray-400">
+            <div className="py-10 text-center text-base-content/40">
               No data found for this range
             </div>
           )}

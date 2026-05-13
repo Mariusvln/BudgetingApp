@@ -2,7 +2,6 @@ import { CircularProgressbar } from "react-circular-progressbar";
 import "../../assets/styles/Dashboard.css";
 import BalanceCard from "./BalanceCard"
 import MonthlyGrowth from "./MonthlyGrowth"
-import TransactionNav from "../TransactionNav"
 import IncomeCard from "./IncomeCard";
 
 const DashboardDesktop = (props) => {
@@ -10,26 +9,27 @@ const DashboardDesktop = (props) => {
   const incomeCards = ["Total Income", "Total Expenses", "Monthly Savings"]
   const progressBarStyles = ["progress-bar-green", "progress-bar-orange"]
   return (
-    <div className="grow desktop-display mr-5.5 pl-[3%]">
-      <div className="grow">
-        <section className="flex gap-5.5 grow mb-5.5">
+    <div className="desktop-display px-6 pb-8 pt-6 md:px-8">
+      <div className="mx-auto max-w-7xl">
+        <section className="mb-6 grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1.35fr)_minmax(360px,0.65fr)]">
           <BalanceCard formatCurrency={props.formatCurrency} balance={props.balance} monthlySpending={props.monthlySpending}/>
           <MonthlyGrowth
             incomes={props.incomeItems}
             expenses={props.expenseItems}
           />
         </section>
-        <div className="flex grow gap-5">
-          <section className="income-cards_grid basis-[450px] grow">
+        <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1.35fr)_minmax(360px,0.65fr)]">
+          <section className="income-cards_grid">
             <IncomeCard header={incomeCards[0]} progressStyle={progressBarStyles[0]} money={props.incomes} percentage={80}/>
             <IncomeCard header={incomeCards[1]} progressStyle={progressBarStyles[1]} money={props.expenses} percentage={40}/>
             <IncomeCard header={incomeCards[2]} progressStyle={progressBarStyles[0]} money={"$4,300.00"} percentage={60}/>
-            <div className="circular-prog-card flex_center">
+            <div className="circular-prog-card">
               <div className="flex flex-col">
-                <p className="gray-text semibold">Savings Ratio</p>
-                <h3 className="my-1 bold_font h3_style black-text">40.8%</h3>
+                <p className="text-sm font-semibold text-base-content/55">Savings Ratio</p>
+                <h3 className="my-1 text-3xl font-extrabold tracking-tight text-base-content">40.8%</h3>
+                <p className="text-xs font-semibold text-base-content/40">Income kept after spending</p>
               </div>
-              <div className="min-h-[30%] min-w-[30%]">
+              <div className="h-24 w-24">
               <div className="circular-prog-bar">
                 <CircularProgressbar
                   value={percentage}
@@ -39,14 +39,14 @@ const DashboardDesktop = (props) => {
               </div>
             </div>
           </section>
-          <section className="saving-goals grow-2 basis-[400px]">
+          <section className="saving-goals">
             <div className="saving-goal">
-              <h4 className="h4_style black-text">Saving Goals</h4>
-              <button className="add-button black-text">+</button>
+              <h4 className="text-lg font-bold text-base-content">Saving Goals</h4>
+              <button className="add-button">+</button>
             </div>
             <div>
               <div className="saving-goal">
-                <p className="black-text">New Car Fund</p>
+                <p className="font-semibold text-base-content">New Car Fund</p>
                 <p className="saving-goal_amount">$12,000 / $25,000</p>
               </div>
               <progress
@@ -57,7 +57,7 @@ const DashboardDesktop = (props) => {
             </div>
             <div>
               <div className="saving-goal">
-                <p className="black-text">Emegency Fund</p>
+                <p className="font-semibold text-base-content">Emergency Fund</p>
                 <p className="saving-goal_amount">$8,500 / $10,000</p>
               </div>
               <progress
@@ -66,7 +66,7 @@ const DashboardDesktop = (props) => {
                 className="saving-goal_bar progress-bar-green"
               ></progress>
             </div>
-            <button className="view-goals bg-green-500">+ View All Goals</button>
+            <button className="view-goals">+ View All Goals</button>
           </section>
         </div>
       </div>

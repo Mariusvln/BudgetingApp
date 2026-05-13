@@ -208,7 +208,7 @@ function ExpensesPage() {
         <div className="mb-4 lg:hidden">
           <button
             type="button"
-            className="btn h-11 w-full rounded-xl border-0 bg-[#22c55e] text-white hover:bg-[#16a34a]"
+            className="btn btn-primary h-11 w-full rounded-xl border-0"
             onClick={() => setIsAddExpenseModalOpen(true)}
           >
             Add Expense
