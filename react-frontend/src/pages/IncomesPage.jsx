@@ -3,7 +3,7 @@ import TransactionNav from "../components/TransactionNav";
 import IncomeHeader from "../components/incomes-page-components/IncomeHeader";
 import IncomeRecentTable from "../components/incomes-page-components/IncomeRecentTable";
 import IncomeAddPanel from "../components/incomes-page-components/IncomeAddPanel";
-import ExportIncomeButton from "../components/incomes-page-components/ExportIncomeButton";
+import ExportButton from "../components/profile-page-components/ExportButton";
 
 function IncomesPage() {
   const formatDate = (date) => {
@@ -149,7 +149,7 @@ function IncomesPage() {
             />
 
             <div className="mt-4 hidden lg:block">
-              <ExportIncomeButton />
+              <ExportButton />
             </div>
           </div>
 

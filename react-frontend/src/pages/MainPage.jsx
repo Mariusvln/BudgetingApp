@@ -10,6 +10,8 @@ const MainPage = () => {
 
     const [incomes, setIncomes] = useState(0);
     const [expenses, setExpenses] = useState(0);
+    const [incomeItems, setIncomeItems] = useState([]);
+    const [expenseItems, setExpenseItems] = useState([]);
     const [balance, setBalance] = useState(0);
     const [monthlySpending, setSpending] = useState(0);
   
@@ -35,10 +37,10 @@ const MainPage = () => {
     const fetchBalance = async () => {
       try {
         const [incomeResponse, expenseResponse] = await Promise.all([
-          fetch(`http://localhost:8080/api/app/incomes/showAllIncomes`, {
+          fetch(`http://localhost:8080/api/app/incomes/`, {
             credentials: "include",
           }),
-          fetch(`http://localhost:8080/api/app/expenses/showAllExpenses`, {
+          fetch(`http://localhost:8080/api/app/expenses/`, {
             credentials: "include",
           }),
         ]);
@@ -57,30 +59,22 @@ const MainPage = () => {
           (partialSum, a) => partialSum + a.amount,
           0,
         );
+        const monthlyExpensesSum = expensesResponse
+          .filter((expense) => expense.date >= dateStart && expense.date <= dateEnd)
+          .reduce((partialSum, expense) => partialSum + expense.amount, 0);
+
+        setIncomeItems(Array.isArray(incomesResponse) ? incomesResponse : []);
+        setExpenseItems(Array.isArray(expensesResponse) ? expensesResponse : []);
         setIncomes(incomesSum)
         setExpenses(expensesSum)
         setBalance(incomesSum - expensesSum);
+        setSpending(monthlyExpensesSum);
       } catch (error) {
         console.error("Error fetching incomes:", error);
         setIncomes(0);
         setExpenses(0);
-      }
-    };
-  
-    const fetchMonthlyExpenses = async () => {
-      try {
-        const expensesResponse = await fetch(
-          `http://localhost:8080/api/app/expenses/fromDateStartToDateFinish?dateStart=${dateStart}&dateEnd=${dateEnd}`,
-          { credentials: "include" },
-        );
-        if (!expensesResponse.ok) {
-          throw new Error("Failed to fetch Monthly Expenses data");
-        }
-        const monthlyExpense = await expensesResponse.json();
-        setSpending(
-          monthlyExpense.reduce((partialSum, a) => partialSum + a.amount, 0),);
-      } catch (error) {
-        console.log("Error fetching Monthly Expenses data:", error);
+        setIncomeItems([]);
+        setExpenseItems([]);
         setSpending(0);
       }
     };
@@ -92,7 +86,7 @@ const MainPage = () => {
       }).format(Number(value) || 0);
   
     useEffect(() => {
-      (fetchBalance(), fetchMonthlyExpenses());
+      fetchBalance();
     }, []);
 
   return (
@@ -100,12 +94,20 @@ const MainPage = () => {
       <div className="w-64 nav-display">
       <TransactionNav/>
       </div>
-      <div className="h-screen flex flex-col bg-[#f3f4f6] pl-[3%] grow">
+      <div className="h-screen flex flex-col bg-[#f3f4f6] grow">
       <DashboardHeaderMobile/>
-      <DashboardHeaderDesktop />
+      <DashboardHeaderDesktop/>
     <main className="main_layout">
-      <DashboardMobile/>
-      <DashboardDesktop formatCurrency={formatCurrency} balance={balance} monthlySpending={monthlySpending} incomes={formatCurrency(incomes)} expenses={formatCurrency(expenses)}/>
+      <DashboardMobile balance={formatCurrency(balance)}/>
+      <DashboardDesktop
+        formatCurrency={formatCurrency}
+        balance={balance}
+        monthlySpending={monthlySpending}
+        incomes={formatCurrency(incomes)}
+        expenses={formatCurrency(expenses)}
+        incomeItems={incomeItems}
+        expenseItems={expenseItems}
+      />
     </main>
     </div>
     </div>

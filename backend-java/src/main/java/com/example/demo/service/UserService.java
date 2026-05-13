@@ -61,9 +61,8 @@ public class UserService {
                 : Role.ROLE_USER;
     }
 
-    public User authenticate(String username, String email, String password) {
-        User user = userRepository.findByEmail(email)
-                .filter(u -> u.getName().matches(username))
+    public User authenticate(String email, String password) {
+        User user = userRepository.findByEmail(email.trim())
                 .filter(u -> encoder.matches(password, u.getPassword()))
                 .orElse(null);
 

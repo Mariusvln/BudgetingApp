@@ -10,11 +10,14 @@ const DashboardDesktop = (props) => {
   const incomeCards = ["Total Income", "Total Expenses", "Monthly Savings"]
   const progressBarStyles = ["progress-bar-green", "progress-bar-orange"]
   return (
-    <div className="grow desktop-display mr-5.5">
+    <div className="grow desktop-display mr-5.5 pl-[3%]">
       <div className="grow">
         <section className="flex gap-5.5 grow mb-5.5">
           <BalanceCard formatCurrency={props.formatCurrency} balance={props.balance} monthlySpending={props.monthlySpending}/>
-          <MonthlyGrowth/>
+          <MonthlyGrowth
+            incomes={props.incomeItems}
+            expenses={props.expenseItems}
+          />
         </section>
         <div className="flex grow gap-5">
           <section className="income-cards_grid basis-[450px] grow">
