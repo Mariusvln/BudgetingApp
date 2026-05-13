@@ -9,6 +9,11 @@ function ExpenseRecentTable({
   setDateEnd,
   onTransactionAdded,
   categories = [],
+  searchQuery = "",
+  selectedCategory = "ALL",
+  setSearchQuery,
+  setSelectedCategory,
+  totalCount,
 }) {
   const formatMobileDate = (dateValue) => {
     const date = new Date(dateValue);
@@ -154,38 +159,86 @@ function ExpenseRecentTable({
 
       <div className="card hidden border border-base-200 bg-base-100 shadow-sm lg:block">
       <div className="card-body">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+        <div className="mb-6 flex flex-col gap-4">
+          <div>
           <div>
             <h2 className="text-xl font-semibold">Expense History</h2>
             <p className="text-sm text-gray-500">
               {loading
                 ? "Loading..."
-                : `Showing ${transactions.length} entries`}
+                : `Showing ${transactions.length} of ${totalCount ?? transactions.length} entries`}
             </p>
           </div>
+          </div>
 
-          <div className="flex flex-wrap gap-2 items-center">
-            <div className="form-control">
-              <label className="label py-0">
-                <span className="label-text text-xs">Start</span>
-              </label>
+          <div className="rounded-2xl bg-base-200/60 p-3">
+            <div className="grid grid-cols-1 gap-3 xl:grid-cols-[minmax(240px,1fr)_210px_160px_160px_auto]">
+            <label className="flex flex-col gap-1">
+              <span className="text-[11px] font-semibold uppercase tracking-wide text-base-content/50">
+                Search
+              </span>
+              <input
+                type="text"
+                className="input input-bordered h-11 rounded-xl bg-base-100 text-sm"
+                placeholder="Title or category..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery?.(e.target.value)}
+              />
+            </label>
+
+            <label className="flex flex-col gap-1">
+              <span className="text-[11px] font-semibold uppercase tracking-wide text-base-content/50">
+                Category
+              </span>
+              <select
+                className="select select-bordered h-11 rounded-xl bg-base-100 text-sm"
+                value={selectedCategory}
+                onChange={(e) => setSelectedCategory?.(e.target.value)}
+              >
+                <option value="ALL">All categories</option>
+                {categories.map((category) => (
+                  <option key={category.id} value={String(category.id)}>
+                    {category.name}
+                  </option>
+                ))}
+              </select>
+            </label>
+
+            <label className="flex flex-col gap-1">
+              <span className="text-[11px] font-semibold uppercase tracking-wide text-base-content/50">
+                From
+              </span>
               <input
                 type="date"
-                className="input input-bordered input-sm"
+                className="input input-bordered h-11 rounded-xl bg-base-100 text-sm"
                 value={dateStart}
                 onChange={(e) => setDateStart(e.target.value)}
               />
-            </div>
-            <div className="form-control">
-              <label className="label py-0">
-                <span className="label-text text-xs">End</span>
-              </label>
+            </label>
+
+            <label className="flex flex-col gap-1">
+              <span className="text-[11px] font-semibold uppercase tracking-wide text-base-content/50">
+                To
+              </span>
               <input
                 type="date"
-                className="input input-bordered input-sm"
+                className="input input-bordered h-11 rounded-xl bg-base-100 text-sm"
                 value={dateEnd}
                 onChange={(e) => setDateEnd(e.target.value)}
               />
+            </label>
+
+            <button
+              type="button"
+              className="btn h-11 self-end rounded-xl border-base-300 bg-base-100 px-5"
+              onClick={() => {
+                setSearchQuery?.("");
+                setSelectedCategory?.("ALL");
+              }}
+              disabled={!searchQuery.trim() && selectedCategory === "ALL"}
+            >
+              Reset
+            </button>
             </div>
           </div>
         </div>
