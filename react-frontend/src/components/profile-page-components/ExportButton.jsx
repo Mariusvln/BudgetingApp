@@ -1,6 +1,8 @@
 import { useState } from "react";
+import { useAppAlert } from "../../contexts/useAppAlert";
 
 const ExportButton = () => {
+  const appAlert = useAppAlert();
   const [open, setOpen] = useState(false);
 
   const downloadFile = async (type) => {
@@ -30,7 +32,7 @@ const ExportButton = () => {
       setOpen(false);
     } catch (error) {
       console.error("Export expenses error:", error);
-      alert("Failed to export expenses.");
+      await appAlert.alert("Failed to export expenses.", { type: "error" });
     }
   };
 

@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
+import { useAppAlert } from "../../contexts/useAppAlert";
 
 const AdminCategories = () => {
+  const appAlert = useAppAlert();
   const [categories, setCategories] = useState([]);
   const [name, setName] = useState("");
   const [type, setType] = useState("INCOME");
@@ -69,8 +71,14 @@ const AdminCategories = () => {
   };
 
   const handleEdit = async (cat) => {
-    const newName = prompt("New category name:", cat.name);
-    const newType = prompt("New type (INCOME / EXPENSE):", cat.type);
+    const newName = await appAlert.prompt("New category name:", cat.name, {
+      placeholder: "Category name",
+    });
+    if (!newName) return;
+
+    const newType = await appAlert.prompt("New type (INCOME / EXPENSE):", cat.type, {
+      placeholder: "INCOME or EXPENSE",
+    });
 
     if (!newName || !newType) return;
 
