@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { useAppAlert } from "../../contexts/useAppAlert";
 
 function IncomeAddPanel({ onTransactionAdded, categories = [] }) {
+  const appAlert = useAppAlert();
   const getTodayDate = () => new Date().toISOString().split("T")[0];
 
   const startDate = getTodayDate();
@@ -36,8 +38,13 @@ function IncomeAddPanel({ onTransactionAdded, categories = [] }) {
   const handleSave = async (formData) => {
     const { description, amount, date, category } = formData;
 
+    if (!amount) {
+      await appAlert.alert("Please fill in all fields", { type: "warning" });
+      return;
+    }
+
     if (!category) {
-      alert("Please select a category");
+      await appAlert.alert("Please select a category", { type: "warning" });
       return;
     }
 
@@ -75,13 +82,24 @@ function IncomeAddPanel({ onTransactionAdded, categories = [] }) {
         });
       } else {
         const errorData = await response.text();
-        alert("Server error: " + errorData);
+        await appAlert.alert("Server error: " + errorData, { type: "error" });
       }
     } catch (error) {
       console.error("Connection error:", error);
-      alert("Could not connect to the server.");
+      await appAlert.alert("Could not connect to the server.", { type: "error" });
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleInvalid = async (formErrors) => {
+    if (formErrors.amount) {
+      await appAlert.alert("Please fill in all fields", { type: "warning" });
+      return;
+    }
+
+    if (formErrors.category) {
+      await appAlert.alert("Please select a category", { type: "warning" });
     }
   };
 
@@ -96,7 +114,7 @@ function IncomeAddPanel({ onTransactionAdded, categories = [] }) {
 
           <form
             className="flex flex-col gap-3"
-            onSubmit={handleSubmit(handleSave)}
+            onSubmit={handleSubmit(handleSave, handleInvalid)}
             noValidate
           >
             <input
@@ -135,7 +153,7 @@ function IncomeAddPanel({ onTransactionAdded, categories = [] }) {
               placeholder="Description (e.g. Grass cutting)"
               className="input input-bordered"
               {...register("description", {
-                maxLength: {value: 50, message: "Description is too long"}
+                maxLength: { value: 50, message: "Description is too long" },
               })}
             />
             {errors.description?.message && (

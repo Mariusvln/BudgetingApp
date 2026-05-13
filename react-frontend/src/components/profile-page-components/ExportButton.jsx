@@ -1,6 +1,8 @@
 import { useState } from "react";
+import { useAppAlert } from "../../contexts/useAppAlert";
 
 const ExportButton = () => {
+  const appAlert = useAppAlert();
   const [open, setOpen] = useState(false);
 
   const exportOptions = [
@@ -50,7 +52,7 @@ const ExportButton = () => {
       setOpen(false);
     } catch (error) {
       console.error("Export error:", error);
-      alert("Failed to export file.");
+      await appAlert.alert("Failed to export file.", { type: "error" });
     }
   };
 
@@ -60,7 +62,7 @@ const ExportButton = () => {
         onClick={() => setOpen(!open)}
         className="px-6 py-2 rounded-lg bg-blue-500 text-white shadow"
       >
-        Export ▼
+        Export v
       </button>
 
       {open && (

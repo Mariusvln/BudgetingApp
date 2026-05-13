@@ -1,9 +1,11 @@
 import { useState } from "react";
 import axios from "axios";
 import { useAuth } from "../../contexts/AuthContext";
+import { useAppAlert } from "../../contexts/useAppAlert";
 
 function DeleteAccountSection() {
   const { setUser } = useAuth();
+  const appAlert = useAppAlert();
 
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
@@ -15,8 +17,16 @@ function DeleteAccountSection() {
       return;
     }
 
-    const confirmed = window.confirm(
-      "Are you sure you want to delete your account? This action cannot be undone."
+    const confirmed = await appAlert.confirm(
+      "This action cannot be undone. All your data, files, and account settings will be permanently deleted.",
+      {
+        type: "error",
+        title: "Are you sure you want to delete your account?",
+        warning:
+          "This will permanently delete your account and remove all your data from our system.",
+        confirmText: "Yes",
+        cancelText: "No",
+      }
     );
 
     if (!confirmed) return;

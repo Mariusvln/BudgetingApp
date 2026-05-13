@@ -1,6 +1,7 @@
 import ReactDom from "react-dom";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { useAppAlert } from "../../contexts/useAppAlert";
 
 const IncomeEditForm = ({
   id,
@@ -12,6 +13,7 @@ const IncomeEditForm = ({
   onTransactionAdded,
   categories = [],
 }) => {
+  const appAlert = useAppAlert();
   const [loading, setLoading] = useState(false);
 
   const {
@@ -69,14 +71,14 @@ const IncomeEditForm = ({
         if (onTransactionAdded) {
           onTransactionAdded();
         }
-        alert("Income saved successfully!");
+        await appAlert.alert("Income saved successfully!", { type: "success" });
       } else {
         const errorData = await response.text();
-        alert("Server error: " + errorData);
+        await appAlert.alert("Server error: " + errorData, { type: "error" });
       }
     } catch (error) {
       console.error("Connection error:", error);
-      alert("Could not connect to the server.");
+      await appAlert.alert("Could not connect to the server.", { type: "error" });
     } finally {
       setLoading(false);
     }

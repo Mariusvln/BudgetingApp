@@ -1,11 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
+import { useAppAlert } from "../../contexts/useAppAlert";
 
 const API_BASE = "http://localhost:8080";
 const DEFAULT_ADMIN_EMAIL = "admin@gmail.com";
 
 const AdminUsers = () => {
   const { user: currentUser, setUser } = useAuth();
+  const appAlert = useAppAlert();
   const [users, setUsers] = useState([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
@@ -144,8 +146,9 @@ const AdminUsers = () => {
   };
 
   const handleDeleteUser = async (user) => {
-    const confirmed = window.confirm(
-      `Delete account for ${user.email || user.name || "this user"}?`
+    const confirmed = await appAlert.confirm(
+      `Delete account for ${user.email || user.name || "this user"}?`,
+      { type: "error", confirmText: "Delete" }
     );
 
     if (!confirmed) return;
@@ -165,7 +168,7 @@ const AdminUsers = () => {
       setUsers((prev) => prev.filter((u) => u.id !== user.id));
     } catch (error) {
       console.error("Delete error:", error);
-      alert("Failed to delete user");
+      await appAlert.alert("Failed to delete user", { type: "error" });
     } finally {
       setActionLoadingId(null);
     }
@@ -184,18 +187,21 @@ const AdminUsers = () => {
       editRole !== "ROLE_ADMIN";
 
     if (!trimmedName || !trimmedEmail || !editRole) {
-      alert("Fill all fields");
+      await appAlert.alert("Fill all fields", { type: "warning" });
       return;
     }
 
     if (isDefaultAdmin && editRole !== "ROLE_ADMIN") {
-      alert("Default admin role cannot be changed.");
+      await appAlert.alert("Default admin role cannot be changed.", {
+        type: "warning",
+      });
       return;
     }
 
     if (isRemovingOwnAdminRole) {
-      const confirmed = window.confirm(
-        "You are removing your own admin role. After saving, you can lose access to the Admin page. Are you sure?"
+      const confirmed = await appAlert.confirm(
+        "You are removing your own admin role. After saving, you can lose access to the Admin page. Are you sure?",
+        { type: "warning", confirmText: "Save anyway" }
       );
 
       if (!confirmed) return;
@@ -234,7 +240,7 @@ const AdminUsers = () => {
       closeEditModal();
     } catch (error) {
       console.error("Update error:", error);
-      alert("Failed to update user");
+      await appAlert.alert("Failed to update user", { type: "error" });
     } finally {
       setActionLoadingId(null);
     }
