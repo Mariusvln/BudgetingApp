@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { useAppAlert } from "../../contexts/useAppAlert";
 
 function ExpenseAddPanel({ onTransactionAdded, categories = [] }) {
+  const appAlert = useAppAlert();
   const getTodayDate = () => new Date().toISOString().split('T')[0];
 
   const [date, setDate] = useState(getTodayDate());
@@ -18,13 +20,13 @@ function ExpenseAddPanel({ onTransactionAdded, categories = [] }) {
   }, [categories]);
 
   const handleSave = async () => {
-    if (!amount || !description) {
-      alert("Please fill in all fields");
+    if (!amount) {
+      await appAlert.alert("Please fill in all fields", { type: "warning" });
       return;
     }
 
     if (!category) {
-      alert("Please select a category");
+      await appAlert.alert("Please select a category", { type: "warning" });
       return;
     }
 
@@ -54,7 +56,7 @@ function ExpenseAddPanel({ onTransactionAdded, categories = [] }) {
           onTransactionAdded();
         }
 
-        alert("Expense saved successfully!");
+        await appAlert.alert("Expense saved successfully!", { type: "success" });
 
         setAmount("");
         setDescription("");
@@ -62,11 +64,11 @@ function ExpenseAddPanel({ onTransactionAdded, categories = [] }) {
         setCategory(categories.length > 0 ? String(categories[0].id) : "");
       } else {
         const errorData = await response.text();
-        alert("Server error: " + errorData);
+        await appAlert.alert("Server error: " + errorData, { type: "error" });
       }
     } catch (error) {
       console.error("Connection error:", error);
-      alert("Could not connect to the server.");
+      await appAlert.alert("Could not connect to the server.", { type: "error" });
     } finally {
       setLoading(false);
     }
