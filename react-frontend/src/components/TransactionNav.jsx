@@ -13,27 +13,52 @@ function TransactionNav() {
   const { user } = useAuth();
   const { theme } = useTheme();
 
-  const isValentineTheme = theme === "valentine";
+  const themeStyles = {
+    light: {
+      logo: "from-[#22C55E] to-[#15803D]",
+      activeLink: "bg-green-50 text-green-700 shadow-sm",
+      activeIcon: "bg-green-100",
+      mobileActiveLink: "bg-green-50 text-green-700",
+      mobileActiveIcon: "bg-green-100",
+    },
+    dark: {
+      logo: "from-[#38BDF8] to-[#818CF8]",
+      activeLink: "bg-sky-500/15 text-sky-200 shadow-sm",
+      activeIcon: "bg-sky-500/20",
+      mobileActiveLink: "bg-sky-500/15 text-sky-200",
+      mobileActiveIcon: "bg-sky-500/20",
+    },
+    valentine: {
+      logo: "from-[#831843] to-[#BE185D]",
+      activeLink: "bg-pink-100 text-pink-900 shadow-sm",
+      activeIcon: "bg-pink-200",
+      mobileActiveLink: "bg-pink-100 text-pink-900",
+      mobileActiveIcon: "bg-pink-200",
+    },
+    synthwave: {
+      logo: "from-[#E779C1] to-[#58C7F3]",
+      activeLink: "bg-fuchsia-400/20 text-fuchsia-100 shadow-sm",
+      activeIcon: "bg-fuchsia-400/25",
+      mobileActiveLink: "bg-fuchsia-400/20 text-fuchsia-100",
+      mobileActiveIcon: "bg-fuchsia-400/25",
+    },
+    luxury: {
+      logo: "from-[#DCA54C] to-[#F4E7C5]",
+      activeLink: "bg-amber-400/20 text-amber-100 shadow-sm",
+      activeIcon: "bg-amber-400/25",
+      mobileActiveLink: "bg-amber-400/20 text-amber-100",
+      mobileActiveIcon: "bg-amber-400/25",
+    },
+    cyberpunk: {
+      logo: "from-[#FF7598] to-[#00E7F9]",
+      activeLink: "bg-yellow-300 text-black shadow-sm",
+      activeIcon: "bg-pink-300",
+      mobileActiveLink: "bg-yellow-300 text-black",
+      mobileActiveIcon: "bg-pink-300",
+    },
+  };
 
-  const logoClass = isValentineTheme
-    ? "from-[#831843] to-[#BE185D]"
-    : "from-[#22C55E] to-[#15803D]";
-
-  const activeLinkClass = isValentineTheme
-    ? "bg-pink-100 text-pink-900 shadow-sm"
-    : "bg-green-50 text-green-700 shadow-sm";
-
-  const activeIconClass = isValentineTheme
-    ? "bg-pink-200"
-    : "bg-green-100";
-
-  const mobileActiveLinkClass = isValentineTheme
-    ? "bg-pink-100 text-pink-900"
-    : "bg-green-50 text-green-700";
-
-  const mobileActiveIconClass = isValentineTheme
-    ? "bg-pink-200"
-    : "bg-green-100";
+  const currentThemeStyles = themeStyles[theme] ?? themeStyles.light;
 
   const navItems = [
     {
@@ -97,7 +122,7 @@ function TransactionNav() {
       <aside className="fixed left-0 top-0 z-40 hidden h-screen w-64 flex-col border-r border-base-300 bg-base-100 md:flex">
         <div className="border-b border-base-200 px-6 py-6">
           <h1
-            className={`bg-linear-to-r ${logoClass} bg-clip-text text-3xl font-bold text-transparent`}
+            className={`bg-linear-to-r ${currentThemeStyles.logo} bg-clip-text text-3xl font-bold text-transparent`}
           >
             FinVue
           </h1>
@@ -122,14 +147,14 @@ function TransactionNav() {
                     href={item.href}
                     className={`group flex items-center gap-3 rounded-2xl px-4 py-3 transition-all duration-200 ${
                       isActive
-                        ? activeLinkClass
+                        ? currentThemeStyles.activeLink
                         : "text-base-content hover:bg-base-200"
                     }`}
                   >
                     <div
                       className={`flex h-10 w-10 items-center justify-center rounded-xl ${
                         isActive
-                          ? activeIconClass
+                          ? currentThemeStyles.activeIcon
                           : "bg-base-200 group-hover:bg-base-300"
                       }`}
                     >
@@ -184,13 +209,13 @@ function TransactionNav() {
                   href={item.href}
                   className={`flex flex-col items-center justify-center gap-1 rounded-2xl px-2 py-2 text-[11px] font-semibold transition ${
                     isActive
-                      ? mobileActiveLinkClass
+                      ? currentThemeStyles.mobileActiveLink
                       : "text-base-content/60 hover:bg-base-200"
                   }`}
                 >
                   <span
                     className={`flex h-9 w-9 items-center justify-center rounded-xl ${
-                      isActive ? mobileActiveIconClass : "bg-base-200"
+                      isActive ? currentThemeStyles.mobileActiveIcon : "bg-base-200"
                     }`}
                   >
                     <img
