@@ -5,7 +5,7 @@
 }
 
 @plugin "daisyui" {
-  themes: light --default, retro, cyberpunk, valentine, aqua, synthwave, coffee, luxury, mint-ice-cream;
+  themes: light --default, dark, retro, cyberpunk, valentine, aqua, synthwave, coffee, luxury, mint-ice-cream;
 }
 
 @plugin "daisyui/theme" {

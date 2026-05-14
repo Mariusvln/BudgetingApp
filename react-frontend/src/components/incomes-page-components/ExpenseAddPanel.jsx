@@ -79,7 +79,7 @@ function ExpenseAddPanel({ onTransactionAdded, categories = [] }) {
       <div className="card bg-base-100 border border-base-200">
         <div className="card-body">
           <h2 className="font-semibold text-lg">Quick Add</h2>
-          <p className="text-sm text-gray-500 mb-4">Easily log a new expense</p>
+          <p className="mb-4 text-sm text-base-content/60">Easily log a new expense</p>
 
           <div className="flex flex-col gap-3">
             <input
@@ -126,13 +126,13 @@ function ExpenseAddPanel({ onTransactionAdded, categories = [] }) {
             <button
               onClick={handleSave}
               disabled={loading || categories.length === 0}
-              className={`btn bg-linear-to-r from-[#13EC6D] to-[#0BB855] hover:bg-linear-to-r hover:from-[#0BB855] hover:via-[#13EC6D] hover:to-[#0BB855] text-white ${loading ? 'opacity-50' : ''}`}
+              className={`btn btn-primary ${loading ? 'opacity-50' : ''}`}
             >
               {loading ? "Saving..." : "Add Expense"}
             </button>
 
             <button
-              className="btn btn-ghost"
+              className="btn btn-neutral"
               onClick={() => {
                 setAmount("");
                 setDescription("");

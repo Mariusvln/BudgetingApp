@@ -53,12 +53,48 @@ const ThemeSelector = () => {
       },
     },
     {
+      name: "dark",
+      preview: {
+        bg: "#1d232a",
+        surface: "#191e24",
+        primary: "#7480ff",
+        text: "#d7dde4",
+      },
+    },
+    {
       name: "valentine",
       preview: {
         bg: "#fdf2f4",
         surface: "#ffffff",
         primary: "#e96d7b",
         text: "#7c2d3a",
+      },
+    },
+    {
+      name: "synthwave",
+      preview: {
+        bg: "#1a103d",
+        surface: "#2d1b69",
+        primary: "#e779c1",
+        text: "#f9f7ff",
+      },
+    },
+    {
+      name: "luxury",
+      preview: {
+        bg: "#09090b",
+        surface: "#171618",
+        primary: "#dca54c",
+        text: "#f4ead7",
+      },
+    },
+    {
+      name: "cyberpunk",
+      preview: {
+        bg: "#fff248",
+        surface: "#fff9a6",
+        primary: "#ff7598",
+        text: "#181600",
       },
     },
   ];
@@ -121,7 +157,7 @@ const ThemeSelector = () => {
               onClick={() => setTheme(t.name)}
               className={`flex w-full items-center justify-between rounded-xl px-3 py-3 text-sm transition-all duration-150 ${
                 theme === t.name
-                  ? "bg-green-500 text-white shadow-sm"
+                  ? "bg-primary text-primary-content shadow-sm"
                   : "text-base-content hover:bg-base-200"
               }`}
             >

@@ -4,7 +4,7 @@ function TransactionAddPanel() {
       <div className="card bg-base-100 border border-base-200">
         <div className="card-body">
           <h2 className="font-semibold text-lg">Quick Add</h2>
-          <p className="text-sm text-gray-500 mb-4">
+          <p className="mb-4 text-sm text-base-content/60">
             Easily log a new transaction
           </p>
 
@@ -34,20 +34,20 @@ function TransactionAddPanel() {
               <option>Salary</option>
             </select>
 
-            <button className="btn bg-linear-to-r from-[#13EC6D] to-[#0BB855] hover:bg-linear-to-r hover:from-[#0BB855] hover:via-[#13EC6D] hover:to-[#0BB855] text-white">
+            <button className="btn btn-primary">
               Save Transaction
             </button>
 
-            <button className="btn btn-ghost">Clear Fields</button>
+            <button className="btn btn-neutral">Clear Fields</button>
           </div>
 
           
-          <div className="mt-6 bg-linear-to-r from-[#13EC6D] to-[#0BB855] text-white p-4 rounded-xl">
+          <div className="mt-6 rounded-xl bg-primary p-4 text-primary-content">
             <p className="text-sm">
               You've spent 15% less on Food & Drink compared to last week.
             </p>
 
-            <button className="btn btn-sm mt-3 bg-white text-green-600">
+            <button className="btn btn-sm mt-3 border-primary-content/20 bg-base-100 text-base-content hover:bg-base-200">
               View Analysis
             </button>
           </div>
