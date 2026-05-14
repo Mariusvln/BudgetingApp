@@ -1,5 +1,5 @@
 import { useState } from "react";
-import AnaliticChart from "../components/analitics-page-components/AnalyticChart";
+import AnalyticChart from "../components/analitics-page-components/AnalyticChart";
 import TransactionNav from "../components/TransactionNav";
 
 const formatDate = (date) => {
@@ -23,38 +23,15 @@ const AnalyticsPage = () => {
   const [dateEnd, setDateEnd] = useState(initialRange.end);
 
   return (
-    <div className="flex min-h-screen bg-base-200">
-      <div className="w-64">
-        <TransactionNav />
-      </div>
-      <div className="w-full">
-        <div className="ml-5 p-10 pb-0">
-          <div className="flex flex-wrap items-end gap-4">
-            <div>
-              <label className="mb-2 block text-sm font-medium text-gray-600">
-                Date start
-              </label>
-              <input
-                type="date"
-                value={dateStart}
-                onChange={(event) => setDateStart(event.target.value)}
-                className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-gray-900"
-              />
-            </div>
-            <div>
-              <label className="mb-2 block text-sm font-medium text-gray-600">
-                Date end
-              </label>
-              <input
-                type="date"
-                value={dateEnd}
-                onChange={(event) => setDateEnd(event.target.value)}
-                className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-gray-900"
-              />
-            </div>
-          </div>
-        </div>
-        <AnaliticChart dateStart={dateStart} dateEnd={dateEnd} />
+    <div className="flex min-h-screen bg-base-200 md:ml-64">
+      <TransactionNav />
+      <div className="w-full pb-24 md:pb-6">
+        <AnalyticChart
+          dateStart={dateStart}
+          dateEnd={dateEnd}
+          setDateStart={setDateStart}
+          setDateEnd={setDateEnd}
+        />
       </div>
     </div>
   );
