@@ -12,7 +12,7 @@ const AdminPage = () => {
       <main className="min-h-screen px-4 pt-5 pb-28 sm:px-6 md:ml-64 md:px-8 md:py-8">
         <div className="mx-auto w-full max-w-7xl">
           <div className="mb-5 md:mb-8">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-green-600 md:hidden">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary md:hidden">
               FinVue
             </p>
 
@@ -20,7 +20,7 @@ const AdminPage = () => {
               Admin Management
             </h1>
 
-            <p className="mt-1 max-w-2xl text-sm text-gray-500 sm:text-base">
+            <p className="mt-1 max-w-2xl text-sm text-base-content/60 sm:text-base">
               Manage categories, users, events and user activity.
             </p>
           </div>

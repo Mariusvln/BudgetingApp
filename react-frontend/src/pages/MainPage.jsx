@@ -1,20 +1,21 @@
-import "../assets/styles/MainPage.css";
 import DashboardMobile from "../components/main-page-components/DashboardMobile";
 import DashboardHeaderMobile from "../components/main-page-components/DashboardHeaderMobile"
 import DashboardDesktop from "../components/main-page-components/DashboardDesktop";
 import DashboardHeaderDesktop from "../components/main-page-components/DashboardHeaderDesktop";
 import TransactionNav from "../components/TransactionNav";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useAuth } from "../contexts/AuthContext";
+import { formatCurrency as formatMoney } from "../utils/currency";
 
 const MainPage = () => {
+    const { user } = useAuth();
 
-    const [incomes, setIncomes] = useState(0);
-    const [expenses, setExpenses] = useState(0);
     const [incomeItems, setIncomeItems] = useState([]);
     const [expenseItems, setExpenseItems] = useState([]);
-    const [balance, setBalance] = useState(0);
-    const [monthlySpending, setSpending] = useState(0);
-  
+    const [categoryLimits, setCategoryLimits] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
+
     const formatDate = (date) => {
       const year = date.getFullYear();
       const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -33,83 +34,143 @@ const MainPage = () => {
     const dateRange = getDateRange();
     const dateStart = dateRange.start;
     const dateEnd = dateRange.end;
-  
-    const fetchBalance = async () => {
+
+    const fetchDashboardData = useCallback(async () => {
+      setLoading(true);
+      setError("");
+
       try {
-        const [incomeResponse, expenseResponse] = await Promise.all([
+        const [incomeResponse, expenseResponse, budgetResponse] = await Promise.all([
           fetch(`http://localhost:8080/api/app/incomes/`, {
             credentials: "include",
           }),
           fetch(`http://localhost:8080/api/app/expenses/`, {
             credentials: "include",
           }),
+          fetch(`http://localhost:8080/api/app/budget/`, {
+            credentials: "include",
+          }),
         ]);
   
-        if (!incomeResponse.ok || !expenseResponse.ok)
-          throw new Error("Network response was not okay");
-        const [incomesResponse, expensesResponse] = await Promise.all([
+        if (!incomeResponse.ok || !expenseResponse.ok || !budgetResponse.ok) {
+          throw new Error("Unable to load dashboard data");
+        }
+
+        const [incomesResponseData, expensesResponseData, budgetResponseData] = await Promise.all([
           incomeResponse.json(),
           expenseResponse.json(),
+          budgetResponse.json(),
         ]);
-        const incomesSum = incomesResponse.reduce(
-          (partialSum, a) => partialSum + a.amount,
-          0,
-        );
-        const expensesSum = expensesResponse.reduce(
-          (partialSum, a) => partialSum + a.amount,
-          0,
-        );
-        const monthlyExpensesSum = expensesResponse
-          .filter((expense) => expense.date >= dateStart && expense.date <= dateEnd)
-          .reduce((partialSum, expense) => partialSum + expense.amount, 0);
 
-        setIncomeItems(Array.isArray(incomesResponse) ? incomesResponse : []);
-        setExpenseItems(Array.isArray(expensesResponse) ? expensesResponse : []);
-        setIncomes(incomesSum)
-        setExpenses(expensesSum)
-        setBalance(incomesSum - expensesSum);
-        setSpending(monthlyExpensesSum);
+        setIncomeItems(Array.isArray(incomesResponseData) ? incomesResponseData : []);
+        setExpenseItems(Array.isArray(expensesResponseData) ? expensesResponseData : []);
+        setCategoryLimits(Array.isArray(budgetResponseData) ? budgetResponseData : []);
       } catch (error) {
-        console.error("Error fetching incomes:", error);
-        setIncomes(0);
-        setExpenses(0);
+        console.error("Error fetching dashboard data:", error);
+        setError("Dashboard data could not be loaded");
         setIncomeItems([]);
         setExpenseItems([]);
-        setSpending(0);
+        setCategoryLimits([]);
+      } finally {
+        setLoading(false);
       }
-    };
-  
-    const formatCurrency = (value) =>
-      new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
-      }).format(Number(value) || 0);
-  
-    useEffect(() => {
-      fetchBalance();
     }, []);
 
+    useEffect(() => {
+      fetchDashboardData();
+    }, [fetchDashboardData]);
+
+    const dashboardTotals = useMemo(() => {
+      const totalIncome = incomeItems.reduce(
+        (sum, item) => sum + (Number(item.amount) || 0),
+        0,
+      );
+      const totalExpenses = expenseItems.reduce(
+        (sum, item) => sum + (Number(item.amount) || 0),
+        0,
+      );
+      const monthlySpending = expenseItems
+        .filter((expense) => expense.date >= dateStart && expense.date <= dateEnd)
+        .reduce((sum, expense) => sum + (Number(expense.amount) || 0), 0);
+      const monthlyIncome = incomeItems
+        .filter((income) => income.date >= dateStart && income.date <= dateEnd)
+        .reduce((sum, income) => sum + (Number(income.amount) || 0), 0);
+      const balance = totalIncome - totalExpenses;
+      const monthlySavings = monthlyIncome - monthlySpending;
+      const savingsRatio =
+        totalIncome > 0 ? Math.max(0, ((totalIncome - totalExpenses) / totalIncome) * 100) : 0;
+      const expensesRatio =
+        totalIncome > 0 ? Math.min((totalExpenses / totalIncome) * 100, 100) : 0;
+      const incomeProgress = totalIncome > 0 ? 100 : 0;
+      const expenseTotalsByCategory = expenseItems.reduce((totals, expense) => {
+        const categoryId = Number(expense.category);
+        totals[categoryId] = (totals[categoryId] || 0) + (Number(expense.amount) || 0);
+        return totals;
+      }, {});
+      const budgetGoals = categoryLimits
+        .filter((limit) => limit.categoryType === "EXPENSE")
+        .map((limit) => {
+          const spent = expenseTotalsByCategory[Number(limit.categoryId)] || 0;
+          const maxLimit = Number(limit.maxLimit) || 0;
+
+          return {
+            id: limit.id,
+            name: limit.categoryName,
+            spent,
+            maxLimit,
+            percent: maxLimit > 0 ? Math.min((spent / maxLimit) * 100, 100) : 0,
+          };
+        })
+        .sort((left, right) => right.percent - left.percent)
+        .slice(0, 2);
+
+      return {
+        balance,
+        budgetGoals,
+        expensesRatio,
+        incomeProgress,
+        monthlyIncome,
+        monthlySavings,
+        monthlySpending,
+        savingsRatio,
+        totalExpenses,
+        totalIncome,
+      };
+    }, [categoryLimits, dateEnd, dateStart, expenseItems, incomeItems]);
+
+    const formatCurrency = useCallback(
+      (value) => formatMoney(value, user?.currency),
+      [user?.currency],
+    );
+
   return (
-    <div className="flex">
-      <div className="w-64 nav-display">
-      <TransactionNav/>
+    <div className="min-h-screen bg-base-200 text-base-content">
+      <TransactionNav />
+
+      <div className="min-h-screen pb-28 md:ml-64 md:pb-0">
+        <DashboardHeaderMobile />
+        <DashboardHeaderDesktop />
+
+        <main className="flex flex-col gap-6 bg-[radial-gradient(circle_at_top_left,color-mix(in_oklch,var(--color-primary)_10%,transparent),transparent_34rem),var(--color-base-200)]">
+          <DashboardMobile balance={formatCurrency(dashboardTotals.balance)} />
+          <DashboardDesktop
+            formatCurrency={formatCurrency}
+            balance={dashboardTotals.balance}
+            budgetGoals={dashboardTotals.budgetGoals}
+            error={error}
+            expenses={formatCurrency(dashboardTotals.totalExpenses)}
+            expensesRatio={dashboardTotals.expensesRatio}
+            incomeProgress={dashboardTotals.incomeProgress}
+            incomeItems={incomeItems}
+            incomes={formatCurrency(dashboardTotals.totalIncome)}
+            loading={loading}
+            monthlySavings={dashboardTotals.monthlySavings}
+            monthlySpending={dashboardTotals.monthlySpending}
+            expenseItems={expenseItems}
+            savingsRatio={dashboardTotals.savingsRatio}
+          />
+        </main>
       </div>
-      <div className="h-screen flex flex-col bg-[#f3f4f6] grow">
-      <DashboardHeaderMobile/>
-      <DashboardHeaderDesktop/>
-    <main className="main_layout">
-      <DashboardMobile balance={formatCurrency(balance)}/>
-      <DashboardDesktop
-        formatCurrency={formatCurrency}
-        balance={balance}
-        monthlySpending={monthlySpending}
-        incomes={formatCurrency(incomes)}
-        expenses={formatCurrency(expenses)}
-        incomeItems={incomeItems}
-        expenseItems={expenseItems}
-      />
-    </main>
-    </div>
     </div>
   );
 };

@@ -40,7 +40,7 @@ const LoginPage = () => {
         <div className="flex-1 px-6 pt-6 pb-8">
           <div className="mb-8">
             <div className="mb-8 flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-green-400">
+              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary">
                 <span className="text-lg font-bold text-black">F</span>
               </div>
               <span className="text-[28px] font-semibold text-foreground">FinVue</span>
@@ -97,12 +97,12 @@ const LoginPage = () => {
                   <input type="checkbox" className="shrink-0 size-4 rounded-sm border border-line-3 bg-transparent text-primary" />
                   <span className="ms-3">Remember me</span>
                 </label>
-                <a href="#" className="text-sm font-medium text-green-500 hover:underline">Forgot password?</a>
+                <a href="#" className="text-sm font-medium text-primary hover:underline">Forgot password?</a>
               </div>
 
               <button
                 type="submit"
-                className="mt-1 w-full rounded-xl bg-green-400 px-4 py-3 text-base font-semibold text-black hover:opacity-90  "
+                className="mt-1 w-full rounded-xl bg-primary px-4 py-3 text-base font-semibold text-primary-content hover:opacity-90  "
               >
                 Sign in
               </button>
@@ -114,7 +114,7 @@ const LoginPage = () => {
           <p className="text-center text-sm text-muted-foreground-2 ">
             Don't have an account?{' '}
             {/* 6. Use Link for internal navigation */}
-            <Link to="/signup" className="font-medium text-green-500 hover:underline">
+            <Link to="/signup" className="font-medium text-primary hover:underline">
               Sign up for free
             </Link>
           </p>

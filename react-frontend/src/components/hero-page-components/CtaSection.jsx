@@ -19,7 +19,7 @@ function CtaSection() {
       <div className=" flex flex-wrap items-center justify-center gap-4">
         <button
           onClick={handleClick}
-          className="px-6 py-3 bg-green-500 hover:bg-green-600 rounded-xl font-semibold shadow-lg"
+          className="px-6 py-3 bg-primary text-primary-content hover:bg-primary/90 rounded-xl font-semibold shadow-lg"
         >
           Get Started for Free
         </button>

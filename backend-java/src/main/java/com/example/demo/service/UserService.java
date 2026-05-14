@@ -39,6 +39,7 @@ public class UserService {
         u.setEmail(normalizedEmail);
         u.setPassword(encoder.encode(password));
         u.setRole(resolveRoleForNewUser(normalizedEmail));
+        u.setCurrency("EUR");
 
         User saved = userRepository.save(u);
 
@@ -77,13 +78,14 @@ public class UserService {
         return user;
     }
 
-    public User updateProfile(String currentEmail, String newName, String newEmail, String newLocation) {
+    public User updateProfile(String currentEmail, String newName, String newEmail, String newLocation, String newCurrency) {
         User user = userRepository.findByEmail(currentEmail)
                 .orElseThrow(UserNotFoundException::new);
 
         String oldName = user.getName();
         String oldEmail = user.getEmail();
         String oldLocation = user.getLocation();
+        String oldCurrency = user.getCurrency();
 
         if (newEmail != null && !newEmail.trim().equalsIgnoreCase(user.getEmail())) {
             boolean emailTaken = userRepository.existsByEmail(newEmail.trim());
@@ -99,6 +101,10 @@ public class UserService {
 
         if (newLocation != null) {
             user.setLocation(newLocation.trim());
+        }
+
+        if (newCurrency != null && !newCurrency.isBlank()) {
+            user.setCurrency(newCurrency.trim().toUpperCase());
         }
 
         User saved = userRepository.save(user);
@@ -120,6 +126,10 @@ public class UserService {
             if (!normalizedNewLocation.equals(normalizedOldLocation)) {
                 changes.append(" location");
             }
+        }
+
+        if (newCurrency != null && !newCurrency.trim().equalsIgnoreCase(oldCurrency)) {
+            changes.append(" currency");
         }
 
         if (changes.toString().equals("Updated profile:")) {

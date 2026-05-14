@@ -1,12 +1,18 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Chart from "react-apexcharts";
+import { useAuth } from "../../contexts/AuthContext";
 import { useTheme } from "../../contexts/useTheme";
+import {
+  convertFromEuro,
+  formatCurrency as formatMoney,
+  normalizeCurrency,
+} from "../../utils/currency";
 
 const API_BASE = "http://localhost:8080/api";
 
 const toNumber = (value) => Number(value) || 0;
-
 const parseLocalDate = (date) => new Date(`${date}T00:00:00`);
+const getMonthKey = (date) => String(date || "").slice(0, 7);
 
 const formatDateKey = (date) => {
   const year = date.getFullYear();
@@ -21,32 +27,13 @@ const formatShortDate = (date) => {
       ? parseLocalDate(date)
       : new Date(date);
 
-  if (Number.isNaN(parsedDate.getTime())) {
-    return String(date ?? "");
-  }
+  if (Number.isNaN(parsedDate.getTime())) return String(date ?? "");
 
   return new Intl.DateTimeFormat("en-US", {
     month: "short",
     day: "numeric",
   }).format(parsedDate);
 };
-
-const formatCurrency = (value) =>
-  new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    maximumFractionDigits: 0,
-  }).format(toNumber(value));
-
-const formatCompactCurrency = (value) =>
-  new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    notation: "compact",
-    maximumFractionDigits: 1,
-  }).format(toNumber(value));
-
-const getMonthKey = (date) => String(date || "").slice(0, 7);
 
 const getCategoryName = (categoryId, categories) =>
   categories.find((category) => Number(category.id) === Number(categoryId))?.name ||
@@ -75,7 +62,6 @@ const getThemeColors = () => {
 
   return {
     base100: read("--color-base-100", "#ffffff"),
-    base200: read("--color-base-200", "#f3f4f6"),
     base300: read("--color-base-300", "#d1d5db"),
     content: read("--color-base-content", "#111827"),
     primary: read("--color-primary", "#22c55e"),
@@ -89,6 +75,7 @@ const getThemeColors = () => {
 };
 
 function AnalyticChart({ dateStart, dateEnd, setDateStart, setDateEnd }) {
+  const { user } = useAuth();
   const { theme } = useTheme();
   const [allIncomes, setAllIncomes] = useState([]);
   const [allExpenses, setAllExpenses] = useState([]);
@@ -98,6 +85,25 @@ function AnalyticChart({ dateStart, dateEnd, setDateStart, setDateEnd }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [themeColors, setThemeColors] = useState(getThemeColors);
+
+  const currency = normalizeCurrency(user?.currency);
+  const locale = currency === "EUR" ? "lt-LT" : "en-US";
+
+  const formatCurrency = useCallback(
+    (value) => formatMoney(value, currency),
+    [currency],
+  );
+
+  const formatCompactCurrency = useCallback(
+    (value) =>
+      new Intl.NumberFormat(locale, {
+        style: "currency",
+        currency,
+        notation: "compact",
+        maximumFractionDigits: 1,
+      }).format(convertFromEuro(value, currency)),
+    [currency, locale],
+  );
 
   useEffect(() => {
     setThemeColors(getThemeColors());
@@ -135,15 +141,6 @@ function AnalyticChart({ dateStart, dateEnd, setDateStart, setDateEnd }) {
         !expenseAllResponse.ok ||
         !categoriesResponse.ok
       ) {
-        if (
-          incomeRangeResponse.status === 401 ||
-          expenseRangeResponse.status === 401 ||
-          incomeAllResponse.status === 401 ||
-          expenseAllResponse.status === 401
-        ) {
-          throw new Error("Please sign in again to load your analytics data.");
-        }
-
         throw new Error("Failed to fetch analytics data");
       }
 
@@ -198,8 +195,16 @@ function AnalyticChart({ dateStart, dateEnd, setDateStart, setDateEnd }) {
 
   const monthKeys = useMemo(() => {
     const keys = [];
-    const current = new Date(parseLocalDate(dateStart).getFullYear(), parseLocalDate(dateStart).getMonth(), 1);
-    const last = new Date(parseLocalDate(dateEnd).getFullYear(), parseLocalDate(dateEnd).getMonth(), 1);
+    const current = new Date(
+      parseLocalDate(dateStart).getFullYear(),
+      parseLocalDate(dateStart).getMonth(),
+      1,
+    );
+    const last = new Date(
+      parseLocalDate(dateEnd).getFullYear(),
+      parseLocalDate(dateEnd).getMonth(),
+      1,
+    );
 
     while (current <= last) {
       keys.push(`${current.getFullYear()}-${String(current.getMonth() + 1).padStart(2, "0")}`);
@@ -237,15 +242,9 @@ function AnalyticChart({ dateStart, dateEnd, setDateStart, setDateEnd }) {
           income,
           expense,
           cashFlow: income - expense,
-          netWorth: allIncomes
-            .filter((transaction) => transaction.date <= `${month}-31`)
-            .reduce((sum, transaction) => sum + toNumber(transaction.amount), 0) -
-            allExpenses
-              .filter((transaction) => transaction.date <= `${month}-31`)
-              .reduce((sum, transaction) => sum + toNumber(transaction.amount), 0),
         };
       }),
-    [allExpenses, allIncomes, monthKeys, rangeExpenses, rangeIncomes],
+    [monthKeys, rangeExpenses, rangeIncomes],
   );
 
   const dailyFlowData = useMemo(
@@ -258,17 +257,10 @@ function AnalyticChart({ dateStart, dateEnd, setDateStart, setDateEnd }) {
           .filter((transaction) => transaction.date === day)
           .reduce((sum, transaction) => sum + toNumber(transaction.amount), 0);
 
-        return {
-          day,
-          income,
-          expenses,
-          netGrowth: income - expenses,
-        };
+        return { day, income, expenses, netGrowth: income - expenses };
       }),
     [dayKeys, rangeExpenses, rangeIncomes],
   );
-
-  const hasAnalyticsData = rangeIncomes.length > 0 || rangeExpenses.length > 0;
 
   const incomeCategories = useMemo(
     () => groupByCategory(rangeIncomes, categories).slice(0, 8),
@@ -311,18 +303,7 @@ function AnalyticChart({ dateStart, dateEnd, setDateStart, setDateEnd }) {
       chart: {
         background: "transparent",
         foreColor: themeColors.content,
-        toolbar: {
-          show: true,
-          tools: {
-            download: true,
-            selection: true,
-            zoom: true,
-            zoomin: true,
-            zoomout: true,
-            pan: true,
-            reset: true,
-          },
-        },
+        toolbar: { show: true },
         animations: { enabled: true, speed: 450 },
       },
       dataLabels: { enabled: false },
@@ -338,105 +319,63 @@ function AnalyticChart({ dateStart, dateEnd, setDateStart, setDateEnd }) {
         y: { formatter: formatCurrency },
       },
     }),
-    [theme, themeColors],
+    [formatCurrency, theme, themeColors],
   );
 
   const dailyFlowOptions = useMemo(
     () => ({
       ...chartBase,
-      chart: {
-        ...chartBase.chart,
-        type: "area",
-        zoom: { enabled: true },
-      },
+      chart: { ...chartBase.chart, type: "area", zoom: { enabled: true } },
       colors: [themeColors.success, themeColors.error, themeColors.info],
       fill: {
         type: ["gradient", "gradient", "solid"],
         opacity: [0.34, 0.3, 0.95],
-        gradient: {
-          opacityFrom: 0.52,
-          opacityTo: 0.08,
-        },
+        gradient: { opacityFrom: 0.52, opacityTo: 0.08 },
       },
       markers: { size: [0, 0, 3], hover: { size: 5 } },
-      stroke: {
-        curve: "straight",
-        width: [2, 2, 3],
-      },
+      stroke: { curve: "straight", width: [2, 2, 3] },
       tooltip: {
         ...chartBase.tooltip,
         shared: true,
         intersect: false,
-        x: {
-          formatter: (value) => formatShortDate(value),
-        },
+        x: { formatter: (value) => formatShortDate(value) },
       },
       xaxis: {
         categories: dayKeys,
-        labels: {
-          formatter: (value) => formatShortDate(value),
-          rotate: -35,
-        },
+        labels: { formatter: (value) => formatShortDate(value), rotate: -35 },
         tickAmount: Math.min(dayKeys.length, 12),
       },
-      yaxis: [
-        {
-          labels: { formatter: formatCompactCurrency },
-          title: { text: "Daily Amount" },
-        },
-      ],
+      yaxis: [{ labels: { formatter: formatCompactCurrency } }],
     }),
-    [chartBase, dayKeys, themeColors],
+    [chartBase, dayKeys, formatCompactCurrency, themeColors],
   );
 
   const cashFlowOptions = useMemo(
     () => ({
       ...chartBase,
-      chart: {
-        ...chartBase.chart,
-        stacked: false,
-      },
+      chart: { ...chartBase.chart, stacked: false },
       colors: [themeColors.success, themeColors.error, themeColors.info],
-      plotOptions: {
-        bar: {
-          borderRadius: 4,
-          columnWidth: "48%",
-        },
-      },
+      plotOptions: { bar: { borderRadius: 4, columnWidth: "48%" } },
       stroke: { width: [0, 0, 3], curve: "smooth" },
       xaxis: { categories: monthKeys },
       yaxis: [
-        {
-          title: { text: "Income and Expenses" },
-          labels: { formatter: formatCompactCurrency },
-        },
-        {
-          opposite: true,
-          title: { text: "Cash Flow" },
-          labels: { formatter: formatCompactCurrency },
-        },
+        { labels: { formatter: formatCompactCurrency } },
+        { opposite: true, labels: { formatter: formatCompactCurrency } },
       ],
     }),
-    [chartBase, monthKeys, themeColors],
+    [chartBase, formatCompactCurrency, monthKeys, themeColors],
   );
 
   const categoryDonutOptions = useCallback(
     (items, type) => ({
       ...chartBase,
-      chart: {
-        ...chartBase.chart,
-        type: "donut",
-        toolbar: { show: false },
-      },
+      chart: { ...chartBase.chart, type: "donut", toolbar: { show: false } },
       colors:
         type === "INCOME"
           ? [themeColors.primary, themeColors.success, themeColors.info, themeColors.secondary, themeColors.accent]
           : [themeColors.error, themeColors.warning, themeColors.accent, themeColors.info, themeColors.secondary],
       labels: items.map((item) => item.name),
-      legend: {
-        position: "right",
-        labels: { colors: themeColors.content },
-      },
+      legend: { position: "right", labels: { colors: themeColors.content } },
       plotOptions: {
         pie: {
           donut: {
@@ -447,41 +386,29 @@ function AnalyticChart({ dateStart, dateEnd, setDateStart, setDateEnd }) {
                 show: true,
                 label: type === "INCOME" ? "Income" : "Expenses",
                 formatter: () =>
-                  formatCompactCurrency(
-                    items.reduce((sum, item) => sum + item.total, 0),
-                  ),
+                  formatCompactCurrency(items.reduce((sum, item) => sum + item.total, 0)),
               },
             },
           },
         },
       },
     }),
-    [chartBase, themeColors],
+    [chartBase, formatCompactCurrency, themeColors],
   );
 
   const expenseBarOptions = useMemo(
     () => ({
       ...chartBase,
-      chart: {
-        ...chartBase.chart,
-        type: "bar",
-        toolbar: { show: false },
-      },
+      chart: { ...chartBase.chart, type: "bar", toolbar: { show: false } },
       colors: [themeColors.accent],
-      plotOptions: {
-        bar: {
-          horizontal: true,
-          borderRadius: 4,
-          barHeight: "62%",
-        },
-      },
+      plotOptions: { bar: { horizontal: true, borderRadius: 4, barHeight: "62%" } },
       xaxis: {
         categories: expenseCategories.map((item) => item.name),
         labels: { formatter: formatCompactCurrency },
       },
       yaxis: { labels: { maxWidth: 120 } },
     }),
-    [chartBase, expenseCategories, themeColors],
+    [chartBase, expenseCategories, formatCompactCurrency, themeColors],
   );
 
   const setYearRange = (year) => {
@@ -501,19 +428,24 @@ function AnalyticChart({ dateStart, dateEnd, setDateStart, setDateEnd }) {
     { label: "Cash Flow", value: totals.cashFlow, tone: totals.cashFlow >= 0 ? "text-info" : "text-error" },
   ];
 
+  const hasAnalyticsData = rangeIncomes.length > 0 || rangeExpenses.length > 0;
+
   return (
-    <main className="mx-auto w-full max-w-[1500px] px-4 py-5 sm:px-6 lg:px-8">
-      <div className="mb-5 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+    <div className="mx-auto w-full max-w-[1500px]">
+      <div className="mb-6 flex flex-col gap-4 rounded-3xl border border-base-300 bg-base-100 p-5 shadow-sm lg:flex-row lg:items-end lg:justify-between lg:p-6">
         <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-base-content/50">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">
             Analytics
           </p>
-          <h1 className="mt-1 text-2xl font-bold text-base-content sm:text-3xl">
+          <h1 className="mt-1 text-2xl font-bold tracking-tight sm:text-3xl">
             Financial overview
           </h1>
+          <p className="mt-2 text-sm text-base-content/60">
+            Compare income, expenses, categories and cash flow over time.
+          </p>
         </div>
 
-        <div className="flex flex-col gap-3 rounded-2xl border border-base-300 bg-base-100 p-3 shadow-sm sm:flex-row sm:items-end">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
           <label className="grid gap-1">
             <span className="text-xs font-semibold text-base-content/60">Start</span>
             <input
@@ -586,24 +518,12 @@ function AnalyticChart({ dateStart, dateEnd, setDateStart, setDateEnd }) {
               </h2>
               {hasAnalyticsData ? (
                 <Chart
-                  key={`daily-flow-${theme}`}
+                  key={`daily-flow-${theme}-${currency}`}
                   options={dailyFlowOptions}
                   series={[
-                    {
-                      name: "Income",
-                      type: "area",
-                      data: dailyFlowData.map((item) => item.income),
-                    },
-                    {
-                      name: "Expenses",
-                      type: "area",
-                      data: dailyFlowData.map((item) => item.expenses),
-                    },
-                    {
-                      name: "Net Growth",
-                      type: "line",
-                      data: dailyFlowData.map((item) => item.netGrowth),
-                    },
+                    { name: "Income", type: "area", data: dailyFlowData.map((item) => item.income) },
+                    { name: "Expenses", type: "area", data: dailyFlowData.map((item) => item.expenses) },
+                    { name: "Net Growth", type: "line", data: dailyFlowData.map((item) => item.netGrowth) },
                   ]}
                   type="area"
                   height={320}
@@ -620,7 +540,7 @@ function AnalyticChart({ dateStart, dateEnd, setDateStart, setDateEnd }) {
                 Income, Expenses and Cash Flow
               </h2>
               <Chart
-                key={`cash-${theme}`}
+                key={`cash-${theme}-${currency}`}
                 options={cashFlowOptions}
                 series={[
                   { name: "Income", type: "column", data: monthlyData.map((item) => item.income) },
@@ -640,7 +560,7 @@ function AnalyticChart({ dateStart, dateEnd, setDateStart, setDateEnd }) {
               </h2>
               {incomeCategories.length > 0 ? (
                 <Chart
-                  key={`income-cat-${theme}`}
+                  key={`income-cat-${theme}-${currency}`}
                   options={categoryDonutOptions(incomeCategories, "INCOME")}
                   series={incomeCategories.map((item) => item.total)}
                   type="donut"
@@ -659,7 +579,7 @@ function AnalyticChart({ dateStart, dateEnd, setDateStart, setDateEnd }) {
               </h2>
               {expenseCategories.length > 0 ? (
                 <Chart
-                  key={`expense-cat-${theme}`}
+                  key={`expense-cat-${theme}-${currency}`}
                   options={categoryDonutOptions(expenseCategories, "EXPENSE")}
                   series={expenseCategories.map((item) => item.total)}
                   type="donut"
@@ -678,14 +598,9 @@ function AnalyticChart({ dateStart, dateEnd, setDateStart, setDateEnd }) {
               </h2>
               {expenseCategories.length > 0 ? (
                 <Chart
-                  key={`expense-bar-${theme}`}
+                  key={`expense-bar-${theme}-${currency}`}
                   options={expenseBarOptions}
-                  series={[
-                    {
-                      name: "Expenses",
-                      data: expenseCategories.map((item) => item.total),
-                    },
-                  ]}
+                  series={[{ name: "Expenses", data: expenseCategories.map((item) => item.total) }]}
                   type="bar"
                   height={300}
                 />
@@ -698,7 +613,7 @@ function AnalyticChart({ dateStart, dateEnd, setDateStart, setDateEnd }) {
           </section>
         </>
       )}
-    </main>
+    </div>
   );
 }
 

@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useAppAlert } from "../../contexts/useAppAlert";
+import { useAuth } from "../../contexts/AuthContext";
+import { convertToEuro, getCurrencyPlaceholder } from "../../utils/currency";
 
 function ExpenseAddPanel({ onTransactionAdded, categories = [] }) {
+  const { user } = useAuth();
   const appAlert = useAppAlert();
   const getTodayDate = () => new Date().toISOString().split('T')[0];
 
@@ -34,7 +37,7 @@ function ExpenseAddPanel({ onTransactionAdded, categories = [] }) {
 
     const expense = {
       description: description,
-      amount: parseFloat(amount),
+      amount: convertToEuro(amount, user?.currency),
       date: date,
       category: parseInt(category),
       processType: "SINGLE",
@@ -76,9 +79,9 @@ function ExpenseAddPanel({ onTransactionAdded, categories = [] }) {
 
   return (
     <div className="w-full max-w-sm">
-      <div className="card bg-base-100 border border-base-200">
+      <div className="card border border-base-300 bg-base-100 shadow-sm">
         <div className="card-body">
-          <h2 className="font-semibold text-lg">Quick Add</h2>
+          <h2 className="text-lg font-bold tracking-tight">Quick Add</h2>
           <p className="mb-4 text-sm text-base-content/60">Easily log a new expense</p>
 
           <div className="flex flex-col gap-3">
@@ -91,7 +94,7 @@ function ExpenseAddPanel({ onTransactionAdded, categories = [] }) {
 
             <input
               type="number"
-              placeholder="$ 0.00"
+              placeholder={getCurrencyPlaceholder(user?.currency)}
               className="input input-bordered"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
@@ -126,13 +129,13 @@ function ExpenseAddPanel({ onTransactionAdded, categories = [] }) {
             <button
               onClick={handleSave}
               disabled={loading || categories.length === 0}
-              className={`btn btn-primary ${loading ? 'opacity-50' : ''}`}
+              className={`btn btn-primary rounded-xl ${loading ? 'opacity-50' : ''}`}
             >
               {loading ? "Saving..." : "Add Expense"}
             </button>
 
             <button
-              className="btn btn-neutral"
+              className="btn btn-neutral rounded-xl"
               onClick={() => {
                 setAmount("");
                 setDescription("");

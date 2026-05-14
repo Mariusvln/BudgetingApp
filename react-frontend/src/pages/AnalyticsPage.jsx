@@ -23,16 +23,16 @@ const AnalyticsPage = () => {
   const [dateEnd, setDateEnd] = useState(initialRange.end);
 
   return (
-    <div className="flex min-h-screen bg-base-200 md:ml-64">
+    <div className="min-h-screen bg-base-200 text-base-content">
       <TransactionNav />
-      <div className="w-full pb-24 md:pb-6">
+      <main className="min-h-screen px-4 pb-28 pt-5 sm:px-6 md:ml-64 md:px-8 md:py-8">
         <AnalyticChart
           dateStart={dateStart}
           dateEnd={dateEnd}
           setDateStart={setDateStart}
           setDateEnd={setDateEnd}
         />
-      </div>
+      </main>
     </div>
   );
 };

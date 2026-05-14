@@ -7,11 +7,11 @@ function ProfileAccountStatus() {
 
   const iconClass = isValentineTheme
     ? "bg-pink-100 text-pink-800"
-    : "bg-green-100 text-green-700";
+    : "bg-primary/15 text-primary";
 
   const statusTextClass = isValentineTheme
     ? "text-pink-800"
-    : "text-green-600";
+    : "text-primary";
 
   return (
     <div className="rounded-3xl bg-base-100 p-5 shadow-sm sm:p-6">

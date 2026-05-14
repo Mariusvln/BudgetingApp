@@ -9,6 +9,54 @@
 }
 
 @plugin "daisyui/theme" {
+  name: "light";
+  default: true;
+  prefersdark: false;
+  color-scheme: light;
+
+  --color-base-100: oklch(100% 0 0);
+  --color-base-200: oklch(97% 0.006 255);
+  --color-base-300: oklch(92% 0.012 255);
+  --color-base-content: oklch(20% 0.04 265);
+
+  --color-primary: oklch(56% 0.22 282);
+  --color-primary-content: oklch(98% 0.01 282);
+
+  --color-secondary: oklch(78% 0.13 260);
+  --color-secondary-content: oklch(22% 0.05 270);
+
+  --color-accent: oklch(64% 0.2 295);
+  --color-accent-content: oklch(98% 0.01 295);
+
+  --color-neutral: oklch(28% 0.045 260);
+  --color-neutral-content: oklch(98% 0.01 260);
+
+  --color-info: oklch(62% 0.18 255);
+  --color-info-content: oklch(98% 0.01 255);
+
+  --color-success: oklch(64% 0.19 150);
+  --color-success-content: oklch(98% 0.01 150);
+
+  --color-warning: oklch(78% 0.16 85);
+  --color-warning-content: oklch(24% 0.05 85);
+
+  --color-error: oklch(63% 0.24 25);
+  --color-error-content: oklch(98% 0.01 25);
+
+  --radius-selector: 1rem;
+  --radius-field: 0.5rem;
+  --radius-box: 0.75rem;
+
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+
+  --border: 1px;
+
+  --depth: 1;
+  --noise: 0;
+}
+
+@plugin "daisyui/theme" {
   name: "mint-ice-cream";
   default: false;
   prefersdark: false;

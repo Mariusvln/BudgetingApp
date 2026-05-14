@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useAppAlert } from "../../contexts/useAppAlert";
+import { useAuth } from "../../contexts/AuthContext";
+import { convertToEuro, getCurrencyPlaceholder } from "../../utils/currency";
 
 function IncomeAddPanel({ onTransactionAdded, categories = [] }) {
+  const { user } = useAuth();
   const appAlert = useAppAlert();
   const getTodayDate = () => new Date().toISOString().split("T")[0];
 
@@ -52,7 +55,7 @@ function IncomeAddPanel({ onTransactionAdded, categories = [] }) {
 
     const income = {
       description: description,
-      amount: parseFloat(amount),
+      amount: convertToEuro(amount, user?.currency),
       date: date,
       category: parseInt(category),
       processType: "SINGLE",
@@ -105,9 +108,9 @@ function IncomeAddPanel({ onTransactionAdded, categories = [] }) {
 
   return (
     <div className="w-full max-w-sm">
-      <div className="card bg-base-100 border border-base-200">
+      <div className="card border border-base-300 bg-base-100 shadow-sm">
         <div className="card-body">
-          <h2 className="font-semibold text-lg">Quick Add</h2>
+          <h2 className="text-lg font-bold tracking-tight">Quick Add</h2>
           <p className="mb-4 text-sm text-base-content/60">
             Easily log a new transaction
           </p>
@@ -127,7 +130,7 @@ function IncomeAddPanel({ onTransactionAdded, categories = [] }) {
             <input
               type="number"
               id="amount"
-              placeholder="$ 0.00"
+              placeholder={getCurrencyPlaceholder(user?.currency)}
               className="input input-bordered"
               {...register("amount", {
                 required:
@@ -186,14 +189,14 @@ function IncomeAddPanel({ onTransactionAdded, categories = [] }) {
             <button
               type="submit"
               disabled={loading || categories.length === 0}
-              className={`btn btn-primary ${loading ? "opacity-50" : ""}`}
+              className={`btn btn-primary rounded-xl ${loading ? "opacity-50" : ""}`}
             >
               {loading ? "Saving..." : "Add Transaction"}
             </button>
 
             <button
               type="button"
-              className="btn btn-neutral"
+              className="btn btn-neutral rounded-xl"
               onClick={() => {
                 reset({
                   description: "",
