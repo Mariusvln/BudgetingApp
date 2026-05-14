@@ -4,12 +4,11 @@ import { Bar } from "react-chartjs-2";
 import "../../assets/styles/Dashboard.css";
 import { useEffect, useState } from "react";
 
-const MonthlyGrowth = () => {
+const MonthlyGrowth = ({formatCurrency}) => {
   
-  const [month1Money, setMonth1Money] = useState(0);
-  const [month2Money, setMonth2Money] = useState(0);
-  const [month3Money, setMonth3Money] = useState(0);
-  const [month4Money, setMonth4Money] = useState(0);
+  const [thisMonthMoney, setThisMonthMoney] =useState([]);
+  const [previousMonthMoney, setPreviousMonthMoney] =useState([]);
+  const [growthPercentage, setGrowthPercentage] = useState(0);
 
   const formatDate = (date) => {
       const year = date.getFullYear();
@@ -18,117 +17,154 @@ const MonthlyGrowth = () => {
     return `${year}-${month}-${day}`;
   };
 
-  const getMonthsRanges = () => {
+  const getThisMonthRanges = () => {
     const today = new Date();
     let result = [];
-    for (let i = 3; i >= 0; i--) {
+    let j = 1;
+    for (let i = 6; i <= 24; i += 6) {
       result.push(
         {
-          start: formatDate(new Date(today.getFullYear(), today.getMonth() - i, 1)),
-          end: formatDate(new Date(today.getFullYear(), today.getMonth() - i + 1, 0)),
+          start: formatDate(new Date(today.getFullYear(), today.getMonth(), j)),
+          end: formatDate(new Date(today.getFullYear(), today.getMonth(), i)),
         }
       )
+      j += 6;
     }
+    result.push(
+      {
+        start: formatDate(new Date(today.getFullYear(), today.getMonth(), 25)),
+        end: formatDate(new Date(today.getFullYear(), today.getMonth() + 1, 0)),
+      }
+    )
     return result;
-  };
+  }
+
+  const getPreviousMonthsRanges = () => {
+    const today = new Date();
+    let result = [];
+    let j = 1;
+    for (let i = 6; i <= 24; i += 6) {
+      result.push(
+        {
+          start: formatDate(new Date(today.getFullYear(), today.getMonth() - 1, j)),
+          end: formatDate(new Date(today.getFullYear(), today.getMonth() - 1, i)),
+        }
+      )
+      j += 6;
+    }
+    result.push(
+      {
+        start: formatDate(new Date(today.getFullYear(), today.getMonth() - 1, 25)),
+        end: formatDate(new Date(today.getFullYear(), today.getMonth(), 0)),
+      }
+    )
+    return result;
+  }
 
   const fetchMonths = async () => {
     try {
-      const ranges = getMonthsRanges();
+      const thisMonthRanges = getThisMonthRanges();
+      const previousMonthRanges = getPreviousMonthsRanges();
+      const BASE_URL = "http://localhost:8080/api/app";
+      const includeCredentials = { credentials: "include" };
 
-      const [month1Income, month1Expense, month2Income, month2Expense, month3Income, month3Expense, month4Income, month4Expense] = await Promise.all([
-        fetch(
-          `http://localhost:8080/api/app/incomes/fromDateStartToDateFinish?dateStart=${ranges[0].start}&dateEnd=${ranges[0].end}`,
-          { credentials: "include" },),
-        fetch(
-          `http://localhost:8080/api/app/expenses/fromDateStartToDateFinish?dateStart=${ranges[0].start}&dateEnd=${ranges[0].end}`,
-          { credentials: "include" },),
-        fetch(
-          `http://localhost:8080/api/app/incomes/fromDateStartToDateFinish?dateStart=${ranges[1].start}&dateEnd=${ranges[1].end}`,
-          { credentials: "include" },),
-        fetch(
-          `http://localhost:8080/api/app/expenses/fromDateStartToDateFinish?dateStart=${ranges[1].start}&dateEnd=${ranges[1].end}`,
-          { credentials: "include" },),
-        fetch(
-          `http://localhost:8080/api/app/incomes/fromDateStartToDateFinish?dateStart=${ranges[2].start}&dateEnd=${ranges[2].end}`,
-          { credentials: "include" },),
-        fetch(
-          `http://localhost:8080/api/app/expenses/fromDateStartToDateFinish?dateStart=${ranges[2].start}&dateEnd=${ranges[2].end}`,
-          { credentials: "include" },),
-        fetch(
-          `http://localhost:8080/api/app/incomes/fromDateStartToDateFinish?dateStart=${ranges[3].start}&dateEnd=${ranges[3].end}`,
-          { credentials: "include" },),
-        fetch(
-          `http://localhost:8080/api/app/expenses/fromDateStartToDateFinish?dateStart=${ranges[3].start}&dateEnd=${ranges[3].end}`,
-          { credentials: "include" },)
-      ])
+      const thisMonthResponse = await Promise.all(
+        thisMonthRanges.flatMap(range => [
+          fetch(
+            `${BASE_URL}/incomes/fromDateStartToDateFinish?dateStart=${range.start}&dateEnd=${range.end}`,
+            includeCredentials
+          ),
+          fetch(
+            `${BASE_URL}/expenses/fromDateStartToDateFinish?dateStart=${range.start}&dateEnd=${range.end}`,
+            includeCredentials
+          )
+        ])
+      )
 
-      if(!month1Income.ok || !month1Expense.ok || !month2Income.ok || !month2Expense.ok || !month3Income.ok || !month3Expense.ok || !month4Income.ok || !month4Expense.ok) {
+      const previousMonthResponse = await Promise.all(
+        previousMonthRanges.flatMap(range => [
+          fetch(
+            `${BASE_URL}/incomes/fromDateStartToDateFinish?dateStart=${range.start}&dateEnd=${range.end}`,
+            includeCredentials
+          ),
+          fetch(
+            `${BASE_URL}/expenses/fromDateStartToDateFinish?dateStart=${range.start}&dateEnd=${range.end}`,
+            includeCredentials
+          )
+        ])
+      )
+
+      if(thisMonthResponse.some(res => !res.ok) || previousMonthResponse.some(res => !res.ok)) {
         throw new Error("Network response was not okay")
       }
-      const [month1Incomes, month1Expenses, month2Incomes, month2Expenses, month3Incomes, month3Expenses, month4Incomes, month4Expenses] = await Promise.all([
-        month1Income.json(),
-        month1Expense.json(),
-        month2Income.json(),
-        month2Expense.json(),
-        month3Income.json(),
-        month3Expense.json(),
-        month4Income.json(),
-        month4Expense.json(),
-      ])
-      const month1Savings = month1Incomes.reduce(
-        (partialSum, a) => partialSum + a.amount,
-        0
-      ) - month1Expenses.reduce(
-        (partialSum, a) => partialSum + a.amount,
-        0
-      );
-      const month2Savings = month2Incomes.reduce(
-        (partialSum, a) => partialSum + a.amount,
-        0
-      ) - month2Expenses.reduce(
-        (partialSum, a) => partialSum + a.amount,
-        0
-      );
-      const month3Savings = month3Incomes.reduce(
-        (partialSum, a) => partialSum + a.amount,
-        0
-      ) - month3Expenses.reduce(
-        (partialSum, a) => partialSum + a.amount,
-        0
-      );
-      const month4Savings = month4Incomes.reduce(
-        (partialSum, a) => partialSum + a.amount,
-        0
-      ) - month4Expenses.reduce(
-        (partialSum, a) => partialSum + a.amount,
-        0
-      );
-      setMonth1Money(Math.max(0, month1Savings));
-      setMonth2Money(Math.max(0, month2Savings));
-      setMonth3Money(Math.max(0, month3Savings));
-      setMonth4Money(Math.max(0, month4Savings));
+      const thisMonthData = await Promise.all(
+        thisMonthResponse.map(res => res.json())
+      )
+      const previousMonthData = await Promise.all(
+        previousMonthResponse.map(res => res.json())
+      )
+      let thisMonthSavings = [];
+      let trueThisMonthSav = [];
+      let previousMonthSavings = [];
+      let truePrevMonthSav = [];
+      for (let i = 0; i < thisMonthData.length; i += 2) {
+        const incomesSum = thisMonthData[i].reduce(
+        (partialSum, a) => partialSum + a.amount, 0)
+        const expensesSum = thisMonthData[i + 1].reduce(
+        (partialSum, a) => partialSum + a.amount, 0)
+        
+        trueThisMonthSav.push(incomesSum - expensesSum);
+        thisMonthSavings.push(Math.max(0, incomesSum - expensesSum));
+      }
+      for (let i = 0; i < previousMonthData.length; i += 2) {
+        const incomesSum = previousMonthData[i].reduce(
+        (partialSum, a) => partialSum + a.amount, 0)
+        const expensesSum = previousMonthData[i + 1].reduce(
+        (partialSum, a) => partialSum + a.amount, 0)
+
+        truePrevMonthSav.push(incomesSum - expensesSum);
+        previousMonthSavings.push(Math.max(0, incomesSum - expensesSum));
+      }
+
+      const currentEarnings = trueThisMonthSav.reduce((partialSum, a) => partialSum + a, 0);
+      const previousEarnings = truePrevMonthSav.reduce((partialSum, a) => partialSum + a, 0);
+      if (previousEarnings === 0) {
+        setGrowthPercentage(0)
+      } else {
+        setGrowthPercentage((((currentEarnings - previousEarnings) / previousEarnings) * 100).toFixed(0));
+      }
+
+      setThisMonthMoney(thisMonthSavings)
+      setPreviousMonthMoney(previousMonthSavings)
     } catch (error) {
       console.log("Error fetching Monthly Growth data:", error);
-      setMonth1Money(0);
-      setMonth2Money(0);
-      setMonth3Money(0);
-      setMonth4Money(0);
+      setThisMonthMoney([]);
     }
   }
 
+  function daysInThisMonth() {
+  const now = new Date();
+  return new Date(now.getFullYear(), now.getMonth()+1, 0).getDate();
+  }
+
   useEffect(() => {
-    (getMonthsRanges(), fetchMonths());
+    (fetchMonths());
   }, [])
 
+  
   const chartData = {
-    labels: ["Month 1", "Month 2", "Month 3", "This Month"],
+    labels: ["1-6", "7-12", "13-18", "19-24", `25-${daysInThisMonth()}`],
     datasets: [
       {
-        label: "Money saved",
-        data: [month1Money, month2Money, month3Money, month4Money],
+        label: "Money saved this month",
+        data: [thisMonthMoney[0], thisMonthMoney[1], thisMonthMoney[2], thisMonthMoney[3], thisMonthMoney[4]],
         backgroundColor: ["#13EC6D"],
       },
+      {
+        label: "Money saved previous month",
+        data: [previousMonthMoney[0], previousMonthMoney[1], previousMonthMoney[2], previousMonthMoney[3], previousMonthMoney[4]],
+        backgroundColor: ["#C5F3DD"],
+      }
     ],
   };
 
@@ -149,10 +185,10 @@ const MonthlyGrowth = () => {
         <p className="text-sm bold-font gray-text">Monthly Growth</p>
         <p className="bold-font gray-text">...</p>
       </div>
-      <h3 className="h3_style bold-font black-text tracking-wide">$1,840.00</h3>
+      <h3 className="h3_style bold-font black-text tracking-wide">{formatCurrency((thisMonthMoney.reduce((partialSum, a) => partialSum + a, 0)) - (previousMonthMoney.reduce((partialSum, a) => partialSum + a, 0)))}</h3>
       <div className="flex gap-1">
         <img src={profitIcon} alt="Profit Icon" className="pt-1" />
-        <p className="text-[#13EC6D] font-bold">+12% these months</p>
+        <p className="text-[#13EC6D] font-bold">+{growthPercentage}% this month</p>
       </div>
       <div>
         <Bar
