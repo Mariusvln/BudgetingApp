@@ -16,13 +16,14 @@ const DashboardDesktop = (props) => {
           <MonthlyGrowth
             incomes={props.incomeItems}
             expenses={props.expenseItems}
+            formatCurrency={props.formatCurrency}
           />
         </section>
         <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1.35fr)_minmax(360px,0.65fr)]">
           <section className="income-cards_grid">
             <IncomeCard header={incomeCards[0]} progressStyle={progressBarStyles[0]} money={props.incomes} percentage={80}/>
             <IncomeCard header={incomeCards[1]} progressStyle={progressBarStyles[1]} money={props.expenses} percentage={40}/>
-            <IncomeCard header={incomeCards[2]} progressStyle={progressBarStyles[0]} money={"$4,300.00"} percentage={60}/>
+            <IncomeCard header={incomeCards[2]} progressStyle={progressBarStyles[0]} money={props.formatCurrency(4300)} percentage={60}/>
             <div className="circular-prog-card">
               <div className="flex flex-col">
                 <p className="text-sm font-semibold text-base-content/55">Savings Ratio</p>
@@ -47,7 +48,7 @@ const DashboardDesktop = (props) => {
             <div>
               <div className="saving-goal">
                 <p className="font-semibold text-base-content">New Car Fund</p>
-                <p className="saving-goal_amount">$12,000 / $25,000</p>
+                <p className="saving-goal_amount">{props.formatCurrency(12000)} / {props.formatCurrency(25000)}</p>
               </div>
               <progress
                 max="100"
@@ -58,7 +59,7 @@ const DashboardDesktop = (props) => {
             <div>
               <div className="saving-goal">
                 <p className="font-semibold text-base-content">Emergency Fund</p>
-                <p className="saving-goal_amount">$8,500 / $10,000</p>
+                <p className="saving-goal_amount">{props.formatCurrency(8500)} / {props.formatCurrency(10000)}</p>
               </div>
               <progress
                 max="100"

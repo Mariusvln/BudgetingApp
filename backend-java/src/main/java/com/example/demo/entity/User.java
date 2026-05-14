@@ -23,6 +23,8 @@ public class User {
 
  private String location;
 
+ private String currency = "EUR";
+
 // @Column(nullable = false, updatable = false)
  private LocalDateTime createdAt;
 
@@ -47,6 +49,9 @@ public class User {
 
  public String getLocation() { return location; }
  public void setLocation(String location) { this.location = location; }
+
+ public String getCurrency() { return currency == null || currency.isBlank() ? "EUR" : currency; }
+ public void setCurrency(String currency) { this.currency = currency == null || currency.isBlank() ? "EUR" : currency; }
 
  public LocalDateTime getCreatedAt() { return createdAt; }
  public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }

@@ -1,4 +1,6 @@
 import ExpenseTransaction from "./ExpenseTransaction";
+import { useAuth } from "../../contexts/AuthContext";
+import { formatCurrency } from "../../utils/currency";
 
 function ExpenseRecentTable({
   transactions,
@@ -15,6 +17,7 @@ function ExpenseRecentTable({
   setSelectedCategory,
   totalCount,
 }) {
+  const { user } = useAuth();
   const formatMobileDate = (dateValue) => {
     const date = new Date(dateValue);
     const today = new Date();
@@ -37,11 +40,7 @@ function ExpenseRecentTable({
     }).format(date);
   };
 
-  const formatAmount = (amount) =>
-    `-$${(Number(amount) || 0).toLocaleString("en-US", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    })}`;
+  const formatAmount = (amount) => `-${formatCurrency(amount, user?.currency)}`;
 
   const getCategoryName = (categoryId) =>
     categories.find((cat) => Number(cat.id) === Number(categoryId))?.name ||

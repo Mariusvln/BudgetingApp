@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useAppAlert } from "../../contexts/useAppAlert";
+import { useAuth } from "../../contexts/AuthContext";
+import { convertToEuro, getCurrencyPlaceholder } from "../../utils/currency";
 
 function IncomeAddPanel({ onTransactionAdded, categories = [] }) {
+  const { user } = useAuth();
   const appAlert = useAppAlert();
   const getTodayDate = () => new Date().toISOString().split("T")[0];
 
@@ -52,7 +55,7 @@ function IncomeAddPanel({ onTransactionAdded, categories = [] }) {
 
     const income = {
       description: description,
-      amount: parseFloat(amount),
+      amount: convertToEuro(amount, user?.currency),
       date: date,
       category: parseInt(category),
       processType: "SINGLE",
@@ -127,7 +130,7 @@ function IncomeAddPanel({ onTransactionAdded, categories = [] }) {
             <input
               type="number"
               id="amount"
-              placeholder="$ 0.00"
+              placeholder={getCurrencyPlaceholder(user?.currency)}
               className="input input-bordered"
               {...register("amount", {
                 required:

@@ -2,6 +2,8 @@ import ReactDom from "react-dom";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useAppAlert } from "../../contexts/useAppAlert";
+import { useAuth } from "../../contexts/AuthContext";
+import { convertFromEuro, convertToEuro, getCurrencyPlaceholder } from "../../utils/currency";
 
 const IncomeEditForm = ({
   id,
@@ -13,6 +15,7 @@ const IncomeEditForm = ({
   onTransactionAdded,
   categories = [],
 }) => {
+  const { user } = useAuth();
   const appAlert = useAppAlert();
   const [loading, setLoading] = useState(false);
 
@@ -25,7 +28,7 @@ const IncomeEditForm = ({
   } = useForm({
     defaultValues: {
       description: description ?? "",
-      amount: amount ?? "",
+      amount: convertFromEuro(amount, user?.currency) || "",
       date: date ?? "",
       category: String(category ?? ""),
     },
@@ -33,10 +36,10 @@ const IncomeEditForm = ({
 
   useEffect(() => {
     setValue("description", description ?? "");
-    setValue("amount", amount ?? "");
+    setValue("amount", convertFromEuro(amount, user?.currency) || "");
     setValue("date", date ?? "");
     setValue("category", String(category ?? ""));
-  }, [description, amount, date, category, setValue]);
+  }, [description, amount, date, category, setValue, user?.currency]);
 
   const selectedCategory = watch("category");
 
@@ -50,7 +53,7 @@ const IncomeEditForm = ({
 
     const income = {
       description: description.trim(),
-      amount: parsedAmount,
+      amount: convertToEuro(parsedAmount, user?.currency),
       date: date,
       category: parsedCategory,
       processType: "SINGLE",
@@ -164,6 +167,7 @@ const IncomeEditForm = ({
           <input
             type="number"
             id="amount"
+            placeholder={getCurrencyPlaceholder(user?.currency)}
             className={`w-full rounded-xl border px-3 py-2.5 text-[#101828] focus:outline-none ${
               errors.amount?.message
                 ? "border-[#e5484d] focus:border-[#e5484d]"

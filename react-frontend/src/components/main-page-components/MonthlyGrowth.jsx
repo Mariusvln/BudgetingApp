@@ -4,7 +4,7 @@ import { Bar } from "react-chartjs-2";
 import "../../assets/styles/Dashboard.css";
 import { useMemo } from "react";
 
-const MonthlyGrowth = ({ incomes = [], expenses = [] }) => {
+const MonthlyGrowth = ({ incomes = [], expenses = [], formatCurrency }) => {
   const getMonths = () => {
     const today = new Date();
     const result = [];
@@ -99,7 +99,9 @@ const MonthlyGrowth = ({ incomes = [], expenses = [] }) => {
         <p className="font-bold text-base-content/35">...</p>
       </div>
       <h3 className="mt-2 text-3xl font-extrabold tracking-tight text-base-content">
-        ${totalSavings.toLocaleString("en-US", { minimumFractionDigits: 2 })}
+        {formatCurrency
+          ? formatCurrency(totalSavings)
+          : `€${totalSavings.toLocaleString("en-US", { minimumFractionDigits: 2 })}`}
       </h3>
       <div className="flex gap-1">
         <img src={profitIcon} alt="Profit Icon" className="pt-1" />

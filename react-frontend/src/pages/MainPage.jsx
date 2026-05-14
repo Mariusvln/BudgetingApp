@@ -5,8 +5,11 @@ import DashboardDesktop from "../components/main-page-components/DashboardDeskto
 import DashboardHeaderDesktop from "../components/main-page-components/DashboardHeaderDesktop";
 import TransactionNav from "../components/TransactionNav";
 import { useEffect, useState } from "react";
+import { useAuth } from "../contexts/AuthContext";
+import { formatCurrency as formatMoney } from "../utils/currency";
 
 const MainPage = () => {
+    const { user } = useAuth();
 
     const [incomes, setIncomes] = useState(0);
     const [expenses, setExpenses] = useState(0);
@@ -79,11 +82,7 @@ const MainPage = () => {
       }
     };
   
-    const formatCurrency = (value) =>
-      new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
-      }).format(Number(value) || 0);
+    const formatCurrency = (value) => formatMoney(value, user?.currency);
   
     useEffect(() => {
       fetchBalance();

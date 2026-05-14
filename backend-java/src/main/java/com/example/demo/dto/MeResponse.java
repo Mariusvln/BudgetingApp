@@ -8,5 +8,6 @@ public record MeResponse(
         String email,
         String role,
         String location,
+        String currency,
         LocalDateTime createdAt
 ) {}

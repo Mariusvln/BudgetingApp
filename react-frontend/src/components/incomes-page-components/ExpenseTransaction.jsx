@@ -1,5 +1,7 @@
 import { Fragment, useState } from "react";
 import ExpenseEditForm from "./ExpenseEditForm";
+import { useAuth } from "../../contexts/AuthContext";
+import { formatCurrency } from "../../utils/currency";
 
 const ExpenseTransaction = ({
   id,
@@ -10,6 +12,7 @@ const ExpenseTransaction = ({
   onTransactionAdded,
   categories = [],
 }) => {
+  const { user } = useAuth();
   const [showEdit, setShowEdit] = useState(false);
 
   const show = () => {
@@ -32,7 +35,7 @@ const ExpenseTransaction = ({
           </span>
         </td>
         <td className="text-right font-medium text-red-600">
-          -${Number(amount)?.toFixed(2)}
+          -{formatCurrency(amount, user?.currency)}
         </td>
         <td>
           <button

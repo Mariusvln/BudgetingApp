@@ -1,7 +1,10 @@
 import React, { useCallback, useEffect, useState } from "react";
 import Chart from "react-apexcharts";
+import { useAuth } from "../../contexts/AuthContext";
+import { formatCurrency } from "../../utils/currency";
 
 function AnalyticChart({ dateStart, dateEnd }) {
+  const { user } = useAuth();
   const [incomeData, setIncomeData] = useState([]);
   const [expenseData, setExpenseData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -110,7 +113,7 @@ function AnalyticChart({ dateStart, dateEnd }) {
     },
     tooltip: {
       y: {
-        formatter: (val) => `$${val}`,
+        formatter: (val) => formatCurrency(val, user?.currency),
       },
     },
   };

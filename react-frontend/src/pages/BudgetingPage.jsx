@@ -1,5 +1,12 @@
 import TransactionNav from "../components/TransactionNav";
 import React, { useEffect, useState } from "react";
+import { useAuth } from "../contexts/AuthContext";
+import {
+  convertFromEuro,
+  convertToEuro,
+  formatCurrency as formatMoney,
+  getCurrencyPlaceholder,
+} from "../utils/currency";
 
 const getMonthStart = (date) =>
   new Date(date.getFullYear(), date.getMonth(), 1);
@@ -62,6 +69,7 @@ const ProgressBar = ({ value, limit, over }) => {
 
 
 const AddCategoryModal = ({ open, onClose, categories, onCategoryAdded }) => {
+  const { user } = useAuth();
   const [limit, setLimit] = useState("");
   const [selected, setSelected] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -100,7 +108,7 @@ const AddCategoryModal = ({ open, onClose, categories, onCategoryAdded }) => {
         credentials: "include",
         body: JSON.stringify({
           category: Number(selected),
-          maxLimit: Number(limit),
+          maxLimit: convertToEuro(limit, user?.currency),
         }),
       });
 
@@ -151,7 +159,7 @@ const AddCategoryModal = ({ open, onClose, categories, onCategoryAdded }) => {
             type="number"
             value={limit}
             onChange={(e) => setLimit(e.target.value)}
-            placeholder="Enter limit"
+            placeholder={getCurrencyPlaceholder(user?.currency)}
             className="w-full border border-[#e5e7eb] rounded-[10px] px-3 py-2 text-[14px]"
           />
         </div>
@@ -182,13 +190,9 @@ const AddCategoryModal = ({ open, onClose, categories, onCategoryAdded }) => {
 };
 
 
-const formatCurrency = (value) =>
-  new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-  }).format(Number(value) || 0);
+const formatCurrency = (value, currency) => formatMoney(value, currency);
 
-const BudgetSummary = ({ totalEarned, totalSpent, totalLimit }) => {
+const BudgetSummary = ({ totalEarned, totalSpent, totalLimit, currency }) => {
   const usedPercent =
     totalLimit > 0 ? Math.min((totalSpent / totalLimit) * 100, 100) : 0;
   const remainingBalance = totalEarned - totalSpent;
@@ -204,10 +208,10 @@ const BudgetSummary = ({ totalEarned, totalSpent, totalLimit }) => {
           remainingBalance < 0 ? "text-[#e5484d]" : "text-[#101828]"
         }`}
       >
-        {formatCurrency(remainingBalance)}
+        {formatCurrency(remainingBalance, currency)}
       </h2>
       <p className="mt-1 text-center text-[13px] text-[#98a2b3]">
-        out of {formatCurrency(totalEarned)} income earned
+        out of {formatCurrency(totalEarned, currency)} income earned
       </p>
 
       <div className="mt-6">
@@ -216,7 +220,7 @@ const BudgetSummary = ({ totalEarned, totalSpent, totalLimit }) => {
             BUDGET USAGE
           </p>
           <p className="text-[13px] text-[#667085]">
-            {formatCurrency(totalSpent)} of {formatCurrency(totalLimit)}
+            {formatCurrency(totalSpent, currency)} of {formatCurrency(totalLimit, currency)}
           </p>
         </div>
         <ProgressBar
@@ -227,12 +231,12 @@ const BudgetSummary = ({ totalEarned, totalSpent, totalLimit }) => {
       </div>
 
       <div className="mt-3 flex justify-between text-[12px] text-[#98a2b3]">
-        <span>{formatCurrency(0)}</span>
+        <span>{formatCurrency(0, currency)}</span>
         <span>
           {usedPercent.toFixed(0)}% Used, Remaining from planned budget{" "}
-          {formatCurrency(remainingBudget)}
+          {formatCurrency(remainingBudget, currency)}
         </span>
-        <span>{formatCurrency(totalLimit)}</span>
+        <span>{formatCurrency(totalLimit, currency)}</span>
       </div>
 
     </div>
@@ -240,17 +244,20 @@ const BudgetSummary = ({ totalEarned, totalSpent, totalLimit }) => {
 };
 
 const EditLimitModal = ({ open, onClose, category, onLimitUpdated }) => {
-  const [limit, setLimit] = useState(category?.maxLimit ?? "");
+  const { user } = useAuth();
+  const [limit, setLimit] = useState(
+    convertFromEuro(category?.maxLimit, user?.currency) || "",
+  );
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
 
   useEffect(() => {
     if (open) {
-      setLimit(category?.maxLimit ?? "");
+      setLimit(convertFromEuro(category?.maxLimit, user?.currency) || "");
       setError("");
       setSubmitting(false);
     }
-  }, [category, open]);
+  }, [category, open, user?.currency]);
 
   if (!open || !category) return null;
 
@@ -280,7 +287,7 @@ const EditLimitModal = ({ open, onClose, category, onLimitUpdated }) => {
           credentials: "include",
           body: JSON.stringify({
             category: Number(category.categoryId),
-            maxLimit: Number(limit),
+            maxLimit: convertToEuro(limit, user?.currency),
           }),
         },
       );
@@ -326,6 +333,7 @@ const EditLimitModal = ({ open, onClose, category, onLimitUpdated }) => {
             type="number"
             value={limit}
             onChange={(e) => setLimit(e.target.value)}
+            placeholder={getCurrencyPlaceholder(user?.currency)}
             placeholder="Enter new limit"
             className="w-full rounded-[10px] border border-[#e5e7eb] px-3 py-2 text-[14px]"
           />
@@ -446,7 +454,7 @@ const formatItemDate = (date) =>
     day: "numeric",
   }).format(new Date(date));
 
-const CategoryCard = ({ category, onEdit, onDelete, expenses }) => {
+const CategoryCard = ({ category, onEdit, onDelete, expenses, currency }) => {
   const { categoryName, spent, maxLimit } = category;
   const amount = spent;
   const limit = maxLimit;
@@ -475,7 +483,7 @@ const CategoryCard = ({ category, onEdit, onDelete, expenses }) => {
               over ? "text-[#e5484d]" : "text-[#101828]"
             }`}
           >
-            {formatCurrency(amount)}
+            {formatCurrency(amount, currency)}
           </p>
           <div className="flex items-center justify-end gap-3">
             <button
@@ -502,14 +510,14 @@ const CategoryCard = ({ category, onEdit, onDelete, expenses }) => {
 
       <div className="flex justify-between text-[12px] mt-3">
         <span className={over ? "text-[#e5484d]" : "text-[#98a2b3]"}>
-          Spent: {formatCurrency(spent)}
+          Spent: {formatCurrency(spent, currency)}
         </span>
-        <span className="text-[#98a2b3]">Limit: {formatCurrency(limit)}</span>
+        <span className="text-[#98a2b3]">Limit: {formatCurrency(limit, currency)}</span>
       </div>
 
       {over && (
         <p className="text-[#e5484d] text-[12px] mt-2 text-right">
-          Over budget by {formatCurrency(spent - limit)}
+          Over budget by {formatCurrency(spent - limit, currency)}
         </p>
       )}
 
@@ -544,7 +552,7 @@ const CategoryCard = ({ category, onEdit, onDelete, expenses }) => {
                       </p>
                     </div>
                     <p className="text-[12px] font-semibold text-[#101828]">
-                      {formatCurrency(item.amount)}
+                      {formatCurrency(item.amount, currency)}
                     </p>
                   </li>
                 ))}
@@ -589,6 +597,7 @@ const Categories = ({
   modalCategories,
   expenses,
   loading,
+  currency,
   onCategoryAdded,
   onLimitUpdated,
   onLimitDeleted,
@@ -636,6 +645,7 @@ const Categories = ({
               expenses={expenses.filter(
                 (expense) => Number(expense.category) === Number(category.categoryId),
               )}
+              currency={currency}
             />
           ))
         ))}
@@ -670,6 +680,7 @@ const Categories = ({
 };
 
 const BudgetingPage = () => {
+  const { user } = useAuth();
   const [limits, setLimits] = useState([]);
   const [expenses, setExpenses] = useState([]);
   const [incomes, setIncomes] = useState([]);
@@ -834,12 +845,14 @@ const BudgetingPage = () => {
             totalEarned={totalEarned}
             totalSpent={totalSpent}
             totalLimit={totalLimit}
+            currency={user?.currency}
           />
           <Categories
             categories={expenseCategories}
             modalCategories={expenseModalCategories}
             expenses={visibleExpenses}
             loading={loading}
+            currency={user?.currency}
             onCategoryAdded={fetchBudgetData}
             onLimitUpdated={fetchBudgetData}
             onLimitDeleted={fetchBudgetData}

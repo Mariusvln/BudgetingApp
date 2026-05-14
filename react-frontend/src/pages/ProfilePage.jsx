@@ -47,6 +47,7 @@ const ProfilePage = () => {
     name: "",
     email: "",
     location: "",
+    currency: "EUR",
   });
 
   const [saving, setSaving] = useState(false);
@@ -58,6 +59,7 @@ const ProfilePage = () => {
         name: user.name || "",
         email: user.email || "",
         location: user.location || "",
+        currency: user.currency || "EUR",
       });
     }
   }, [user]);

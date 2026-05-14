@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useAppAlert } from "../../contexts/useAppAlert";
+import { useAuth } from "../../contexts/AuthContext";
+import { convertToEuro, getCurrencyPlaceholder } from "../../utils/currency";
 
 function ExpenseAddPanel({ onTransactionAdded, categories = [] }) {
+  const { user } = useAuth();
   const appAlert = useAppAlert();
   const getTodayDate = () => new Date().toISOString().split('T')[0];
 
@@ -34,7 +37,7 @@ function ExpenseAddPanel({ onTransactionAdded, categories = [] }) {
 
     const expense = {
       description: description,
-      amount: parseFloat(amount),
+      amount: convertToEuro(amount, user?.currency),
       date: date,
       category: parseInt(category),
       processType: "SINGLE",
@@ -91,7 +94,7 @@ function ExpenseAddPanel({ onTransactionAdded, categories = [] }) {
 
             <input
               type="number"
-              placeholder="$ 0.00"
+              placeholder={getCurrencyPlaceholder(user?.currency)}
               className="input input-bordered"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}

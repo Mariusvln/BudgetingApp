@@ -1,3 +1,5 @@
+import { CURRENCY_OPTIONS } from "../../utils/currency";
+
 function ProfilePersonalInformation({ formData, onChange }) {
   return (
     <div className="rounded-3xl border border-base-300 bg-base-100 p-5 shadow-sm sm:p-6 lg:col-span-2">
@@ -49,9 +51,17 @@ function ProfilePersonalInformation({ formData, onChange }) {
           <label className="text-sm font-medium text-base-content/60">
             Preferred Currency
           </label>
-          <select className="mt-2 h-12 w-full rounded-2xl border border-base-300 bg-base-200 px-4 text-sm outline-none transition focus:border-primary focus:bg-base-100">
-            <option>USD - US Dollar</option>
-            <option>EUR - Euro</option>
+          <select
+            name="currency"
+            value={formData.currency || "EUR"}
+            onChange={onChange}
+            className="mt-2 h-12 w-full rounded-2xl border border-base-300 bg-base-200 px-4 text-sm outline-none transition focus:border-primary focus:bg-base-100"
+          >
+            {CURRENCY_OPTIONS.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
           </select>
         </div>
       </div>

@@ -1,6 +1,9 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useAuth } from "../../contexts/AuthContext";
+import { formatCurrency } from "../../utils/currency";
 
 function TransactionRecentTable() {
+  const { user } = useAuth();
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("ALL");
@@ -45,12 +48,8 @@ function TransactionRecentTable() {
   };
 
   const formatAmount = (amount, type) => {
-    const numericAmount = Number(amount) || 0;
     const prefix = type === "INCOME" ? "+" : "-";
-    return `${prefix}$${numericAmount.toLocaleString("en-US", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    })}`;
+    return `${prefix}${formatCurrency(amount, user?.currency)}`;
   };
 
   const fetchTransactions = useCallback(async () => {

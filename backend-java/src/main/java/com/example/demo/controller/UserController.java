@@ -79,7 +79,8 @@ public class UserController {
                 currentEmail,
                 request.name(),
                 request.email(),
-                request.location()
+                request.location(),
+                request.currency()
         );
 
         String token = jwtService.generateAccessToken(updated.getEmail(), updated.getRole().name());
@@ -91,6 +92,7 @@ public class UserController {
                 updated.getEmail(),
                 updated.getRole().name(),
                 updated.getLocation(),
+                updated.getCurrency(),
                 updated.getCreatedAt()
         );
     }
