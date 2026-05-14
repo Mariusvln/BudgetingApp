@@ -39,7 +39,10 @@ const BalanceCard = ({formatCurrency, balance, monthlySpending}) => {
 
   return (
     <div className="relative min-h-[260px] basis-[600px] grow overflow-hidden rounded-3xl border border-primary/35 bg-[radial-gradient(circle_at_16%_10%,rgb(255_255_255_/_0.34),transparent_18rem),radial-gradient(circle_at_95%_0%,color-mix(in_oklch,var(--color-secondary)_80%,transparent),transparent_22rem),linear-gradient(135deg,color-mix(in_oklch,var(--color-primary)_92%,black),var(--color-primary))] p-8 shadow-[0_22px_60px_color-mix(in_oklch,var(--color-primary)_22%,transparent),0_16px_36px_color-mix(in_oklch,var(--color-base-content)_8%,transparent)]">
-      <div className="pointer-events-none absolute -bottom-32 -right-24 h-72 w-72 rounded-full bg-base-100/25" />
+      <div className="pointer-events-none absolute -left-24 -top-28 h-88 w-88 rounded-full bg-primary-content/30 blur-3xl motion-safe:animate-pulse" />
+      <div className="pointer-events-none absolute -right-28 top-8 h-96 w-96 rounded-full bg-secondary/50 blur-3xl motion-safe:animate-pulse" />
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(115deg,transparent_0%,rgb(255_255_255_/_0.18)_35%,transparent_70%)] opacity-70 motion-safe:animate-pulse" />
+      <div className="pointer-events-none absolute -bottom-32 -right-24 h-76 w-76 rounded-full bg-base-100/32 blur-sm motion-safe:animate-[pulse_4s_ease-in-out_infinite]" />
       <div className="pointer-events-none absolute inset-x-8 top-0 h-px bg-primary-content/35" />
 
       <div className="relative z-10 flex w-fit items-center gap-2 rounded-full bg-base-100/20 px-3 py-1 text-xs font-bold uppercase tracking-[0.16em] text-primary-content/90 backdrop-blur">
