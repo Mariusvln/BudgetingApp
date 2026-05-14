@@ -1,14 +1,6 @@
-import { useTheme } from "../../contexts/useTheme";
-
 function ProfileNotifications() {
-  const { theme } = useTheme();
-
-  const isValentineTheme = theme === "valentine";
-
-  const toggleClass = isValentineTheme ? "toggle-secondary" : "toggle-success";
-
   return (
-    <div className="rounded-3xl bg-base-100 p-5 shadow-sm sm:p-6">
+    <div className="rounded-3xl border border-base-300 bg-base-100 p-5 shadow-sm sm:p-6">
       <h3 className="mb-4 text-lg font-bold">Notifications</h3>
 
       <div className="flex items-center justify-between gap-4">
@@ -21,7 +13,7 @@ function ProfileNotifications() {
 
         <input
           type="checkbox"
-          className={`toggle shrink-0 ${toggleClass}`}
+          className="toggle toggle-primary shrink-0"
           defaultChecked
         />
       </div>

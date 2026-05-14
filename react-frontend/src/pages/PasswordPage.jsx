@@ -7,7 +7,7 @@ const PasswordPage = () => {
         <div className="flex-1 px-6 pt-6 pb-8">
           <div className="mb-8">
             <div className="mb-8 flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-green-400">
+              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary">
                 <span className="text-lg font-bold text-black">F</span>
               </div>
               <span className="text-[18px] font-semibold text-foreground">FinVue</span>
@@ -43,7 +43,7 @@ const PasswordPage = () => {
 
               <button
                 type="submit"
-                className="mt-1 w-full rounded-xl bg-green-400 px-4 py-3 text-base font-semibold text-black hover:opacity-90"
+                className="mt-1 w-full rounded-xl bg-primary px-4 py-3 text-base font-semibold text-primary-content hover:opacity-90"
               >
                 Send link
               </button>
@@ -54,7 +54,7 @@ const PasswordPage = () => {
         <div className="bottomWindow flex min-h-[72px] items-center justify-center border-t border-card-line bg-[#F8FAFC] px-6 py-6">
           <p className="text-center text-sm text-muted-foreground-2">
             have an account?{' '}
-            <a href="#" className="font-medium text-green-500 hover:underline">
+            <a href="#" className="font-medium text-primary hover:underline">
               Sign in </a>
           </p>
         </div>

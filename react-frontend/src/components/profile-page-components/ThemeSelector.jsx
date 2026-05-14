@@ -48,7 +48,7 @@ const ThemeSelector = () => {
       preview: {
         bg: "#f8fafc",
         surface: "#ffffff",
-        primary: "#22c55e",
+        primary: "#4f46e5",
         text: "#0f172a",
       },
     },

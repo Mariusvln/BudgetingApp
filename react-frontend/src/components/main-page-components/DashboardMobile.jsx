@@ -1,41 +1,40 @@
 import listIcon from "../../assets/images/icons/list-icon.svg";
 import statsIcon from "../../assets/images/icons/stats-icon.svg";
 import piggybankIcon from "../../assets/images/icons/piggybank-icon.svg";
-import "../../assets/styles/Dashboard.css";
 import AccountCard from "./AccountCard";
 import SavingGoal from "./SavingGoal";
 
 const DashboardMobile = ({balance}) => {
   return (
-    <div className="flex_col flex_center gap-7 mobile-display">
+    <div className="flex flex-col justify-center gap-7 min-[930px]:hidden">
       <AccountCard balance={balance}/>
       <SavingGoal/>
-      <nav className="flex_between mx-2">
+      <nav className="mx-2 flex justify-between">
         <div>
-          <button className="bg-[#DBEAFE] nav_button_style hover:bg-[#bdd7fa]">
+          <button className="rounded-xl bg-blue-100 px-5 py-5 transition hover:bg-blue-200">
             <img src={listIcon} alt="list icon" className="w-4.5 h-5" />
           </button>
-          <p className="nav_element_style">Bills</p>
+          <p className="mt-1 text-center text-sm font-semibold text-base-content/60">Bills</p>
         </div>
         <div>
-          <button className="bg-[#FFEDD5] nav_button_style hover:bg-[#ffdcad]">
+          <button className="rounded-xl bg-orange-100 px-5 py-5 transition hover:bg-orange-200">
             <img src={statsIcon} alt="stats icon" className="w-4.5 h-5" />
           </button>
-          <p className="nav_element_style">Stats</p>
+          <p className="mt-1 text-center text-sm font-semibold text-base-content/60">Stats</p>
         </div>
         <div>
-          <button className="bg-[#F3E8FF] nav_button_style hover:bg-[#e0c3ff]">
+          <button className="rounded-xl bg-purple-100 px-5 py-5 transition hover:bg-purple-200">
             <img
               src={piggybankIcon}
               alt="piggybank icon"
               className="w-4.5 h-5"
             />
           </button>
-          <p className="nav_element_style">Vaults</p>
+          <p className="mt-1 text-center text-sm font-semibold text-base-content/60">Vaults</p>
         </div>
         <div>
-          <button className="nav_button_plus green-text semibold">+</button>
-          <p className="nav_element_style">Add</p>
+          <button className="rounded-xl bg-primary/15 px-5 py-3.5 text-2xl font-semibold text-primary transition hover:bg-primary/25">+</button>
+          <p className="mt-1 text-center text-sm font-semibold text-base-content/60">Add</p>
         </div>
       </nav>
     </div>

@@ -100,6 +100,7 @@ public class AuthController {
                 user.getEmail(),
                 user.getRole().name(),
                 user.getLocation(),
+                user.getCurrency(),
                 user.getCreatedAt()
         );
     }

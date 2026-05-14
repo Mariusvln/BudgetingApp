@@ -55,7 +55,7 @@ const RegisterPage = () => {
         <div className="flex-1 px-6 pt-6 pb-8">
           <div className="mb-8">
             <div className="mb-8 flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-green-400">
+              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary">
                 <span className="text-lg font-bold text-black">F</span>
               </div>
               <span className="text-[18px] font-semibold text-foreground">
@@ -202,7 +202,7 @@ const RegisterPage = () => {
 
                 <a
                   href="#"
-                  className="text-sm font-medium text-green-500 hover:underline"
+                  className="text-sm font-medium text-primary hover:underline"
                 >
                   Forgot password?
                 </a>
@@ -210,7 +210,7 @@ const RegisterPage = () => {
 
               <button
                 type="submit"
-                className="mt-1 w-full rounded-xl bg-green-400 px-4 py-3 text-base font-semibold text-black hover:opacity-90"
+                className="mt-1 w-full rounded-xl bg-primary px-4 py-3 text-base font-semibold text-primary-content hover:opacity-90"
               >
                 Sign Up
               </button>
@@ -225,7 +225,7 @@ const RegisterPage = () => {
             have an account?{" "}
             <Link
               to="/signin"
-              className="font-medium text-green-500 hover:underline"
+              className="font-medium text-primary hover:underline"
             >
               Sign in
             </Link>

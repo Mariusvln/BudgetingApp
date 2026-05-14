@@ -1,4 +1,6 @@
 import Transaction from "./Transaction";
+import { useAuth } from "../../contexts/AuthContext";
+import { formatCurrency } from "../../utils/currency";
 
 function IncomeRecentTable({
   transactions,
@@ -15,6 +17,7 @@ function IncomeRecentTable({
   setSelectedCategory,
   totalCount,
 }) {
+  const { user } = useAuth();
   const formatMobileDate = (dateValue) => {
     const date = new Date(dateValue);
     const today = new Date();
@@ -37,11 +40,7 @@ function IncomeRecentTable({
     }).format(date);
   };
 
-  const formatAmount = (amount) =>
-    `+$${(Number(amount) || 0).toLocaleString("en-US", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    })}`;
+  const formatAmount = (amount) => `+${formatCurrency(amount, user?.currency)}`;
 
   const getCategoryName = (categoryId) =>
     categories.find((cat) => Number(cat.id) === Number(categoryId))?.name ||
@@ -102,18 +101,24 @@ function IncomeRecentTable({
         </div>
       </section>
 
-      <div className="card hidden border border-base-200 bg-base-100 shadow-sm lg:block">
+      <div className="card hidden border border-base-300 bg-base-100 shadow-sm lg:block">
       <div className="card-body">
         <div className="mb-6 flex flex-col gap-4">
+          <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
           <div>
-          <div>
-            <h2 className="text-xl font-semibold">Income History</h2>
-            <p className="text-sm text-gray-500">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">
+              Cash flow
+            </p>
+            <h2 className="mt-1 text-2xl font-bold tracking-tight">Income History</h2>
+            <p className="text-sm text-base-content/60">
               {loading
                 ? "Loading..."
                 : `Showing ${transactions.length} of ${totalCount ?? transactions.length} entries`}
             </p>
           </div>
+            <div className="rounded-full bg-success/10 px-4 py-2 text-sm font-bold text-success">
+              Income
+            </div>
           </div>
 
           <div className="rounded-2xl bg-base-200/60 p-3">
@@ -136,7 +141,7 @@ function IncomeRecentTable({
                 Category
               </span>
               <select
-                className="select select-bordered h-11 rounded-xl bg-base-100 text-sm"
+                className="select select-bordered h-11 rounded-xl border-base-300 bg-base-100 text-sm text-base-content"
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory?.(e.target.value)}
               >
@@ -175,7 +180,7 @@ function IncomeRecentTable({
 
             <button
               type="button"
-              className="btn h-11 self-end rounded-xl border-base-300 bg-base-100 px-5"
+              className="btn h-11 self-end rounded-xl border-base-300 bg-base-100 px-5 text-base-content/75 hover:bg-base-200 disabled:bg-base-200/80 disabled:text-base-content/45 disabled:opacity-100"
               onClick={() => {
                 setSearchQuery?.("");
                 setSelectedCategory?.("ALL");
@@ -190,7 +195,7 @@ function IncomeRecentTable({
 
         <div className="overflow-x-auto">
           <table className="table">
-            <thead className="text-gray-500 text-sm">
+            <thead className="text-sm text-base-content/55">
               <tr>
                 <th>ID</th>
                 <th>Date</th>
@@ -226,7 +231,7 @@ function IncomeRecentTable({
           </table>
 
           {!loading && transactions.length === 0 && (
-            <div className="text-center py-10 text-gray-400">
+            <div className="py-10 text-center text-base-content/40">
               No data found for this range
             </div>
           )}

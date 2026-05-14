@@ -9,7 +9,7 @@ function AnalyticChartMonthly() {
       toolbar: { show: false },
       zoom: { enabled: false },
     },
-    colors: ["#13EC6D", "#EA580C"], // fallback if CSS vars fail
+    colors: ["#22c55e", "#ef4444"],
     dataLabels: { enabled: false },
     stroke: {
       curve: "smooth",
@@ -74,7 +74,7 @@ function AnalyticChartMonthly() {
   ];
 
   return (
-    <div className="w-[95%] bg-white rounded-4xl p-10 m-auto">
+    <div className="m-auto w-[95%] rounded-3xl border border-base-300 bg-base-100 p-10 shadow-sm">
       <Chart options={options} series={series} type="area" height={700} />
     </div>
   );

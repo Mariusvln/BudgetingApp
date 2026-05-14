@@ -1,4 +1,9 @@
+import { useAuth } from "../../contexts/AuthContext";
+import { getCurrencyPlaceholder } from "../../utils/currency";
+
 function TransactionAddPanel() {
+  const { user } = useAuth();
+
   return (
     <div className="w-full max-w-sm">
       <div className="card bg-base-100 border border-base-200">
@@ -17,7 +22,7 @@ function TransactionAddPanel() {
 
             <input
               type="text"
-              placeholder="$ 0.00"
+              placeholder={getCurrencyPlaceholder(user?.currency)}
               className="input input-bordered"
             />
 
@@ -27,7 +32,7 @@ function TransactionAddPanel() {
               className="input input-bordered"
             />
 
-            <select className="select select-bordered">
+            <select className="select select-bordered border-base-300 bg-base-100 text-base-content">
               <option>Select category</option>
               <option>Food</option>
               <option>Rent</option>

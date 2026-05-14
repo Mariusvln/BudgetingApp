@@ -1,6 +1,8 @@
 import ReactDom from "react-dom";
 import { useState, useEffect } from "react";
 import { useAppAlert } from "../../contexts/useAppAlert";
+import { useAuth } from "../../contexts/AuthContext";
+import { convertFromEuro, convertToEuro, getCurrencyPlaceholder } from "../../utils/currency";
 
 const ExpenseEditForm = ({
   id,
@@ -12,20 +14,21 @@ const ExpenseEditForm = ({
   onTransactionAdded,
   categories = [],
 }) => {
+  const { user } = useAuth();
   const appAlert = useAppAlert();
   const formId = id;
   const [formDate, setDate] = useState(date);
-  const [formAmount, setAmount] = useState(amount);
+  const [formAmount, setAmount] = useState(convertFromEuro(amount, user?.currency));
   const [formDescription, setDescription] = useState(description);
   const [formCategory, setCategory] = useState(String(category ?? ""));
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setDate(date);
-    setAmount(amount);
+    setAmount(convertFromEuro(amount, user?.currency));
     setDescription(description);
     setCategory(String(category ?? ""));
-  }, [date, amount, description, category]);
+  }, [date, amount, description, category, user?.currency]);
 
   const handleSubmit = async () => {
     if (!formAmount) {
@@ -42,7 +45,7 @@ const ExpenseEditForm = ({
 
     const expense = {
       description: formDescription,
-      amount: parseFloat(formAmount),
+      amount: convertToEuro(formAmount, user?.currency),
       date: formDate,
       category: parseInt(formCategory),
       processType: "SINGLE",
@@ -100,7 +103,7 @@ const ExpenseEditForm = ({
             type="date"
             value={formDate}
             onChange={(e) => setDate(e.target.value)}
-            className="w-full rounded-xl border border-[#d0d5dd] px-3 py-2.5 text-[#101828] focus:border-[#86efac] focus:outline-none"
+            className="w-full rounded-xl border border-[#d0d5dd] px-3 py-2.5 text-[#101828] focus:border-primary focus:outline-none"
           />
         </label>
 
@@ -112,7 +115,7 @@ const ExpenseEditForm = ({
             type="text"
             value={formDescription}
             onChange={(e) => setDescription(e.target.value)}
-            className="w-full rounded-xl border border-[#d0d5dd] px-3 py-2.5 text-[#101828] focus:border-[#86efac] focus:outline-none"
+            className="w-full rounded-xl border border-[#d0d5dd] px-3 py-2.5 text-[#101828] focus:border-primary focus:outline-none"
           />
         </label>
 
@@ -121,7 +124,7 @@ const ExpenseEditForm = ({
             Category
           </span>
           <select
-            className="w-full rounded-xl border border-[#d0d5dd] px-3 py-2.5 text-[#101828] focus:border-[#86efac] focus:outline-none"
+            className="w-full rounded-xl border border-[#d0d5dd] px-3 py-2.5 text-[#101828] focus:border-primary focus:outline-none"
             value={formCategory}
             onChange={(e) => setCategory(e.target.value)}
           >
@@ -145,9 +148,10 @@ const ExpenseEditForm = ({
           </span>
           <input
             type="number"
+            placeholder={getCurrencyPlaceholder(user?.currency)}
             value={formAmount}
             onChange={(e) => setAmount(e.target.value)}
-            className="w-full rounded-xl border border-[#d0d5dd] px-3 py-2.5 text-[#101828] focus:border-[#86efac] focus:outline-none"
+            className="w-full rounded-xl border border-[#d0d5dd] px-3 py-2.5 text-[#101828] focus:border-primary focus:outline-none"
           />
         </label>
 
@@ -160,7 +164,7 @@ const ExpenseEditForm = ({
             Cancel
           </button>
           <button
-            className="rounded-xl bg-[#16a34a] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#15803d]"
+            className="rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-primary-content hover:bg-primary/90"
             type="submit"
             disabled={loading}
           >

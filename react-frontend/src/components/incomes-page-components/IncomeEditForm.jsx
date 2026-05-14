@@ -2,6 +2,8 @@ import ReactDom from "react-dom";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useAppAlert } from "../../contexts/useAppAlert";
+import { useAuth } from "../../contexts/AuthContext";
+import { convertFromEuro, convertToEuro, getCurrencyPlaceholder } from "../../utils/currency";
 
 const IncomeEditForm = ({
   id,
@@ -13,6 +15,7 @@ const IncomeEditForm = ({
   onTransactionAdded,
   categories = [],
 }) => {
+  const { user } = useAuth();
   const appAlert = useAppAlert();
   const [loading, setLoading] = useState(false);
 
@@ -25,7 +28,7 @@ const IncomeEditForm = ({
   } = useForm({
     defaultValues: {
       description: description ?? "",
-      amount: amount ?? "",
+      amount: convertFromEuro(amount, user?.currency) || "",
       date: date ?? "",
       category: String(category ?? ""),
     },
@@ -33,10 +36,10 @@ const IncomeEditForm = ({
 
   useEffect(() => {
     setValue("description", description ?? "");
-    setValue("amount", amount ?? "");
+    setValue("amount", convertFromEuro(amount, user?.currency) || "");
     setValue("date", date ?? "");
     setValue("category", String(category ?? ""));
-  }, [description, amount, date, category, setValue]);
+  }, [description, amount, date, category, setValue, user?.currency]);
 
   const selectedCategory = watch("category");
 
@@ -50,7 +53,7 @@ const IncomeEditForm = ({
 
     const income = {
       description: description.trim(),
-      amount: parsedAmount,
+      amount: convertToEuro(parsedAmount, user?.currency),
       date: date,
       category: parsedCategory,
       processType: "SINGLE",
@@ -106,7 +109,7 @@ const IncomeEditForm = ({
           <input
             type="date"
             id="date"
-            className="w-full rounded-xl border border-[#d0d5dd] px-3 py-2.5 text-[#101828] focus:border-[#86efac] focus:outline-none"
+            className="w-full rounded-xl border border-[#d0d5dd] px-3 py-2.5 text-[#101828] focus:border-primary focus:outline-none"
             {...register("date")}
           />
         </label>
@@ -121,7 +124,7 @@ const IncomeEditForm = ({
             className={`w-full rounded-xl border px-3 py-2.5 text-[#101828] focus:outline-none ${
               errors.description?.message
                 ? "border-[#e5484d] focus:border-[#e5484d]"
-                : "border-[#d0d5dd] focus:border-[#86efac]"
+                : "border-[#d0d5dd] focus:border-primary"
             }`}
             {...register("description", {
               maxLength: {value: 50, message: "Description is too long"}
@@ -139,7 +142,7 @@ const IncomeEditForm = ({
             Category
           </span>
           <select
-            className="w-full rounded-xl border border-[#d0d5dd] px-3 py-2.5 text-[#101828] focus:border-[#86efac] focus:outline-none"
+            className="w-full rounded-xl border border-[#d0d5dd] px-3 py-2.5 text-[#101828] focus:border-primary focus:outline-none"
             {...register("category")}
             value={selectedCategory || ""}
           >
@@ -164,10 +167,11 @@ const IncomeEditForm = ({
           <input
             type="number"
             id="amount"
+            placeholder={getCurrencyPlaceholder(user?.currency)}
             className={`w-full rounded-xl border px-3 py-2.5 text-[#101828] focus:outline-none ${
               errors.amount?.message
                 ? "border-[#e5484d] focus:border-[#e5484d]"
-                : "border-[#d0d5dd] focus:border-[#86efac]"
+                : "border-[#d0d5dd] focus:border-primary"
             }`}
             {...register("amount", {
               required: "Please input your income amount, letters and symbols not allowed",
@@ -193,7 +197,7 @@ const IncomeEditForm = ({
             Cancel
           </button>
           <button
-            className="rounded-xl bg-[#16a34a] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#15803d]"
+            className="rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-primary-content hover:bg-primary/90"
             type="submit"
             disabled={loading}
           >

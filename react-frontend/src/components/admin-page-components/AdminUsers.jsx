@@ -251,7 +251,7 @@ const AdminUsers = () => {
       return "bg-red-100 text-red-700 border-none";
     }
 
-    return "bg-green-100 text-green-700 border-none";
+    return "bg-primary/15 text-primary border-none";
   };
 
   return (
@@ -270,7 +270,7 @@ const AdminUsers = () => {
               <button
                 type="button"
                 onClick={openCreateModal}
-                className="inline-flex h-10 ml-3 items-center justify-center rounded-xl bg-green-600 px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-green-700"
+                className="inline-flex h-10 ml-3 items-center justify-center rounded-xl bg-primary px-4 text-sm font-semibold text-primary-content shadow-sm transition hover:bg-primary/90"
               >
                 Create User
               </button>
@@ -423,7 +423,7 @@ const AdminUsers = () => {
               </button>
 
               <button
-                className="btn rounded-xl bg-green-600 text-white hover:bg-green-700"
+                className="btn rounded-xl bg-primary text-primary-content hover:bg-primary/90"
                 onClick={handleCreateUser}
                 disabled={actionLoadingId === "create-user"}
               >
@@ -490,7 +490,7 @@ const AdminUsers = () => {
               </button>
 
               <button
-                className="btn rounded-xl bg-green-600 text-white hover:bg-green-700"
+                className="btn rounded-xl bg-primary text-primary-content hover:bg-primary/90"
                 onClick={handleSaveEdit}
                 disabled={actionLoadingId === editingUser.id}
               >

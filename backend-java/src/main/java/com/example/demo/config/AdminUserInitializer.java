@@ -28,6 +28,11 @@ public class AdminUserInitializer implements CommandLineRunner {
             admin.setRole(Role.ROLE_ADMIN);
             userRepository.save(admin);
         }
+
+        if (admin.getCurrency() == null || admin.getCurrency().isBlank()) {
+            admin.setCurrency("EUR");
+            userRepository.save(admin);
+        }
     }
 
     private User createAdminUser() {
@@ -36,6 +41,7 @@ public class AdminUserInitializer implements CommandLineRunner {
         admin.setEmail(ADMIN_EMAIL);
         admin.setPassword(passwordEncoder.encode(ADMIN_PASSWORD));
         admin.setRole(Role.ROLE_ADMIN);
+        admin.setCurrency("EUR");
         return userRepository.save(admin);
     }
 }

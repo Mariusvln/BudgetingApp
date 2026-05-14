@@ -1,5 +1,7 @@
 import { useState } from "react";
 import IncomeEditForm from "./IncomeEditForm";
+import { useAuth } from "../../contexts/AuthContext";
+import { formatCurrency } from "../../utils/currency";
 
 const Transaction = ({
   id,
@@ -10,6 +12,7 @@ const Transaction = ({
   onTransactionAdded,
   categories = [],
 }) => {
+  const { user } = useAuth();
   const [showEdit, setShowEdit] = useState(false);
 
   const show = () => {
@@ -31,11 +34,11 @@ const Transaction = ({
         </span>
       </td>
       <td className="text-right font-medium text-green-600">
-        +${Number(amount)?.toFixed(2)}
+        +{formatCurrency(amount, user?.currency)}
       </td>
       <td>
         <button
-          className="bg-green-500 text-white font-bold px-2 py-1 rounded-lg hover:bg-green-600"
+          className="bg-primary text-primary-content font-bold px-2 py-1 rounded-lg hover:bg-primary/90"
           onClick={show}
         >
           Edit
