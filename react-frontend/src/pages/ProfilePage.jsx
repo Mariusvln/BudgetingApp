@@ -14,15 +14,34 @@ const ProfilePage = () => {
   const { user, setUser, logout } = useAuth();
   const { theme } = useTheme();
 
-  const isValentineTheme = theme === "valentine";
+  const themeStyles = {
+    light: {
+      accentText: "text-green-600",
+      saveButton: "bg-green-500 hover:bg-green-600",
+    },
+    dark: {
+      accentText: "text-sky-300",
+      saveButton: "bg-sky-500 hover:bg-sky-600",
+    },
+    valentine: {
+      accentText: "text-pink-800",
+      saveButton: "bg-pink-700 hover:bg-pink-800",
+    },
+    synthwave: {
+      accentText: "text-fuchsia-300",
+      saveButton: "bg-fuchsia-500 hover:bg-fuchsia-600",
+    },
+    luxury: {
+      accentText: "text-amber-300",
+      saveButton: "bg-amber-500 hover:bg-amber-600 text-black",
+    },
+    cyberpunk: {
+      accentText: "text-pink-500",
+      saveButton: "bg-yellow-300 hover:bg-yellow-400 text-black",
+    },
+  };
 
-  const accentTextClass = isValentineTheme
-    ? "text-pink-800"
-    : "text-green-600";
-
-  const saveButtonClass = isValentineTheme
-    ? "bg-pink-700 hover:bg-pink-800"
-    : "bg-green-500 hover:bg-green-600";
+  const currentThemeStyles = themeStyles[theme] ?? themeStyles.light;
 
   const [formData, setFormData] = useState({
     name: "",
@@ -92,7 +111,7 @@ const ProfilePage = () => {
           <div className="mb-5 flex items-center justify-between gap-4 md:mb-8">
             <div>
               <p
-                className={`text-xs font-semibold uppercase tracking-[0.18em] md:hidden ${accentTextClass}`}
+                className={`text-xs font-semibold uppercase tracking-[0.18em] md:hidden ${currentThemeStyles.accentText}`}
               >
                 FinVue
               </p>
@@ -126,7 +145,7 @@ const ProfilePage = () => {
             <button
               onClick={handleSave}
               disabled={saving}
-              className={`h-11 rounded-xl px-5 text-sm font-semibold text-white shadow-sm transition disabled:opacity-50 sm:hidden ${saveButtonClass}`}
+              className={`h-11 rounded-xl px-5 text-sm font-semibold text-white shadow-sm transition disabled:opacity-50 sm:hidden ${currentThemeStyles.saveButton}`}
             >
               {saving ? "Saving..." : "Save Changes"}
             </button>
@@ -134,7 +153,7 @@ const ProfilePage = () => {
             <button
               onClick={handleSave}
               disabled={saving}
-              className={`hidden h-11 rounded-xl px-5 text-sm font-semibold text-white shadow-sm transition disabled:opacity-50 sm:block ${saveButtonClass}`}
+              className={`hidden h-11 rounded-xl px-5 text-sm font-semibold text-white shadow-sm transition disabled:opacity-50 sm:block ${currentThemeStyles.saveButton}`}
             >
               {saving ? "Saving..." : "Save Changes"}
             </button>
