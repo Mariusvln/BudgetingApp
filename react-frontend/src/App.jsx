@@ -1,3 +1,4 @@
+
 import "./App.css";
 import MainPage from "./pages/MainPage";
 import LoginPage from "./pages/LoginPage";
@@ -16,6 +17,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router";
 import { AuthProvider } from "./contexts/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { ThemeProvider } from "./contexts/ThemeProvider";
+import { AppAlertProvider } from "./contexts/AppAlertProvider";
 
 import Logout from "./components/Logout";
 
@@ -23,23 +25,28 @@ function App() {
   return (
     <ThemeProvider>
       <AuthProvider>
-        <Routes>
-          <Route path="/" element={<HeroPage />} />
-          <Route path="/signin" element={<LoginPage />} />
-          <Route path="/signup" element={<RegisterPage />} />
-          <Route path="/main" element={<MainPage />} />
-          <Route path="/analytics" element={<AnalyticsPage />} />
-          <Route path="/incomes" element={<IncomesPage />} />
-          <Route path="/expenses" element={<ExpensesPage />} />
-          <Route path="/admin" element={<AdminPage />} />
+        <AppAlertProvider>
+          <Routes>
+            <Route path="/" element={<HeroPage />} />
+            <Route path="/signin" element={<LoginPage />} />
+            <Route path="/signup" element={<RegisterPage />} />
+            <Route path="/main" element={<MainPage />} />
+            <Route path="/analytics" element={<AnalyticsPage />} />
+            <Route path="/incomes" element={<IncomesPage />} />
+            <Route path="/expenses" element={<ExpensesPage />} />
 
-          <Route element={<ProtectedRoute />}>
-            <Route path="/dashboard" element={<TransactionsPage />} />
-            <Route path="/profile" element={<ProfilePage />} />
-            <Route path="/logout" element={<Logout />} />
-            <Route path="/budgeting" element={<BudgetingPage />} />
-          </Route>
-        </Routes>
+            <Route element={<ProtectedRoute />}>
+              <Route path="/dashboard" element={<TransactionsPage />} />
+              <Route path="/profile" element={<ProfilePage />} />
+              <Route path="/logout" element={<Logout />} />
+              <Route path="/budgeting" element={<BudgetingPage />} />
+            </Route>
+
+            <Route element={<ProtectedRoute requiredRole="ROLE_ADMIN" />}>
+              <Route path="/admin" element={<AdminPage />} />
+            </Route>
+          </Routes>
+        </AppAlertProvider>
       </AuthProvider>
     </ThemeProvider>
   );

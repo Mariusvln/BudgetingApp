@@ -1,8 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
+import { useAuth } from "../../contexts/AuthContext";
+import { useAppAlert } from "../../contexts/useAppAlert";
 
 const API_BASE = "http://localhost:8080";
+const DEFAULT_ADMIN_EMAIL = "admin@gmail.com";
 
 const AdminUsers = () => {
+  const { user: currentUser, setUser } = useAuth();
+  const appAlert = useAppAlert();
   const [users, setUsers] = useState([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
@@ -10,7 +15,14 @@ const AdminUsers = () => {
   const [editingUser, setEditingUser] = useState(null);
   const [editName, setEditName] = useState("");
   const [editEmail, setEditEmail] = useState("");
-  const [editRole, setEditRole] = useState("USER");
+  const [editRole, setEditRole] = useState("ROLE_USER");
+
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [createName, setCreateName] = useState("");
+  const [createEmail, setCreateEmail] = useState("");
+  const [createPassword, setCreatePassword] = useState("");
+  const [createRole, setCreateRole] = useState("ROLE_USER");
+  const [createError, setCreateError] = useState("");
 
   const [actionLoadingId, setActionLoadingId] = useState(null);
 
@@ -18,7 +30,9 @@ const AdminUsers = () => {
     try {
       setLoading(true);
 
-      const res = await fetch(`${API_BASE}/api/users`);
+      const res = await fetch(`${API_BASE}/api/admin/users`, {
+        credentials: "include",
+      });
 
       if (!res.ok) {
         throw new Error(`Users request failed: ${res.status}`);
@@ -60,19 +74,81 @@ const AdminUsers = () => {
     setEditingUser(user);
     setEditName(user.name || "");
     setEditEmail(user.email || "");
-    setEditRole(user.role || "USER");
+    setEditRole(user.role || "ROLE_USER");
   };
 
   const closeEditModal = () => {
     setEditingUser(null);
     setEditName("");
     setEditEmail("");
-    setEditRole("USER");
+    setEditRole("ROLE_USER");
+  };
+
+  const resetCreateForm = () => {
+    setCreateName("");
+    setCreateEmail("");
+    setCreatePassword("");
+    setCreateRole("ROLE_USER");
+    setCreateError("");
+  };
+
+  const openCreateModal = () => {
+    setSearch("");
+    resetCreateForm();
+    setIsCreateModalOpen(true);
+  };
+
+  const closeCreateModal = () => {
+    setIsCreateModalOpen(false);
+    resetCreateForm();
+  };
+
+  const handleCreateUser = async () => {
+    const trimmedName = createName.trim();
+    const trimmedEmail = createEmail.trim();
+
+    if (!trimmedName || !trimmedEmail || !createPassword || !createRole) {
+      setCreateError("Fill all fields");
+      return;
+    }
+
+    try {
+      setCreateError("");
+      setActionLoadingId("create-user");
+
+      const res = await fetch(`${API_BASE}/api/admin/users`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: trimmedName,
+          email: trimmedEmail,
+          password: createPassword,
+          role: createRole,
+        }),
+      });
+
+      if (!res.ok) {
+        throw new Error(`Create failed: ${res.status}`);
+      }
+
+      const created = await res.json();
+      setUsers((prev) => [...prev, created]);
+      closeCreateModal();
+    } catch (error) {
+      console.error("Create user error:", error);
+      setCreateError("Failed to create user");
+    } finally {
+      setActionLoadingId(null);
+    }
   };
 
   const handleDeleteUser = async (user) => {
-    const confirmed = window.confirm(
-      `Delete account for ${user.email || user.name || "this user"}?`
+    const confirmed = await appAlert.confirm(
+      `Delete account for ${user.email || user.name || "this user"}?`,
+      { type: "error", confirmText: "Delete" }
     );
 
     if (!confirmed) return;
@@ -80,8 +156,9 @@ const AdminUsers = () => {
     try {
       setActionLoadingId(user.id);
 
-      const res = await fetch(`${API_BASE}/api/users/${user.id}`, {
+      const res = await fetch(`${API_BASE}/api/admin/users/${user.id}`, {
         method: "DELETE",
+        credentials: "include",
       });
 
       if (!res.ok) {
@@ -91,7 +168,7 @@ const AdminUsers = () => {
       setUsers((prev) => prev.filter((u) => u.id !== user.id));
     } catch (error) {
       console.error("Delete error:", error);
-      alert("Failed to delete user");
+      await appAlert.alert("Failed to delete user", { type: "error" });
     } finally {
       setActionLoadingId(null);
     }
@@ -102,17 +179,40 @@ const AdminUsers = () => {
 
     const trimmedName = editName.trim();
     const trimmedEmail = editEmail.trim();
+    const isDefaultAdmin = editingUser.email?.toLowerCase() === DEFAULT_ADMIN_EMAIL;
+    const isEditingSelf = editingUser.id === currentUser?.id;
+    const isRemovingOwnAdminRole =
+      isEditingSelf &&
+      editingUser.role === "ROLE_ADMIN" &&
+      editRole !== "ROLE_ADMIN";
 
     if (!trimmedName || !trimmedEmail || !editRole) {
-      alert("Fill all fields");
+      await appAlert.alert("Fill all fields", { type: "warning" });
       return;
+    }
+
+    if (isDefaultAdmin && editRole !== "ROLE_ADMIN") {
+      await appAlert.alert("Default admin role cannot be changed.", {
+        type: "warning",
+      });
+      return;
+    }
+
+    if (isRemovingOwnAdminRole) {
+      const confirmed = await appAlert.confirm(
+        "You are removing your own admin role. After saving, you can lose access to the Admin page. Are you sure?",
+        { type: "warning", confirmText: "Save anyway" }
+      );
+
+      if (!confirmed) return;
     }
 
     try {
       setActionLoadingId(editingUser.id);
 
-      const res = await fetch(`${API_BASE}/api/users/${editingUser.id}`, {
+      const res = await fetch(`${API_BASE}/api/admin/users/${editingUser.id}`, {
         method: "PUT",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
@@ -133,17 +233,21 @@ const AdminUsers = () => {
         prev.map((u) => (u.id === editingUser.id ? { ...u, ...updated } : u))
       );
 
+      if (isEditingSelf) {
+        setUser((prev) => (prev ? { ...prev, ...updated } : prev));
+      }
+
       closeEditModal();
     } catch (error) {
       console.error("Update error:", error);
-      alert("Failed to update user");
+      await appAlert.alert("Failed to update user", { type: "error" });
     } finally {
       setActionLoadingId(null);
     }
   };
 
   const getRoleBadgeClass = (role) => {
-    if (role === "ADMIN") {
+    if (role === "ADMIN" || role === "ROLE_ADMIN") {
       return "bg-red-100 text-red-700 border-none";
     }
 
@@ -155,11 +259,21 @@ const AdminUsers = () => {
       <div className="card rounded-2xl bg-base-100 shadow-sm">
         <div className="card-body p-5 sm:p-6">
           <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-            <div>
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+              <div>
               <h2 className="text-xl font-semibold">User Directory</h2>
               <p className="text-sm text-gray-500">
                 {loading ? "Loading..." : `Showing ${filteredUsers.length} users`}
               </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={openCreateModal}
+                className="inline-flex h-10 ml-3 items-center justify-center rounded-xl bg-green-600 px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-green-700"
+              >
+                Create User
+              </button>
             </div>
 
             <input
@@ -168,11 +282,13 @@ const AdminUsers = () => {
               className="input w-full rounded-xl border-none bg-[#F2F3FF] md:w-80"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
+              autoComplete="off"
+              name="admin-user-search"
             />
           </div>
 
           <div className="overflow-x-auto">
-            <table className="table min-w-[760px]">
+            <table className="table min-w-190">
               <thead className="text-sm text-gray-500">
                 <tr>
                   <th>ID</th>
@@ -242,6 +358,82 @@ const AdminUsers = () => {
         </div>
       </div>
 
+      {isCreateModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
+          <div className="w-full max-w-md rounded-2xl bg-white p-5 shadow-lg sm:p-6">
+            <h3 className="mb-4 text-lg font-semibold">Create User</h3>
+
+            <div className="space-y-4">
+              <input
+                type="text"
+                className="input input-bordered w-full"
+                value={createName}
+                onChange={(e) => setCreateName(e.target.value)}
+                placeholder="Username"
+                autoComplete="off"
+                name="create-user-name"
+              />
+
+              <input
+                type="email"
+                className="input input-bordered w-full"
+                value={createEmail}
+                onChange={(e) => setCreateEmail(e.target.value)}
+                placeholder="Email"
+                autoComplete="new-email"
+                name="create-user-email"
+              />
+
+              <input
+                type="password"
+                className="input input-bordered w-full"
+                value={createPassword}
+                onChange={(e) => setCreatePassword(e.target.value)}
+                placeholder="Password"
+                autoComplete="new-password"
+                name="create-user-password"
+              />
+
+              <div>
+                <label className="mb-2 block text-sm font-medium">Role</label>
+                <select
+                  className="select select-bordered w-full"
+                  value={createRole}
+                  onChange={(e) => setCreateRole(e.target.value)}
+                >
+                  <option value="ROLE_USER">USER</option>
+                  <option value="ROLE_ADMIN">ADMIN</option>
+                </select>
+              </div>
+            </div>
+
+            {createError && (
+              <p className="mt-4 text-sm font-medium text-red-600">
+                {createError}
+              </p>
+            )}
+
+            <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <button
+                className="btn rounded-xl bg-black text-white hover:bg-black/80"
+                onClick={closeCreateModal}
+                disabled={actionLoadingId === "create-user"}
+              >
+                Cancel
+              </button>
+
+              <button
+                className="btn rounded-xl bg-green-600 text-white hover:bg-green-700"
+                onClick={handleCreateUser}
+                disabled={actionLoadingId === "create-user"}
+              >
+                {actionLoadingId === "create-user" ? "Creating..." : "Create"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {editingUser && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
           <div className="w-full max-w-md rounded-2xl bg-white p-5 shadow-lg sm:p-6">
@@ -254,6 +446,8 @@ const AdminUsers = () => {
                 value={editName}
                 onChange={(e) => setEditName(e.target.value)}
                 placeholder="Name"
+                autoComplete="off"
+                name="edit-user-name"
               />
 
               <input
@@ -262,6 +456,9 @@ const AdminUsers = () => {
                 value={editEmail}
                 onChange={(e) => setEditEmail(e.target.value)}
                 placeholder="Email"
+                autoComplete="off"
+                name="edit-user-email"
+                disabled={editingUser.email?.toLowerCase() === DEFAULT_ADMIN_EMAIL}
               />
 
               <div>
@@ -270,10 +467,16 @@ const AdminUsers = () => {
                   className="select select-bordered w-full"
                   value={editRole}
                   onChange={(e) => setEditRole(e.target.value)}
+                  disabled={editingUser.email?.toLowerCase() === DEFAULT_ADMIN_EMAIL}
                 >
-                  <option value="USER">USER</option>
-                  <option value="ADMIN">ADMIN</option>
+                  <option value="ROLE_USER">USER</option>
+                  <option value="ROLE_ADMIN">ADMIN</option>
                 </select>
+                {editingUser.email?.toLowerCase() === DEFAULT_ADMIN_EMAIL && (
+                  <p className="mt-2 text-sm text-gray-500">
+                    Default admin role cannot be changed.
+                  </p>
+                )}
               </div>
             </div>
 

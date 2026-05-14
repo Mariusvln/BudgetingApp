@@ -1,5 +1,6 @@
 import ReactDom from "react-dom";
 import { useState, useEffect } from "react";
+import { useAppAlert } from "../../contexts/useAppAlert";
 
 const ExpenseEditForm = ({
   id,
@@ -11,6 +12,7 @@ const ExpenseEditForm = ({
   onTransactionAdded,
   categories = [],
 }) => {
+  const appAlert = useAppAlert();
   const formId = id;
   const [formDate, setDate] = useState(date);
   const [formAmount, setAmount] = useState(amount);
@@ -26,13 +28,13 @@ const ExpenseEditForm = ({
   }, [date, amount, description, category]);
 
   const handleSubmit = async () => {
-    if (!formAmount || !formDescription) {
-      alert("Please fill in all fields");
+    if (!formAmount) {
+      await appAlert.alert("Please fill in all fields", { type: "warning" });
       return;
     }
 
     if (!formCategory) {
-      alert("Please select a category");
+      await appAlert.alert("Please select a category", { type: "warning" });
       return;
     }
 
@@ -61,14 +63,14 @@ const ExpenseEditForm = ({
         if (onTransactionAdded) {
           onTransactionAdded();
         }
-        alert("Expense saved successfully!");
+        await appAlert.alert("Expense saved successfully!", { type: "success" });
       } else {
         const errorData = await response.text();
-        alert("Server error: " + errorData);
+        await appAlert.alert("Server error: " + errorData, { type: "error" });
       }
     } catch (error) {
       console.error("Connection error:", error);
-      alert("Could not connect to the server.");
+      await appAlert.alert("Could not connect to the server.", { type: "error" });
     } finally {
       setLoading(false);
     }

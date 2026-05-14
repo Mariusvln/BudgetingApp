@@ -29,7 +29,6 @@ const LoginPage = () => {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      username: "",
       email: "",
       password: "",
     },
@@ -59,21 +58,6 @@ const LoginPage = () => {
           {/* 5. Add onSubmit and value/onChange to inputs */}
           <form onSubmit={handleSubmit(handleLogin)} noValidate>
             <div className="grid gap-y-5">
-              <div>
-                <label className="mb-2 block text-sm font-medium text-foreground">Username</label>
-                <input
-                  type="text"
-                  name="username"
-                  placeholder="Enter your username"
-                  className={`block w-full rounded-xl border border-layer-line bg-layer px-4 py-3 text-sm text-foreground focus:border-primary-focus focus:ring-primary-focus border-card-line bg-[#F8FAFC] ${errors.username?.message ? `border-red-500` : `border-gray-300`}`}
-                  {...register("username", {
-                    required: "Username is required",
-                    maxLength: {value: 53, message: "Username is too long"},
-                  })}
-                />
-                <p className="text-red-500">{errors.username?.message}</p>
-              </div>
-
               <div>
                 <label className="mb-2 block text-sm font-medium text-foreground">Email address</label>
                 <input

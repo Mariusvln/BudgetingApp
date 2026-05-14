@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import TransactionNav from "../components/TransactionNav";
 import IncomeHeader from "../components/incomes-page-components/IncomeHeader";
 import IncomeRecentTable from "../components/incomes-page-components/IncomeRecentTable";
 import IncomeAddPanel from "../components/incomes-page-components/IncomeAddPanel";
-import ExportIncomeButton from "../components/incomes-page-components/ExportIncomeButton";
+import ExportButton from "../components/profile-page-components/ExportButton";
 
 function IncomesPage() {
   const formatDate = (date) => {
@@ -27,6 +27,9 @@ function IncomesPage() {
 
   const [dateStart, setDateStart] = useState(() => getMonthStart());
   const [dateEnd, setDateEnd] = useState(() => getMonthEnd());
+  const [isAddIncomeModalOpen, setIsAddIncomeModalOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("ALL");
 
   const fetchIncomes = useCallback(
     async (start = dateStart, end = dateEnd) => {
@@ -77,6 +80,31 @@ function IncomesPage() {
   }, [fetchCategories]);
 
   const incomeCategories = categories.filter((cat) => cat.type === "INCOME");
+  const categoryMap = useMemo(() => {
+    return incomeCategories.reduce((map, category) => {
+      map[Number(category.id)] = category.name;
+      return map;
+    }, {});
+  }, [incomeCategories]);
+
+  const filteredTransactions = useMemo(() => {
+    const query = searchQuery.trim().toLowerCase();
+
+    return transactions.filter((transaction) => {
+      const categoryId = String(transaction.category);
+      const categoryName = categoryMap[Number(transaction.category)] || "";
+      const matchesCategory =
+        selectedCategory === "ALL" || categoryId === selectedCategory;
+      const matchesSearch =
+        !query ||
+        (transaction.description || "").toLowerCase().includes(query) ||
+        categoryName.toLowerCase().includes(query);
+
+      return matchesCategory && matchesSearch;
+    });
+  }, [categoryMap, searchQuery, selectedCategory, transactions]);
+
+  const hasActiveFilters = searchQuery.trim() || selectedCategory !== "ALL";
 
   return (
     <div className="transactions-page flex min-h-screen bg-base-200 md:ml-64">
@@ -93,10 +121,104 @@ function IncomesPage() {
           <IncomeHeader />
         </div>
 
+        <h2 className="mb-4 text-center text-2xl font-bold text-base-content lg:hidden">
+          Incomes History
+        </h2>
+
+        <div className="mb-4 rounded-2xl border border-base-300 bg-base-100 p-4 shadow-sm lg:hidden">
+          <div className="mb-4 flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
+            <p className="text-sm text-base-content/60">
+              Showing {filteredTransactions.length} of {transactions.length}
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-[1fr_220px_auto]">
+            <label className="flex flex-col gap-1">
+              <span className="text-xs font-medium text-base-content/60">
+                Search
+              </span>
+              <input
+                type="text"
+                className="input input-bordered h-11 rounded-xl bg-base-200/60"
+                placeholder="Search by title or category..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </label>
+
+            <label className="flex flex-col gap-1">
+              <span className="text-xs font-medium text-base-content/60">
+                Category
+              </span>
+              <select
+                className="select select-bordered h-11 rounded-xl bg-base-200/60"
+                value={selectedCategory}
+                onChange={(e) => setSelectedCategory(e.target.value)}
+              >
+                <option value="ALL">All categories</option>
+                {incomeCategories.map((category) => (
+                  <option key={category.id} value={String(category.id)}>
+                    {category.name}
+                  </option>
+                ))}
+              </select>
+            </label>
+
+            <button
+              type="button"
+              className="btn h-11 self-end rounded-xl border-base-300 bg-base-100"
+              onClick={() => {
+                setSearchQuery("");
+                setSelectedCategory("ALL");
+              }}
+              disabled={!hasActiveFilters}
+            >
+              Reset
+            </button>
+          </div>
+        </div>
+
+        <div className="mb-4 rounded-2xl border border-base-300 bg-base-100 p-4 shadow-sm lg:hidden">
+          <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-base-content/60">
+            Date Range
+          </p>
+          <div className="grid grid-cols-2 gap-2">
+            <label className="flex flex-col gap-1">
+              <span className="text-xs font-medium text-base-content/70">From</span>
+              <input
+                type="date"
+                className="input input-bordered h-11 rounded-xl bg-base-200/60 text-sm"
+                value={dateStart}
+                onChange={(e) => setDateStart(e.target.value)}
+              />
+            </label>
+
+            <label className="flex flex-col gap-1">
+              <span className="text-xs font-medium text-base-content/70">To</span>
+              <input
+                type="date"
+                className="input input-bordered h-11 rounded-xl bg-base-200/60 text-sm"
+                value={dateEnd}
+                onChange={(e) => setDateEnd(e.target.value)}
+              />
+            </label>
+          </div>
+        </div>
+
+        <div className="mb-4 lg:hidden">
+          <button
+            type="button"
+            className="btn h-11 w-full rounded-xl border-0 bg-[#22c55e] text-white hover:bg-[#16a34a]"
+            onClick={() => setIsAddIncomeModalOpen(true)}
+          >
+            Add Income
+          </button>
+        </div>
+
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
           <div className="lg:col-span-2">
             <IncomeRecentTable
-              transactions={transactions}
+              transactions={filteredTransactions}
               loading={loading}
               dateStart={dateStart}
               dateEnd={dateEnd}
@@ -104,10 +226,15 @@ function IncomesPage() {
               setDateEnd={setDateEnd}
               onTransactionAdded={fetchIncomes}
               categories={incomeCategories}
+              searchQuery={searchQuery}
+              selectedCategory={selectedCategory}
+              setSearchQuery={setSearchQuery}
+              setSelectedCategory={setSelectedCategory}
+              totalCount={transactions.length}
             />
 
             <div className="mt-4 hidden lg:block">
-              <ExportIncomeButton />
+              <ExportButton variant="incomes" />
             </div>
           </div>
 
@@ -118,6 +245,37 @@ function IncomesPage() {
             />
           </div>
         </div>
+
+        {isAddIncomeModalOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-3 lg:hidden">
+            <button
+              type="button"
+              className="absolute inset-0 bg-black/45"
+              onClick={() => setIsAddIncomeModalOpen(false)}
+              aria-label="Close add income modal"
+            />
+            <div className="relative w-full max-w-sm overflow-hidden rounded-t-2xl bg-base-100 p-0">
+              <button
+                type="button"
+                className="absolute right-3 top-2 z-10 bg-transparent p-1 text-[1.2rem] leading-none text-base-content shadow-none hover:bg-transparent"
+                onClick={() => setIsAddIncomeModalOpen(false)}
+                aria-label="Close quick add income modal"
+              >
+                x
+              </button>
+              <div className="mb-2 mt-3 flex justify-center">
+                <div className="h-1.5 w-10 rounded-full bg-base-300" />
+              </div>
+              <IncomeAddPanel
+                onTransactionAdded={() => {
+                  fetchIncomes();
+                  setIsAddIncomeModalOpen(false);
+                }}
+                categories={incomeCategories}
+              />
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
