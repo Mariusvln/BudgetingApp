@@ -40,7 +40,7 @@ const ExpenseTransaction = ({
         <td>
           <button
             type="button"
-            className="bg-green-500 text-white font-bold px-2 py-1 rounded-lg hover:bg-green-600"
+            className="bg-primary text-primary-content font-bold px-2 py-1 rounded-lg hover:bg-primary/90"
             onClick={show}
           >
             Edit

@@ -22,13 +22,13 @@ function HeroHeader() {
         <div className="flex gap-3">
           <button
             onClick={SignInClick}
-            className="px-6 py-3  bg-[#32a316] hover:bg-green-600 rounded-2xl font-semibold shadow-lg text-white"
+            className="px-6 py-3 bg-primary hover:bg-primary/90 rounded-2xl font-semibold shadow-lg text-primary-content"
           >
             Sign In
           </button>
           <button
             onClick={RegisterClick}
-            className="px-6 py-3 bg-[#32a316] hover:bg-green-600 rounded-2xl font-semibold shadow-lg text-white"
+            className="px-6 py-3 bg-primary hover:bg-primary/90 rounded-2xl font-semibold shadow-lg text-primary-content"
           >
             Sign Up
           </button>

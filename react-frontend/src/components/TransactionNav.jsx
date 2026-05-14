@@ -15,11 +15,11 @@ function TransactionNav() {
 
   const themeStyles = {
     light: {
-      logo: "from-[#22C55E] to-[#15803D]",
-      activeLink: "bg-green-50 text-green-700 shadow-sm",
-      activeIcon: "bg-green-100",
-      mobileActiveLink: "bg-green-50 text-green-700",
-      mobileActiveIcon: "bg-green-100",
+      logo: "from-[#4F46E5] to-[#2563EB]",
+      activeLink: "bg-indigo-50 text-indigo-700 shadow-sm",
+      activeIcon: "bg-indigo-100",
+      mobileActiveLink: "bg-indigo-50 text-indigo-700",
+      mobileActiveIcon: "bg-indigo-100",
     },
     dark: {
       logo: "from-[#38BDF8] to-[#818CF8]",

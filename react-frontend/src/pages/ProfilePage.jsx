@@ -16,8 +16,8 @@ const ProfilePage = () => {
 
   const themeStyles = {
     light: {
-      accentText: "text-green-600",
-      saveButton: "bg-green-500 hover:bg-green-600",
+      accentText: "text-indigo-600",
+      saveButton: "bg-indigo-600 hover:bg-indigo-700",
     },
     dark: {
       accentText: "text-sky-300",

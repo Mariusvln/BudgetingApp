@@ -103,7 +103,7 @@ const ExpenseEditForm = ({
             type="date"
             value={formDate}
             onChange={(e) => setDate(e.target.value)}
-            className="w-full rounded-xl border border-[#d0d5dd] px-3 py-2.5 text-[#101828] focus:border-[#86efac] focus:outline-none"
+            className="w-full rounded-xl border border-[#d0d5dd] px-3 py-2.5 text-[#101828] focus:border-primary focus:outline-none"
           />
         </label>
 
@@ -115,7 +115,7 @@ const ExpenseEditForm = ({
             type="text"
             value={formDescription}
             onChange={(e) => setDescription(e.target.value)}
-            className="w-full rounded-xl border border-[#d0d5dd] px-3 py-2.5 text-[#101828] focus:border-[#86efac] focus:outline-none"
+            className="w-full rounded-xl border border-[#d0d5dd] px-3 py-2.5 text-[#101828] focus:border-primary focus:outline-none"
           />
         </label>
 
@@ -124,7 +124,7 @@ const ExpenseEditForm = ({
             Category
           </span>
           <select
-            className="w-full rounded-xl border border-[#d0d5dd] px-3 py-2.5 text-[#101828] focus:border-[#86efac] focus:outline-none"
+            className="w-full rounded-xl border border-[#d0d5dd] px-3 py-2.5 text-[#101828] focus:border-primary focus:outline-none"
             value={formCategory}
             onChange={(e) => setCategory(e.target.value)}
           >
@@ -151,7 +151,7 @@ const ExpenseEditForm = ({
             placeholder={getCurrencyPlaceholder(user?.currency)}
             value={formAmount}
             onChange={(e) => setAmount(e.target.value)}
-            className="w-full rounded-xl border border-[#d0d5dd] px-3 py-2.5 text-[#101828] focus:border-[#86efac] focus:outline-none"
+            className="w-full rounded-xl border border-[#d0d5dd] px-3 py-2.5 text-[#101828] focus:border-primary focus:outline-none"
           />
         </label>
 
@@ -164,7 +164,7 @@ const ExpenseEditForm = ({
             Cancel
           </button>
           <button
-            className="rounded-xl bg-[#16a34a] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#15803d]"
+            className="rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-primary-content hover:bg-primary/90"
             type="submit"
             disabled={loading}
           >

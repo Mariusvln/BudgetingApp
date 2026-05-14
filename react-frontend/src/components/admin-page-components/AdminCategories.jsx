@@ -143,7 +143,7 @@ const AdminCategories = () => {
         </select>
 
         <button
-          className="btn mt-2 w-full rounded-xl border-none bg-[#006E2F] text-white hover:bg-green-800"
+          className="btn btn-primary mt-2 w-full rounded-xl border-none"
           onClick={handleCreate}
         >
           Create Category
@@ -173,8 +173,8 @@ const AdminCategories = () => {
                 onClick={() => setFilterType("INCOME")}
                 className={`btn btn-sm rounded-xl border-none px-3 sm:px-4 ${
                   filterType === "INCOME"
-                    ? "bg-green-700 text-white"
-                    : "bg-transparent"
+                    ? "bg-primary text-primary-content"
+                    : "bg-transparent text-slate-600 hover:bg-base-100"
                 }`}
               >
                 Income
@@ -184,8 +184,8 @@ const AdminCategories = () => {
                 onClick={() => setFilterType("EXPENSE")}
                 className={`btn btn-sm rounded-xl border-none px-3 sm:px-4 ${
                   filterType === "EXPENSE"
-                    ? "bg-green-700 text-white"
-                    : "bg-transparent"
+                    ? "bg-primary text-primary-content"
+                    : "bg-transparent text-slate-600 hover:bg-base-100"
                 }`}
               >
                 Expense
@@ -195,8 +195,8 @@ const AdminCategories = () => {
                 onClick={() => setFilterType("ALL")}
                 className={`btn btn-sm rounded-xl border-none px-3 sm:px-4 ${
                   filterType === "ALL"
-                    ? "bg-green-700 text-white"
-                    : "bg-transparent"
+                    ? "bg-primary text-primary-content"
+                    : "bg-transparent text-slate-600 hover:bg-base-100"
                 }`}
               >
                 All
@@ -223,7 +223,7 @@ const AdminCategories = () => {
                 <span
                   className={`badge border-none px-3 py-3 ${
                     cat.type === "INCOME"
-                      ? "bg-green-100 text-green-700"
+                      ? "bg-primary/15 text-primary"
                       : "bg-red-100 text-red-700"
                   }`}
                 >

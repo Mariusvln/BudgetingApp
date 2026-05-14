@@ -60,7 +60,7 @@ const ProgressBar = ({ value, limit, over }) => {
   return (
     <div className="w-full h-[10px] rounded-full bg-[#edf0f2] overflow-hidden">
       <div
-        className={`h-[10px] rounded-full transition-[width] duration-1000 ease-out ${over ? "bg-[#e5484d]" : "bg-[#1db954]"}`}
+        className={`h-[10px] rounded-full transition-[width] duration-1000 ease-out ${over ? "bg-[#e5484d]" : "bg-primary"}`}
         style={{ width: `${animatedPercent}%` }}
       />
     </div>
@@ -178,7 +178,7 @@ const AddCategoryModal = ({ open, onClose, categories, onCategoryAdded }) => {
           </button>
           <button
             onClick={handleSubmit}
-            className="px-4 py-2 bg-[#1db954] text-white rounded-[10px] text-[13px]"
+            className="rounded-[10px] bg-primary px-4 py-2 text-[13px] text-primary-content"
             disabled={submitting}
           >
             {submitting ? "Adding..." : "Add"}
@@ -353,7 +353,7 @@ const EditLimitModal = ({ open, onClose, category, onLimitUpdated }) => {
           </button>
           <button
             onClick={handleSubmit}
-            className="rounded-[10px] bg-[#1db954] px-4 py-2 text-[13px] text-white"
+            className="rounded-[10px] bg-primary px-4 py-2 text-[13px] text-primary-content"
             disabled={submitting}
           >
             {submitting ? "Saving..." : "Save"}
@@ -489,7 +489,7 @@ const CategoryCard = ({ category, onEdit, onDelete, expenses, currency }) => {
             <button
               type="button"
               onClick={() => onEdit(category)}
-              className="cursor-pointer text-[12px] font-medium text-[#1db954]"
+              className="cursor-pointer text-[12px] font-medium text-primary"
             >
               EDIT LIMIT
             </button>
@@ -618,7 +618,7 @@ const Categories = ({
           onClick={() => setActive("expenses")}
           className={`flex-1 rounded-[10px] py-3.5 text-[13px] font-medium transition ${
             active === "expenses"
-              ? "bg-base-100 text-[#1db954] shadow-sm"
+              ? "bg-base-100 text-primary shadow-sm"
               : "text-[#98a2b3]"
           }`}
         >
@@ -818,7 +818,7 @@ const BudgetingPage = () => {
 
       <div className="flex-1 bg-base-200 px-4 py-10 md:px-6 md:py-14">
         <div className="mx-auto w-full max-w-5xl">
-          <h1 className="text-[36px] font-semibold text-[#15803d] text-center mb-10 tracking-tight">
+          <h1 className="text-[36px] font-semibold text-primary text-center mb-10 tracking-tight">
             Budgeting
           </h1>
           <div className="mb-8 flex items-center justify-center gap-4">

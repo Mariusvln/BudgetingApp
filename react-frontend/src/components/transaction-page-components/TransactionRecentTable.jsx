@@ -248,8 +248,8 @@ function TransactionRecentTable() {
                 onClick={() => setActiveTab(tab)}
                 className={`btn btn-sm rounded-xl border-none px-4 ${
                   activeTab === tab
-                    ? "bg-green-700 text-white"
-                    : "bg-transparent"
+                    ? "bg-primary text-primary-content"
+                    : "bg-transparent text-base-content/65 hover:bg-base-100 hover:text-base-content"
                 }`}
                 aria-selected={activeTab === tab}
               >

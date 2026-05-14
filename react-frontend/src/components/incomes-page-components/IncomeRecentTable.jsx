@@ -141,7 +141,7 @@ function IncomeRecentTable({
                 Category
               </span>
               <select
-                className="select select-bordered h-11 rounded-xl bg-base-100 text-sm"
+                className="select select-bordered h-11 rounded-xl border-base-300 bg-base-100 text-sm text-base-content"
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory?.(e.target.value)}
               >
@@ -180,7 +180,7 @@ function IncomeRecentTable({
 
             <button
               type="button"
-              className="btn h-11 self-end rounded-xl border-base-300 bg-base-100 px-5"
+              className="btn h-11 self-end rounded-xl border-base-300 bg-base-100 px-5 text-base-content/75 hover:bg-base-200 disabled:bg-base-200/80 disabled:text-base-content/45 disabled:opacity-100"
               onClick={() => {
                 setSearchQuery?.("");
                 setSelectedCategory?.("ALL");

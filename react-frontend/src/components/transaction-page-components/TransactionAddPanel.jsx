@@ -32,7 +32,7 @@ function TransactionAddPanel() {
               className="input input-bordered"
             />
 
-            <select className="select select-bordered">
+            <select className="select select-bordered border-base-300 bg-base-100 text-base-content">
               <option>Select category</option>
               <option>Food</option>
               <option>Rent</option>

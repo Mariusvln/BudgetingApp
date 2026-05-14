@@ -109,7 +109,7 @@ const IncomeEditForm = ({
           <input
             type="date"
             id="date"
-            className="w-full rounded-xl border border-[#d0d5dd] px-3 py-2.5 text-[#101828] focus:border-[#86efac] focus:outline-none"
+            className="w-full rounded-xl border border-[#d0d5dd] px-3 py-2.5 text-[#101828] focus:border-primary focus:outline-none"
             {...register("date")}
           />
         </label>
@@ -124,7 +124,7 @@ const IncomeEditForm = ({
             className={`w-full rounded-xl border px-3 py-2.5 text-[#101828] focus:outline-none ${
               errors.description?.message
                 ? "border-[#e5484d] focus:border-[#e5484d]"
-                : "border-[#d0d5dd] focus:border-[#86efac]"
+                : "border-[#d0d5dd] focus:border-primary"
             }`}
             {...register("description", {
               maxLength: {value: 50, message: "Description is too long"}
@@ -142,7 +142,7 @@ const IncomeEditForm = ({
             Category
           </span>
           <select
-            className="w-full rounded-xl border border-[#d0d5dd] px-3 py-2.5 text-[#101828] focus:border-[#86efac] focus:outline-none"
+            className="w-full rounded-xl border border-[#d0d5dd] px-3 py-2.5 text-[#101828] focus:border-primary focus:outline-none"
             {...register("category")}
             value={selectedCategory || ""}
           >
@@ -171,7 +171,7 @@ const IncomeEditForm = ({
             className={`w-full rounded-xl border px-3 py-2.5 text-[#101828] focus:outline-none ${
               errors.amount?.message
                 ? "border-[#e5484d] focus:border-[#e5484d]"
-                : "border-[#d0d5dd] focus:border-[#86efac]"
+                : "border-[#d0d5dd] focus:border-primary"
             }`}
             {...register("amount", {
               required: "Please input your income amount, letters and symbols not allowed",
@@ -197,7 +197,7 @@ const IncomeEditForm = ({
             Cancel
           </button>
           <button
-            className="rounded-xl bg-[#16a34a] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#15803d]"
+            className="rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-primary-content hover:bg-primary/90"
             type="submit"
             disabled={loading}
           >
