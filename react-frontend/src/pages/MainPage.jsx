@@ -1,4 +1,3 @@
-import "../assets/styles/MainPage.css";
 import DashboardMobile from "../components/main-page-components/DashboardMobile";
 import DashboardHeaderMobile from "../components/main-page-components/DashboardHeaderMobile"
 import DashboardDesktop from "../components/main-page-components/DashboardDesktop";
@@ -96,7 +95,7 @@ const MainPage = () => {
         <DashboardHeaderMobile />
         <DashboardHeaderDesktop />
 
-        <main className="main_layout">
+        <main className="flex flex-col gap-6 bg-[radial-gradient(circle_at_top_left,color-mix(in_oklch,var(--color-primary)_10%,transparent),transparent_34rem),var(--color-base-200)]">
           <DashboardMobile balance={formatCurrency(balance)} />
           <DashboardDesktop
             formatCurrency={formatCurrency}

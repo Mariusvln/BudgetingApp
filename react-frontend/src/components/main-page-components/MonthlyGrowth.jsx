@@ -1,7 +1,6 @@
 import profitIcon from "../../assets/images/icons/profit-icon.svg";
 import { Chart as ChartJS } from "chart.js/auto";
 import { Bar } from "react-chartjs-2";
-import "../../assets/styles/Dashboard.css";
 import { useMemo } from "react";
 
 const MonthlyGrowth = ({ incomes = [], expenses = [], formatCurrency }) => {
