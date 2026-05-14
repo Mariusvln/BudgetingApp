@@ -9,6 +9,11 @@ const DashboardDesktop = (props) => {
   const incomeCards = ["Total Income", "Total Expenses", "Monthly Savings"]
 
   return (
+    <div className="grow desktop-display mr-5.5 pl-[3%]">
+      <div className="grow">
+        <section className="flex gap-5.5 grow mb-5.5">
+          <BalanceCard formatCurrency={props.formatCurrency} balance={props.balance} monthlySpending={props.monthlySpending}/>
+          <MonthlyGrowth formatCurrency={props.formatCurrency}/>
     <div className="hidden px-6 pb-8 pt-6 min-[930px]:block md:px-8">
       <div className="mx-auto max-w-7xl">
         {props.error ? (
