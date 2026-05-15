@@ -92,7 +92,7 @@ const AddCategoryModal = ({ open, onClose, categories, onCategoryAdded }) => {
     setError("");
 
     try {
-      const response = await fetch("http://localhost:8080/api/app/budget/", {
+      const response = await fetch("/api/app/budget/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -271,7 +271,7 @@ const EditLimitModal = ({ open, onClose, category, onLimitUpdated }) => {
 
     try {
       const response = await fetch(
-        `http://localhost:8080/api/app/budget/${category.id}`,
+        `/api/app/budget/${category.id}`,
         {
           method: "PUT",
           headers: {
@@ -375,7 +375,7 @@ const DeleteLimitModal = ({ open, onClose, category, onLimitDeleted }) => {
 
     try {
       const response = await fetch(
-        `http://localhost:8080/api/app/budget/${category.id}`,
+        `/api/app/budget/${category.id}`,
         {
           method: "DELETE",
           credentials: "include",
@@ -685,16 +685,16 @@ const BudgetingPage = () => {
     try {
       const [limitsResponse, expensesResponse, incomesResponse, categoriesResponse] =
         await Promise.all([
-          fetch("http://localhost:8080/api/app/budget/", {
+          fetch("/api/app/budget/", {
             credentials: "include",
           }),
-          fetch("http://localhost:8080/api/app/expenses/", {
+          fetch("/api/app/expenses/", {
             credentials: "include",
           }),
-          fetch("http://localhost:8080/api/app/incomes/", {
+          fetch("/api/app/incomes/", {
             credentials: "include",
           }),
-          fetch("http://localhost:8080/api/categories", {
+          fetch("/api/categories", {
             credentials: "include",
           }),
         ]);

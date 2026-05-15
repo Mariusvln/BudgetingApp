@@ -12,7 +12,7 @@ const AdminCategories = () => {
   useEffect(() => {
     const loadCategories = async () => {
       try {
-        const res = await fetch("http://localhost:8080/api/categories");
+        const res = await fetch("/api/categories");
 
         if (!res.ok) {
           throw new Error(`Categories request failed: ${res.status}`);
@@ -35,7 +35,7 @@ const AdminCategories = () => {
     const newCategory = { name: name.trim(), type };
 
     try {
-      const res = await fetch("http://localhost:8080/api/categories", {
+      const res = await fetch("/api/categories", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newCategory),
@@ -56,7 +56,7 @@ const AdminCategories = () => {
 
   const handleDelete = async (id) => {
     try {
-      const res = await fetch(`http://localhost:8080/api/categories/${id}`, {
+      const res = await fetch(`/api/categories/${id}`, {
         method: "DELETE",
       });
 
@@ -83,7 +83,7 @@ const AdminCategories = () => {
     if (!newName || !newType) return;
 
     try {
-      const res = await fetch(`http://localhost:8080/api/categories/${cat.id}`, {
+      const res = await fetch(`/api/categories/${cat.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

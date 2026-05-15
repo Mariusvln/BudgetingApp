@@ -36,7 +36,7 @@ function IncomesPage() {
       setLoading(true);
       try {
         const response = await fetch(
-          `http://localhost:8080/api/app/incomes/fromDateStartToDateFinish?dateStart=${start}&dateEnd=${end}`,
+          `/api/app/incomes/fromDateStartToDateFinish?dateStart=${start}&dateEnd=${end}`,
           { credentials: "include" },
         );
 
@@ -55,7 +55,7 @@ function IncomesPage() {
 
   const fetchCategories = useCallback(async () => {
     try {
-      const response = await fetch("http://localhost:8080/api/categories", {
+      const response = await fetch("/api/categories", {
         credentials: "include",
       });
 

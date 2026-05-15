@@ -11,24 +11,24 @@ const ExportButton = ({ variant = "expenses" }) => {
           {
             label: "Incomes CSV",
             fileName: "incomes.csv",
-            url: "http://localhost:8080/api/app/incomes/exportIncomes?type=csv",
+            url: "/api/app/incomes/exportIncomes?type=csv",
           },
           {
             label: "Incomes Excel",
             fileName: "incomes.xlsx",
-            url: "http://localhost:8080/api/app/incomes/exportIncomes?type=excel",
+            url: "/api/app/incomes/exportIncomes?type=excel",
           },
         ]
       : [
           {
             label: "Expenses CSV",
             fileName: "expenses.csv",
-            url: "http://localhost:8080/api/app/expenses/export?type=csv",
+            url: "/api/app/expenses/export?type=csv",
           },
           {
             label: "Expenses Excel",
             fileName: "expenses.xlsx",
-            url: "http://localhost:8080/api/app/expenses/export?type=excel",
+            url: "/api/app/expenses/export?type=excel",
           },
         ];
 

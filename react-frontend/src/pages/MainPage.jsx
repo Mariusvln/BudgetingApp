@@ -37,10 +37,10 @@ const MainPage = () => {
     const fetchBalance = async () => {
       try {
         const [incomeResponse, expenseResponse] = await Promise.all([
-          fetch(`http://localhost:8080/api/app/incomes/`, {
+          fetch(`/api/app/incomes/`, {
             credentials: "include",
           }),
-          fetch(`http://localhost:8080/api/app/expenses/`, {
+          fetch(`/api/app/expenses/`, {
             credentials: "include",
           }),
         ]);

@@ -7,11 +7,11 @@ function AnalyticsHeader({ dateStart, dateEnd }) {
   const fetchRangeData = async (start, end) => {
     const [incomeResponse, expenseResponse] = await Promise.all([
       fetch(
-        `http://localhost:8080/api/app/incomes/fromDateStartToDateFinish?dateStart=${start}&dateEnd=${end}`,
+        `/api/app/incomes/fromDateStartToDateFinish?dateStart=${start}&dateEnd=${end}`,
         { credentials: "include" },
       ),
       fetch(
-        `http://localhost:8080/api/app/expenses/fromDateStartToDateFinish?dateStart=${start}&dateEnd=${end}`,
+        `/api/app/expenses/fromDateStartToDateFinish?dateStart=${start}&dateEnd=${end}`,
         { credentials: "include" },
       ),
     ]);

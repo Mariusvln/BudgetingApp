@@ -18,7 +18,7 @@ const RegisterPage = () => {
       const { username, email, password } = formData;
 
       await axios.post(
-        "http://localhost:8080/api/auth/register",
+        "/api/auth/register",
         { username, email, password },
         { withCredentials: true }
       );

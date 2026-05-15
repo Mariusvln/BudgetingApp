@@ -42,7 +42,7 @@ function ExpenseAddPanel({ onTransactionAdded, categories = [] }) {
     };
 
     try {
-      const response = await fetch("http://localhost:8080/api/app/expenses/", {
+      const response = await fetch("/api/app/expenses/", {
         method: "POST",
         credentials: "include",
         headers: {

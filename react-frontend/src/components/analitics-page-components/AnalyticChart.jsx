@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import Chart from "react-apexcharts";
 import { useTheme } from "../../contexts/useTheme";
 
-const API_BASE = "http://localhost:8080/api";
+const API_BASE = "/api";
 
 const toNumber = (value) => Number(value) || 0;
 

@@ -77,7 +77,7 @@ const ProfilePage = () => {
       setMessage("");
 
       const res = await axios.put(
-        "http://localhost:8080/api/users/me",
+        "/api/users/me",
         formData,
         { withCredentials: true }
       );

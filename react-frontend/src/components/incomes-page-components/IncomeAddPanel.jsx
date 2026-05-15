@@ -60,7 +60,7 @@ function IncomeAddPanel({ onTransactionAdded, categories = [] }) {
     };
 
     try {
-      const response = await fetch("http://localhost:8080/api/app/incomes/", {
+      const response = await fetch("/api/app/incomes/", {
         method: "POST",
         credentials: "include",
         headers: {

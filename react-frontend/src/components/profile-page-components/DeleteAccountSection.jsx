@@ -35,7 +35,7 @@ function DeleteAccountSection() {
       setDeleting(true);
       setMessage("");
 
-      await axios.delete("http://localhost:8080/api/users/me", {
+      await axios.delete("/api/users/me", {
         data: { password },
         withCredentials: true,
       });

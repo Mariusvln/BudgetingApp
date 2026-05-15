@@ -1,0 +1,7 @@
+.git
+backend-java/.idea
+backend-java/data
+backend-java/target
+react-frontend/dist
+react-frontend/node_modules
+**/.DS_Store

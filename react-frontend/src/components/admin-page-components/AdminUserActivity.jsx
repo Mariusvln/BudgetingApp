@@ -13,10 +13,10 @@ function AdminUserActivity() {
 
           const trimmedSearch = search.trim();
           const url = trimmedSearch
-            ? `http://localhost:8080/api/activity/search?query=${encodeURIComponent(
+            ? `/api/activity/search?query=${encodeURIComponent(
                 trimmedSearch
               )}`
-            : "http://localhost:8080/api/activity";
+            : "/api/activity";
 
           const res = await fetch(url);
 

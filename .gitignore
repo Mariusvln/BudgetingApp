@@ -12,3 +12,6 @@ target/
 
 # Logs
 *.log
+
+# Local database files
+backend-java/data/

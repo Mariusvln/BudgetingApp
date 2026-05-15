@@ -10,7 +10,7 @@ export const AuthProvider = ({ children }) => {
   // Check session on mount
   useEffect(() => {
     // Note: Changed path to /api/auth/me to match your Java AuthController
-    axios.get('http://localhost:8080/api/auth/me', { withCredentials: true })
+    axios.get('/api/auth/me', { withCredentials: true })
       .then(res => {
         setUser(res.data);
       })
@@ -23,21 +23,21 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = async (credentials) => {
-    const res = await axios.post('http://localhost:8080/api/auth/login', credentials, { withCredentials: true });
+    const res = await axios.post('/api/auth/login', credentials, { withCredentials: true });
     // After login, we immediately set the user so the app reacts
-    const me = await axios.get('http://localhost:8080/api/auth/me', { withCredentials: true });
+    const me = await axios.get('/api/auth/me', { withCredentials: true });
     setUser(me.data);
   };
 
   const register = async (userData) => {
     // Register usually returns a simple "OK" or the new user object
-    await axios.post('http://localhost:8080/api/auth/register', userData, { withCredentials: true });
+    await axios.post('/api/auth/register', userData, { withCredentials: true });
     // Usually, you don't setUser here unless your backend logs them in automatically
   };
 
   const logout = async () => {
     try {
-      await axios.post('http://localhost:8080/api/auth/logout', {}, { withCredentials: true });
+      await axios.post('/api/auth/logout', {}, { withCredentials: true });
     } finally {
       setUser(null);
     }

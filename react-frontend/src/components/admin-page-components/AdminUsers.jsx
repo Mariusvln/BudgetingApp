@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import { useAppAlert } from "../../contexts/useAppAlert";
 
-const API_BASE = "http://localhost:8080";
+const API_BASE = "";
 const DEFAULT_ADMIN_EMAIL = "admin@gmail.com";
 
 const AdminUsers = () => {
