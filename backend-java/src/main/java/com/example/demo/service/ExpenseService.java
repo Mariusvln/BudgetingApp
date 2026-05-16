@@ -65,8 +65,16 @@ public class ExpenseService {
         return expenseRepository.save(existing);
 }
 
-    public void deleteExpense(Long expenseId){
-        expenseRepository.deleteById(expenseId);
+    public void deleteExpense(String email, Long expenseId){
+        User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
+        Expense existing = expenseRepository.findById(expenseId)
+                .orElseThrow(() -> new ResourceNotFoundException("Expense", expenseId));
+
+        if (!existing.getUser().getId().equals(user.getId())) {
+            throw new ForbiddenResourceAccessException("Expense does not belong to user");
+        }
+
+        expenseRepository.delete(existing);
     }
 
     public BigDecimal fetchAllGivenExpenses(){
