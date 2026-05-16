@@ -7,8 +7,8 @@ const BalanceCard = ({formatCurrency, balance, monthlySpending}) => {
     const target = Number(balance) || 0;
 
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setDisplayBalance(target);
-      return;
+      const frameId = requestAnimationFrame(() => setDisplayBalance(target));
+      return () => cancelAnimationFrame(frameId);
     }
 
     let frameId;
