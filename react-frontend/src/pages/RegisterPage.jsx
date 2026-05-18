@@ -49,23 +49,26 @@ const RegisterPage = () => {
     },
   });
 
+  const inputClass =
+    "block w-full rounded-xl border bg-[#F8FAFC] px-4 py-3 text-sm text-[#101828] caret-primary placeholder:text-[#98A2B3] focus:border-primary focus:outline-none";
+
   return (
-    <div className="RegisterPage w-106 mx-auto mt-20">
-      <div className="bg-card border border-card-line rounded-xl shadow-2xs overflow-hidden flex flex-col min-h-178.75 -translate-x-2 -translate-y-5 border-gray-300">
+    <div data-theme="light" className="RegisterPage w-106 mx-auto mt-20">
+      <div className="overflow-hidden flex flex-col min-h-178.75 -translate-x-2 -translate-y-5 rounded-xl border border-gray-300 bg-white shadow-2xs">
         <div className="flex-1 px-6 pt-6 pb-8">
           <div className="mb-8">
             <div className="mb-8 flex items-center gap-3">
               <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary">
                 <span className="text-lg font-bold text-black">F</span>
               </div>
-              <span className="text-[18px] font-semibold text-foreground">
+              <span className="text-[18px] font-semibold text-[#101828]">
                 FinVue
               </span>
             </div>
 
             <h3
               id="hs-modal-signin-label"
-              className="text-[48px] leading-none font-bold text-foreground"
+              className="text-[48px] leading-none font-bold text-[#101828]"
             >
               Sign Up
             </h3>
@@ -84,7 +87,7 @@ const RegisterPage = () => {
               <div>
                 <label
                   htmlFor="username"
-                  className="mb-2 block text-sm font-medium text-foreground"
+                  className="mb-2 block text-sm font-medium text-[#344054]"
                 >
                   Username
                 </label>
@@ -92,7 +95,7 @@ const RegisterPage = () => {
                   type="text"
                   id="username"
                   placeholder="Enter your username"
-                  className={`block w-full rounded-xl border border-layer-line bg-layer px-4 py-3 text-sm text-foreground border-card-line bg-[#F8FAFC] ${
+                  className={`${inputClass} ${
                     errors.username?.message ? "border-red-500" : "border-gray-300"
                   }`}
                   {...register("username", {
@@ -109,7 +112,7 @@ const RegisterPage = () => {
               <div>
                 <label
                   htmlFor="email"
-                  className="mb-2 block text-sm font-medium text-foreground"
+                  className="mb-2 block text-sm font-medium text-[#344054]"
                 >
                   Email address
                 </label>
@@ -117,7 +120,7 @@ const RegisterPage = () => {
                   type="email"
                   id="email"
                   placeholder="Enter your email"
-                  className={`block w-full rounded-xl border border-layer-line bg-layer px-4 py-3 text-sm text-foreground border-card-line bg-[#F8FAFC] ${
+                  className={`${inputClass} ${
                     errors.email?.message ? "border-red-500" : "border-gray-300"
                   }`}
                   {...register("email", {
@@ -139,7 +142,7 @@ const RegisterPage = () => {
               <div>
                 <label
                   htmlFor="password"
-                  className="mb-2 block text-sm font-medium text-foreground"
+                  className="mb-2 block text-sm font-medium text-[#344054]"
                 >
                   Password
                 </label>
@@ -147,7 +150,7 @@ const RegisterPage = () => {
                   type="password"
                   id="password"
                   placeholder="••••••••"
-                  className={`block w-full rounded-xl border border-layer-line bg-layer px-4 py-3 text-sm text-foreground border-card-line bg-[#F8FAFC] ${
+                  className={`${inputClass} ${
                     errors.password?.message ? "border-red-500" : "border-gray-300"
                   }`}
                   {...register("password", {
@@ -160,7 +163,7 @@ const RegisterPage = () => {
               <div>
                 <label
                   htmlFor="repeatPassword"
-                  className="mb-2 block text-sm font-medium text-foreground"
+                  className="mb-2 block text-sm font-medium text-[#344054]"
                 >
                   Repeat password
                 </label>
@@ -168,7 +171,7 @@ const RegisterPage = () => {
                   type="password"
                   id="repeatPassword"
                   placeholder="••••••••"
-                  className={`block w-full rounded-xl border border-layer-line bg-layer px-4 py-3 text-sm text-foreground border-card-line bg-[#F8FAFC] ${
+                  className={`${inputClass} ${
                     errors.repeatPassword?.message
                       ? "border-red-500"
                       : "border-gray-300"
@@ -190,7 +193,7 @@ const RegisterPage = () => {
               <div className="flex items-center justify-between pt-1">
                 <label
                   htmlFor="checkbox"
-                  className="flex items-center text-sm text-foreground"
+                  className="flex items-center text-sm text-[#344054]"
                 >
                   <input
                     id="checkbox"

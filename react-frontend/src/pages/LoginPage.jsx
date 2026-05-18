@@ -34,19 +34,22 @@ const LoginPage = () => {
     },
   });
 
+  const inputClass =
+    "block w-full rounded-xl border bg-[#F8FAFC] px-4 py-3 text-sm text-[#101828] caret-primary placeholder:text-[#98A2B3] focus:border-primary focus:outline-none";
+
   return (
-    <div className="LoginPage w-[424px] mx-auto mt-20">
-      <div className="bg-card border border-card-line rounded-xl shadow-2xs overflow-hidden flex flex-col min-h-[715px] -translate-x-[8px] -translate-y-[20px] border-gray-300">
+    <div data-theme="light" className="LoginPage w-[424px] mx-auto mt-20">
+      <div className="overflow-hidden flex flex-col min-h-[715px] -translate-x-[8px] -translate-y-[20px] rounded-xl border border-gray-300 bg-white shadow-2xs">
         <div className="flex-1 px-6 pt-6 pb-8">
           <div className="mb-8">
             <div className="mb-8 flex items-center gap-3">
               <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary">
                 <span className="text-lg font-bold text-black">F</span>
               </div>
-              <span className="text-[28px] font-semibold text-foreground">FinVue</span>
+              <span className="text-[28px] font-semibold text-[#101828]">FinVue</span>
             </div>
 
-            <h3 className="text-[48px] leading-none font-bold text-foreground">Sign in</h3>
+            <h3 className="text-[48px] leading-none font-bold text-[#101828]">Sign in</h3>
             <p className="mt-4 text-[16px] leading-8 text-muted-foreground-2 text-gray-500">
               Welcome back! Please enter your<br />details.
             </p>
@@ -59,12 +62,12 @@ const LoginPage = () => {
           <form onSubmit={handleSubmit(handleLogin)} noValidate>
             <div className="grid gap-y-5">
               <div>
-                <label className="mb-2 block text-sm font-medium text-foreground">Email address</label>
+                <label className="mb-2 block text-sm font-medium text-[#344054]">Email address</label>
                 <input
                   type="email"
                   name="email"
                   placeholder="Enter your email" 
-                  className={`block w-full rounded-xl border border-layer-line bg-layer px-4 py-3 text-sm text-foreground border-card-line bg-[#F8FAFC] ${errors.email?.message ? `border-red-500` : `border-gray-300`}`}
+                  className={`${inputClass} ${errors.email?.message ? `border-red-500` : `border-gray-300`}`}
                   {...register("email", {
                     required: "Email is required",
                     maxLength: {value: 254, message: "Email is too long"},
@@ -79,12 +82,12 @@ const LoginPage = () => {
               </div>
 
               <div>
-                <label className="mb-2 block text-sm font-medium text-foreground">Password</label>
+                <label className="mb-2 block text-sm font-medium text-[#344054]">Password</label>
                 <input
                   type="password"
                   name="password"
                   placeholder="••••••••" 
-                  className={`block w-full rounded-xl border border-layer-line bg-layer px-4 py-3 text-sm text-foreground border-card-line bg-[#F8FAFC] ${errors.password?.message ? `border-red-500` : `border-gray-300`}`}
+                  className={`${inputClass} ${errors.password?.message ? `border-red-500` : `border-gray-300`}`}
                   {...register("password", {
                     required: "Password is required",
                   })} 
@@ -93,7 +96,7 @@ const LoginPage = () => {
               </div>
 
               <div className="flex items-center justify-between pt-1">
-                <label className="flex items-center text-sm text-foreground">
+                <label className="flex items-center text-sm text-[#344054]">
                   <input type="checkbox" className="shrink-0 size-4 rounded-sm border border-line-3 bg-transparent text-primary" />
                   <span className="ms-3">Remember me</span>
                 </label>
