@@ -49,13 +49,13 @@ public class ExpensesController {
     }
 
     @DeleteMapping ("/")
-    public RegisterResponse deleteExpense(@Valid @RequestParam Long expenseId) {
-        expenses.deleteExpense(expenseId);
+    public RegisterResponse deleteExpense(@Valid @RequestParam Long expenseId, Authentication authentication) {
+        expenses.deleteExpense(authentication.getName(), expenseId);
         return new RegisterResponse("OK");
     }
 
     public ExpenseResponse mapToDTO(Expense expense) {
-        return new ExpenseResponse(expense.getUser().getId(),  expense.getDescription(), expense.getAmount(), expense.getDate(), expense.getCategory(), expense.getProcessType());
+        return new ExpenseResponse(expense.getUser().getId(), expense.getId(), expense.getDescription(), expense.getAmount(), expense.getDate(), expense.getCategory(), expense.getProcessType());
     }
 
     public List<ExpenseResponse> mapUsersToDTOs(List<Expense> expense) {

@@ -22,8 +22,9 @@ public class IncomeResponse {
 
     public PROCESS_TYPE processType;
 
-    public IncomeResponse(Long user, String description, BigDecimal amount, LocalDate date, int category, PROCESS_TYPE processType) {
+    public IncomeResponse(Long user, Long id, String description, BigDecimal amount, LocalDate date, int category, PROCESS_TYPE processType) {
         this.user = user;
+        this.id = id;
         this.description = description;
         this.amount = amount;
         this.date = date;

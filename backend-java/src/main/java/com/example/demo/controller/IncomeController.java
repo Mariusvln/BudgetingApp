@@ -46,13 +46,13 @@ public class IncomeController {
     }
 
     @DeleteMapping ("/")
-    public RegisterResponse deleteIncome(@Valid @RequestParam Long incomeId) {
-        incomes.deleteIncome(incomeId);
+    public RegisterResponse deleteIncome(@Valid @RequestParam Long incomeId, Authentication authentication) {
+        incomes.deleteIncome(authentication.getName(), incomeId);
         return new RegisterResponse("OK");
     }
 
     public IncomeResponse mapToDTO(Income income) {
-        return new IncomeResponse(income.getUser().getId(), income.getDescription(), income.getAmount(), income.getDate(), income.getCategory(), income.getProcessType());
+        return new IncomeResponse(income.getUser().getId(), income.getId(), income.getDescription(), income.getAmount(), income.getDate(), income.getCategory(), income.getProcessType());
     }
 
     public List<IncomeResponse> mapUsersToDTOs(List<Income> incomes) {

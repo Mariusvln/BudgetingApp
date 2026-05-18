@@ -67,8 +67,16 @@ public class IncomeService {
         return incomeRepository.save(existing);
     }
 
-    public void deleteIncome(Long incomeId){
-        incomeRepository.deleteById(incomeId);
+    public void deleteIncome(String email, Long incomeId){
+        User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
+        Income existing = incomeRepository.findById(incomeId)
+                .orElseThrow(() -> new ResourceNotFoundException("Income", incomeId));
+
+        if (!existing.getUser().getId().equals(user.getId())) {
+            throw new ForbiddenResourceAccessException("Income does not belong to user");
+        }
+
+        incomeRepository.delete(existing);
     }
 
 
