@@ -2,7 +2,15 @@ import ReactDom from "react-dom";
 import { useState, useEffect } from "react";
 import { useAppAlert } from "../../contexts/useAppAlert";
 import { useAuth } from "../../contexts/AuthContext";
-import { convertFromEuro, convertToEuro, getCurrencyPlaceholder } from "../../utils/currency";
+import {
+  MAX_TRANSACTION_AMOUNT,
+  MIN_TRANSACTION_AMOUNT,
+  convertFromEuro,
+  convertToEuro,
+  getApiErrorMessage,
+  getCurrencyPlaceholder,
+  validateCurrencyAmount,
+} from "../../utils/currency";
 
 const ExpenseEditForm = ({
   id,
@@ -41,6 +49,17 @@ const ExpenseEditForm = ({
       return;
     }
 
+    const amountValidation = validateCurrencyAmount(formAmount, "Expense");
+    if (amountValidation !== true) {
+      await appAlert.alert(amountValidation, { type: "warning" });
+      return;
+    }
+
+    if ((formDescription || "").length > 50) {
+      await appAlert.alert("Description is too long", { type: "warning" });
+      return;
+    }
+
     setLoading(true);
 
     const expense = {
@@ -68,7 +87,7 @@ const ExpenseEditForm = ({
         }
         await appAlert.alert("Expense saved successfully!", { type: "success" });
       } else {
-        const errorData = await response.text();
+        const errorData = await getApiErrorMessage(response);
         await appAlert.alert("Server error: " + errorData, { type: "error" });
       }
     } catch (error) {
@@ -148,6 +167,9 @@ const ExpenseEditForm = ({
           </span>
           <input
             type="number"
+            max={MAX_TRANSACTION_AMOUNT}
+            min={MIN_TRANSACTION_AMOUNT}
+            step="0.01"
             placeholder={getCurrencyPlaceholder(user?.currency)}
             value={formAmount}
             onChange={(e) => setAmount(e.target.value)}

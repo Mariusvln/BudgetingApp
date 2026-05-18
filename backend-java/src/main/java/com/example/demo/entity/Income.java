@@ -1,6 +1,10 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotNull;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -13,6 +17,9 @@ public class Income extends Categories{
 
     private String description;
 
+    @NotNull
+    @DecimalMin(value = "0.01", message = "Amount cannot be less than 0.01")
+    @DecimalMax(value = "4000000000", message = "Amount cannot be more than 4000000000")
     private BigDecimal amount;
 
     private LocalDate date;

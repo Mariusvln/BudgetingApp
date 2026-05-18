@@ -16,30 +16,46 @@ import up from "../assets/images/icons/up.svg";
 import chart from "../assets/images/icons/charts.svg";
 
 const HeroPage = () => {
+  const stats = [
+    {
+      label: "ACTIVE USERS",
+      value: "500K+",
+      icon: up,
+      alt: "Growth indicator",
+    },
+    {
+      label: "ASSETS TRACKED",
+      value: "$2B+",
+      icon: chart,
+      alt: "Assets chart",
+    },
+    {
+      label: "CUSTOMER RATING",
+      value: "4.9/5",
+      icon: star,
+      alt: "Customer rating",
+    },
+  ];
+
   return (
     <>
       <HeroHeader />
 
-      {/* hero page background */}
-      <div className="bg-base-200">
-        {/* Main page */}
+      <div className="bg-linear-to-b from-blue-50 via-slate-50 to-white">
         <HeroMaster />
 
-        <div className="relative mt-[64px] flex w-full justify-center">
-          {/* The Center Piece (The Phone) */}
+        <div className="relative mx-auto mt-12 flex w-full max-w-6xl justify-center px-5 md:mt-16">
           <HeroPhoneSection />
 
-          {/* Card 1: 50px Left from Phone */}
-          <div className="bg-base-100 rounded-2xl absolute right-[calc(50%+223px)] top-18">
+          <div className="absolute right-[calc(50%+223px)] top-18 hidden md:block">
             <HeroCard
               icon={analitic}
-              title="Real time Analasysis"
+              title="Real-time Analysis"
               description="Watch your net worth update instantly as you sync accounts."
             />
           </div>
 
-          {/* Card 2: Right side with more gap */}
-          <div className="bg-base-100 rounded-2xl absolute left-[calc(50%+220px)] top-72">
+          <div className="absolute left-[calc(50%+220px)] top-72 hidden md:block">
             <HeroCard
               icon={optimize}
               title="Smart Budgeting"
@@ -47,90 +63,63 @@ const HeroPage = () => {
             />
           </div>
 
-          {/* Card 3: Left side, bottom side */}
-          <div className="bg-base-100 rounded-2xl absolute right-[calc(50%+230px)] bottom-[47px]">
+          <div className="absolute bottom-[47px] right-[calc(50%+230px)] hidden md:block">
             <HeroCard
               icon={budget}
-              title="Bank Grade security"
-              description=""
+              title="Bank-grade Security"
+              description="Keep sensitive data protected with privacy-first account controls."
             />
           </div>
         </div>
-        <div className="core-benefits-baner flex justify-center items-center w-full my-8 block md:hidden">
-          <p className="core-benefits text-center text-[#64e764] font-bold tracking-widest text-[15px] sm:text-sm leading-tight">
+
+        <div className="my-8 flex w-full items-center justify-center md:hidden">
+          <p className="text-center text-[15px] font-bold leading-tight tracking-[0.28em] text-blue-600 sm:text-sm">
             CORE <br /> BENEFITS
           </p>
         </div>
-        <div className="Why-choose-container flex justify-center items-center w-full my-8 block md:hidden">
-          <p className="why-choose-text text-center text-black font-bold  text-[50px] leading-tight tracking-tight">
+        <div className="my-8 flex w-full items-center justify-center md:hidden">
+          <p className="text-center text-[50px] font-extrabold leading-tight tracking-normal text-slate-950">
             Why <br />
             Choose <br />
             FinVue?
           </p>
         </div>
-        <div className="description-container  flex justify-center items-center block md:hidden">
-          <p className="experience-description text-center  text-[#808080] font-light text-[20px]">
+        <div className="flex items-center justify-center px-6 md:hidden">
+          <p className="text-center text-[20px] font-light leading-8 text-slate-500">
             Experience the future of <br />
             personal finance with our <br />
-            comprhesive tools designed <br />
+            comprehensive tools designed <br />
             for the modern era.
           </p>
         </div>
 
-        <div className="active-users "></div>
-        <div className="m-20">
-          <div className="">
+        <div className="mx-auto max-w-6xl px-5 py-14 md:px-8 md:py-20">
+          <div id="hero-features">
             <FeatureSection />
           </div>
-          <br />
-          <div className="active-users flex flex-col items-center gap-6 px-6 md:hidden ">
-            <div className="w-full max-w-[400px] bg-[#f0f9f4] rounded-2xl p-6 flex flex-col items-center border border-[#e0ece6]">
-              <span className="text-[#7a8b94] text-xs font-bold tracking-widest mb-2">
-                ACTIVE USERS
-              </span>
-              <div className="flex items-center gap-2">
-                <h2 className="text-[#1a2b3b] text-4xl font-extrabold ">
-                  500K+
-                </h2>
-                <span className="text-[#22c55e] text-2xl">
-                  <img src={up} alt="Arrow Up" />
-                </span>
-              </div>
-            </div>
 
-            <div className="w-full max-w-[400px] bg-[#f0f9f4] rounded-2xl p-8 flex flex-col items-center border border-[#e0ece6]">
-              <span className="text-[#7a8b94] text-xs font-bold tracking-widest mb-2">
-                ASSETS TRACKED
-              </span>
-              <div className="flex items-center gap-2">
-                <h2 className="text-[#1a2b3b] text-4xl font-extrabold ">
-                  $2B+
-                </h2>
-                <span className="text-[#22c55e] text-2xl">
-                  <img src={chart} alt="Chart" />
+          <div className="mt-10 flex flex-col items-center gap-6 md:hidden">
+            {stats.map((stat) => (
+              <div
+                key={stat.label}
+                className="flex w-full max-w-[400px] flex-col items-center rounded-2xl border border-blue-100 bg-white p-6 shadow-lg shadow-blue-950/5"
+              >
+                <span className="mb-2 text-xs font-bold tracking-[0.24em] text-slate-500">
+                  {stat.label}
                 </span>
-              </div>
-            </div>
-
-            <div className="w-full max-w-[400px] bg-[#f0f9f4] rounded-2xl p-8 flex flex-col items-center border border-[#e0ece6]">
-              <span className="text-[#7a8b94] text-xs font-bold tracking-widest mb-2">
-                CUSTOMER RATING
-              </span>
-              <div className="flex items-center gap-2">
-                <h2 className="text-[#1a2b3b] text-4xl font-extrabold">
-                  4.9/5
-                </h2>
-                <span className="text-[#22c55e] text-2xl">
-                  <span className="text-[#22c55e] text-2xl">
-                    <img src={star} alt="Star" />
+                <div className="flex items-center gap-3">
+                  <h2 className="text-4xl font-extrabold text-slate-950">
+                    {stat.value}
+                  </h2>
+                  <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50">
+                    <img className="h-5 w-5 [filter:hue-rotate(170deg)_saturate(1.4)]" src={stat.icon} alt={stat.alt} />
                   </span>
-                </span>
+                </div>
               </div>
-            </div>
+            ))}
           </div>
 
-          <div className="m-20"></div>
-          <div>
+          <div className="mt-14">
             <CtaSection />
           </div>
         </div>

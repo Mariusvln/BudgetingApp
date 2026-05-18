@@ -2,8 +2,8 @@ import phone1 from '../../assets/images/phone1.png'
 
 function HeroPhoneSection() {
   return (
-    <section className="hero-phone-section">
-      <img src={phone1} alt="Phone" />
+    <section className="relative z-10">
+      <img className="w-[280px] max-w-[76vw] drop-shadow-2xl md:w-[330px]" src={phone1} alt="FinVue mobile dashboard preview" />
     </section>
   );
 }

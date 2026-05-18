@@ -1,13 +1,13 @@
 function FeatureCard({ icon, title, description }) {
   return (
-    <div className="bg-base-100 rounded-2xl shadow p-6 border border-[#e5e7eb]">
-      <div className="w-12 h-12 bg-primary/15 text-primary rounded-lg flex items-center justify-center mb-4 p-1">
+    <div className="rounded-2xl border border-blue-100 bg-white p-6 shadow-lg shadow-blue-950/5 transition hover:-translate-y-1 hover:border-blue-200 hover:shadow-xl hover:shadow-blue-950/10">
+      <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 p-1 text-blue-600">
         <div className="w-8 h-8">
-          <img src={icon} alt={icon} />
+          <img src={icon} alt="" />
         </div>
       </div>
-      <h3 className="text-lg font-bold mb-2">{title}</h3>
-      <p className="text-sm">{description}</p>
+      <h3 className="mb-2 text-lg font-bold text-slate-950">{title}</h3>
+      <p className="text-sm leading-6 text-slate-500">{description}</p>
     </div>
   );
 }

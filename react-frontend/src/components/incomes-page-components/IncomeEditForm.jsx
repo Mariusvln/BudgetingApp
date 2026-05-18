@@ -3,7 +3,15 @@ import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useAppAlert } from "../../contexts/useAppAlert";
 import { useAuth } from "../../contexts/AuthContext";
-import { convertFromEuro, convertToEuro, getCurrencyPlaceholder } from "../../utils/currency";
+import {
+  MAX_TRANSACTION_AMOUNT,
+  MIN_TRANSACTION_AMOUNT,
+  convertFromEuro,
+  convertToEuro,
+  getApiErrorMessage,
+  getCurrencyPlaceholder,
+  validateCurrencyAmount,
+} from "../../utils/currency";
 
 const IncomeEditForm = ({
   id,
@@ -76,7 +84,7 @@ const IncomeEditForm = ({
         }
         await appAlert.alert("Income saved successfully!", { type: "success" });
       } else {
-        const errorData = await response.text();
+        const errorData = await getApiErrorMessage(response);
         await appAlert.alert("Server error: " + errorData, { type: "error" });
       }
     } catch (error) {
@@ -167,6 +175,9 @@ const IncomeEditForm = ({
           <input
             type="number"
             id="amount"
+            max={MAX_TRANSACTION_AMOUNT}
+            min={MIN_TRANSACTION_AMOUNT}
+            step="0.01"
             placeholder={getCurrencyPlaceholder(user?.currency)}
             className={`w-full rounded-xl border px-3 py-2.5 text-[#101828] focus:outline-none ${
               errors.amount?.message
@@ -175,11 +186,7 @@ const IncomeEditForm = ({
             }`}
             {...register("amount", {
               required: "Please input your income amount, letters and symbols not allowed",
-              validate: (value) => {
-                if (isNaN(value)) return "Only numbers are allowed";
-                if (Number(value) <= 0) return "Income cannot be 0 or less";
-                return true;
-              },
+              validate: (value) => validateCurrencyAmount(value, "Income"),
             })}
           />
         </label>
