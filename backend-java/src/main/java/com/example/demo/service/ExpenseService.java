@@ -6,6 +6,7 @@ import com.example.demo.entity.User;
 import com.example.demo.exception.ForbiddenResourceAccessException;
 import com.example.demo.exception.InvalidDateRangeException;
 import com.example.demo.exception.ResourceNotFoundException;
+import com.example.demo.exception.TransactionLimitExceededException;
 import com.example.demo.exception.UserNotFoundException;
 import com.example.demo.repository.ExpenseRepository;
 import com.example.demo.repository.UserRepository;
@@ -22,11 +23,14 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ExpenseService {
 
+    private static final BigDecimal MAX_TOTAL_EXPENSES = new BigDecimal("4000000000");
+
     private final ExpenseRepository expenseRepository;
     private final UserRepository userRepository;
 
     public Expense addExpense(String email, ExpenseRequest request) {
         User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
+        validateTotalLimit(user, null, request.getAmount());
         Expense expense = fromDTO(request, user);
         return expenseRepository.save(expense);
     }
@@ -56,6 +60,8 @@ public class ExpenseService {
             throw new ForbiddenResourceAccessException("Expense does not belong to user");
         }
 
+        validateTotalLimit(user, existing, updated.getAmount());
+
         existing.setDescription(updated.getDescription());
         existing.setAmount(updated.getAmount());
         existing.setDate(updated.getDate());
@@ -64,6 +70,22 @@ public class ExpenseService {
 
         return expenseRepository.save(existing);
 }
+
+    private void validateTotalLimit(User user, Expense existingExpense, BigDecimal newAmount) {
+        BigDecimal currentTotal = expenseRepository.findByUser(user).stream()
+                .map(Expense::getAmount)
+                .filter(amount -> amount != null)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        if (existingExpense != null && existingExpense.getAmount() != null) {
+            currentTotal = currentTotal.subtract(existingExpense.getAmount());
+        }
+
+        BigDecimal nextTotal = currentTotal.add(newAmount == null ? BigDecimal.ZERO : newAmount);
+        if (nextTotal.compareTo(MAX_TOTAL_EXPENSES) > 0) {
+            throw new TransactionLimitExceededException("expenses", MAX_TOTAL_EXPENSES.toPlainString());
+        }
+    }
 
     public void deleteExpense(String email, Long expenseId){
         User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);

@@ -1,4 +1,6 @@
 export const DEFAULT_CURRENCY = "EUR";
+export const MIN_TRANSACTION_AMOUNT = 0.01;
+export const MAX_TRANSACTION_AMOUNT = 4_000_000_000;
 
 export const CURRENCY_OPTIONS = [
   { value: "EUR", label: "EUR - Euro" },
@@ -8,6 +10,47 @@ export const CURRENCY_OPTIONS = [
 const EUR_EXCHANGE_RATES = {
   EUR: 1,
   USD: 1.08,
+};
+
+export const formatAmountLimit = () =>
+  MAX_TRANSACTION_AMOUNT.toLocaleString("en-US");
+
+export const formatMinimumAmount = () =>
+  MIN_TRANSACTION_AMOUNT.toLocaleString("en-US", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+
+export const validateCurrencyAmount = (value, label = "Amount") => {
+  const parsedValue = Number(value);
+
+  if (!Number.isFinite(parsedValue)) {
+    return "Only numbers are allowed";
+  }
+
+  if (parsedValue < MIN_TRANSACTION_AMOUNT) {
+    return `${label} cannot be less than ${formatMinimumAmount()}`;
+  }
+
+  if (!/^\d+(\.\d{1,2})?$/.test(String(value).trim())) {
+    return `${label} cannot have fractions smaller than 0.01`;
+  }
+
+  if (parsedValue > MAX_TRANSACTION_AMOUNT) {
+    return `${label} cannot be more than ${formatAmountLimit()}`;
+  }
+
+  return true;
+};
+
+export const getApiErrorMessage = async (response) => {
+  const fallback = await response.text();
+
+  try {
+    return JSON.parse(fallback).message || fallback;
+  } catch {
+    return fallback;
+  }
 };
 
 export const normalizeCurrency = (currency) =>

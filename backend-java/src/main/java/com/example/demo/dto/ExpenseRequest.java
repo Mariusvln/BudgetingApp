@@ -1,6 +1,7 @@
 package com.example.demo.dto;
 
 import com.example.demo.entity.PROCESS_TYPE;
+import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -22,7 +23,8 @@ public class ExpenseRequest {
     private String description;
 
     @NotNull
-    @Positive(message = "Amount must be greater than 0")
+    @DecimalMin(value = "0.01", message = "Amount cannot be less than 0.01")
+    @DecimalMax(value = "4000000000", message = "Amount cannot be more than 4000000000")
     private BigDecimal amount;
 
     @NotNull

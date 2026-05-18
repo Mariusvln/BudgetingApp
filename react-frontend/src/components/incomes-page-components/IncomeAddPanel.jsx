@@ -2,7 +2,14 @@ import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useAppAlert } from "../../contexts/useAppAlert";
 import { useAuth } from "../../contexts/AuthContext";
-import { convertToEuro, getCurrencyPlaceholder } from "../../utils/currency";
+import {
+  MAX_TRANSACTION_AMOUNT,
+  MIN_TRANSACTION_AMOUNT,
+  convertToEuro,
+  getApiErrorMessage,
+  getCurrencyPlaceholder,
+  validateCurrencyAmount,
+} from "../../utils/currency";
 
 function IncomeAddPanel({ onTransactionAdded, categories = [] }) {
   const { user } = useAuth();
@@ -84,7 +91,7 @@ function IncomeAddPanel({ onTransactionAdded, categories = [] }) {
           category: categories.length > 0 ? String(categories[0].id) : "",
         });
       } else {
-        const errorData = await response.text();
+        const errorData = await getApiErrorMessage(response);
         await appAlert.alert("Server error: " + errorData, { type: "error" });
       }
     } catch (error) {
@@ -130,20 +137,16 @@ function IncomeAddPanel({ onTransactionAdded, categories = [] }) {
             <input
               type="number"
               id="amount"
+              max={MAX_TRANSACTION_AMOUNT}
+              min={MIN_TRANSACTION_AMOUNT}
+              step="0.01"
               placeholder={getCurrencyPlaceholder(user?.currency)}
               className="input input-bordered"
               {...register("amount", {
                 required:
                   "Please input your income, letters and symbols not allowed",
                 valueAsNumber: true,
-                validate: (value) => {
-                  if (isNaN(value)) {
-                    return "Only numbers are allowed";
-                  } else if (value <= 0) {
-                    return "Income cannot be 0 or less";
-                  }
-                  return true;
-                },
+                validate: (value) => validateCurrencyAmount(value, "Income"),
               })}
             />
             {errors.amount?.message && (
