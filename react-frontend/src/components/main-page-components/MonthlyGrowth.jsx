@@ -1,64 +1,104 @@
 import profitIcon from "../../assets/images/icons/profit-icon.svg";
+import lossIcon from "../../assets/images/icons/loss-icon.svg"
 import { Chart as ChartJS } from "chart.js/auto";
 import { Bar } from "react-chartjs-2";
 import { useMemo } from "react";
 
 const MonthlyGrowth = ({ incomes = [], expenses = [], formatCurrency }) => {
-  const getMonths = () => {
-    const today = new Date();
-    const result = [];
+  const today = new Date();
 
-    for (let i = 3; i >= 0; i--) {
-      result.push(new Date(today.getFullYear(), today.getMonth() - i, 1));
+  const getTsMonthDays = () => {
+    let result = [];
+    let j = 1;
+    for (let i = 6; i <= 24; i += 6) {
+      result.push({
+        start: new Date(today.getFullYear(), today.getMonth(), j),
+        end: new Date(today.getFullYear(), today.getMonth(), i),
+      });
+      j += 6;
     }
-
+    result.push({
+      start: new Date(today.getFullYear(), today.getMonth(), 25),
+      end: new Date(today.getFullYear(), today.getMonth() + 1, 0),
+    });
     return result;
   };
 
-  const monthlySavings = useMemo(() => {
-    return getMonths().map((monthDate) => {
-      const isSameMonth = (item) => {
-        const itemDate = new Date(item.date);
+  const getPrevMonthDays = () => {
+    let result = [];
+    let j = 1;
+    for (let i = 6; i <= 24; i += 6) {
+      result.push({
+        start: new Date(today.getFullYear(), today.getMonth() - 1, j),
+        end: new Date(today.getFullYear(), today.getMonth() - 1, i),
+      });
+      j += 6;
+    }
+    result.push({
+      start: new Date(today.getFullYear(), today.getMonth() - 1, 25),
+      end: new Date(today.getFullYear(), today.getMonth(), 0),
+    });
+    return result;
+  };
+
+  const {tsMonthSavings, prevMonthSavings} = useMemo(() => {
+    const calculateSavings = (dateRanges) => {
+    return dateRanges.map((dayRange) => {
+      const isInRange = (item) => {
+        const itemDay = new Date(item.date);
         return (
-          itemDate.getFullYear() === monthDate.getFullYear() &&
-          itemDate.getMonth() === monthDate.getMonth()
+          itemDay.getFullYear() === dayRange.start.getFullYear() &&
+          (itemDay.getMonth() === dayRange.start.getMonth() ||
+          itemDay.getMonth() === dayRange.end.getMonth()) &&
+          itemDay.getDate() >= dayRange.start.getDate() &&
+          itemDay.getDate() <= dayRange.end.getDate()
         );
       };
 
-      const incomeTotal = incomes
-        .filter(isSameMonth)
-        .reduce((sum, item) => sum + (Number(item.amount) || 0), 0);
-
-      const expenseTotal = expenses
-        .filter(isSameMonth)
-        .reduce((sum, item) => sum + (Number(item.amount) || 0), 0);
-
-      return Math.max(0, incomeTotal - expenseTotal);
+      const rangeIncomes = incomes.filter(isInRange).reduce((sum, item) => sum + (Number(item.amount) || 0), 0);
+      const rangeExpenses = expenses.filter(isInRange).reduce((sum, item) => sum + (Number(item.amount) || 0), 0);
+      return Math.max(0, rangeIncomes - rangeExpenses);
     });
-  }, [expenses, incomes]);
+  };
+  return {
+    tsMonthSavings: calculateSavings(getTsMonthDays()),
+    prevMonthSavings: calculateSavings(getPrevMonthDays())
+  }
+  }, [incomes, expenses]);
 
-  const totalSavings = monthlySavings.reduce((sum, value) => sum + value, 0);
-  const previousTotal = monthlySavings
-    .slice(0, -1)
-    .reduce((sum, value) => sum + value, 0);
-  const currentMonthSavings = monthlySavings[monthlySavings.length - 1] || 0;
-  const previousAverage = previousTotal / Math.max(monthlySavings.length - 1, 1);
+  const totalSavings = tsMonthSavings.reduce((sum, value) => sum + value, 0);
+  const previousTotal = prevMonthSavings.reduce((sum, value) => sum + value, 0);
+  const previousAverage = previousTotal / Math.max(prevMonthSavings.length, 1);
   const growthPercentage =
     previousAverage > 0
-      ? Math.round(((currentMonthSavings - previousAverage) / previousAverage) * 100)
-      : currentMonthSavings > 0
+      ? Math.round(
+          ((totalSavings - previousTotal) / previousTotal) * 100,
+        )
+      : totalSavings > 0
         ? 100
         : 0;
   const growthPrefix = growthPercentage > 0 ? "+" : "";
   const growthTone = growthPercentage >= 0 ? "text-success" : "text-error";
 
+  const daysInThisMonth = () => {
+  const now = new Date();
+  return new Date(now.getFullYear(), now.getMonth()+1, 0).getDate();
+  }
+
   const chartData = {
-    labels: ["Month 1", "Month 2", "Month 3", "This Month"],
+    labels: ["Days 1-6", "7-12", "13-18", "19-24", `25-${daysInThisMonth()}`],
     datasets: [
       {
-        label: "Money saved",
-        data: monthlySavings,
+        label: "Money saved this month",
+        data: tsMonthSavings,
         backgroundColor: ["#22c55e"],
+        borderRadius: 10,
+        maxBarThickness: 42,
+      },
+      {
+        label: "Money saved last month",
+        data: prevMonthSavings,
+        backgroundColor: ["#B2BEB5"],
         borderRadius: 10,
         maxBarThickness: 42,
       },
@@ -71,7 +111,7 @@ const MonthlyGrowth = ({ incomes = [], expenses = [], formatCurrency }) => {
         display: false,
       },
       customCanvasBackgroundColor: {
-        color: 'white',
+        color: "white",
       },
       tooltip: {
         backgroundColor: "rgba(15, 23, 42, 0.92)",
@@ -112,16 +152,15 @@ const MonthlyGrowth = ({ incomes = [], expenses = [], formatCurrency }) => {
           : `EUR ${totalSavings.toLocaleString("en-US", { minimumFractionDigits: 2 })}`}
       </h3>
       <div className="flex gap-1">
-        <img src={profitIcon} alt="Profit Icon" className="pt-1" />
+        {growthPercentage > 0 && <img src={profitIcon} alt="Profit Icon" className="pt-1" />}
+        {growthPercentage < 0 && <img src={lossIcon} alt="Loss Icon" className="pt-1"/>}
         <p className={`font-bold ${growthTone}`}>
           {growthPrefix}
           {growthPercentage}% this month
         </p>
       </div>
       <div className="mt-4 h-36">
-        <Bar
-          data={chartData} options={chartOptions}
-        />
+        <Bar data={chartData} options={chartOptions} />
       </div>
     </div>
   );
