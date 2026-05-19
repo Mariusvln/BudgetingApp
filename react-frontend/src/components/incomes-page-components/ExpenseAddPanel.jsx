@@ -1,7 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useAppAlert } from "../../contexts/useAppAlert";
 import { useAuth } from "../../contexts/AuthContext";
-import { convertToEuro, getCurrencyPlaceholder } from "../../utils/currency";
+import {
+  MAX_TRANSACTION_AMOUNT,
+  MIN_TRANSACTION_AMOUNT,
+  convertToEuro,
+  getApiErrorMessage,
+  getCurrencyPlaceholder,
+  validateCurrencyAmount,
+} from "../../utils/currency";
 
 function ExpenseAddPanel({ onTransactionAdded, categories = [] }) {
   const { user } = useAuth();
@@ -30,6 +37,17 @@ function ExpenseAddPanel({ onTransactionAdded, categories = [] }) {
 
     if (!category) {
       await appAlert.alert("Please select a category", { type: "warning" });
+      return;
+    }
+
+    const amountValidation = validateCurrencyAmount(amount, "Expense");
+    if (amountValidation !== true) {
+      await appAlert.alert(amountValidation, { type: "warning" });
+      return;
+    }
+
+    if (description.length > 50) {
+      await appAlert.alert("Description is too long", { type: "warning" });
       return;
     }
 
@@ -66,7 +84,7 @@ function ExpenseAddPanel({ onTransactionAdded, categories = [] }) {
         setDate(getTodayDate());
         setCategory(categories.length > 0 ? String(categories[0].id) : "");
       } else {
-        const errorData = await response.text();
+        const errorData = await getApiErrorMessage(response);
         await appAlert.alert("Server error: " + errorData, { type: "error" });
       }
     } catch (error) {
@@ -94,6 +112,9 @@ function ExpenseAddPanel({ onTransactionAdded, categories = [] }) {
 
             <input
               type="number"
+              max={MAX_TRANSACTION_AMOUNT}
+              min={MIN_TRANSACTION_AMOUNT}
+              step="0.01"
               placeholder={getCurrencyPlaceholder(user?.currency)}
               className="input input-bordered"
               value={amount}

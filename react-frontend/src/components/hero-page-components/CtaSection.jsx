@@ -4,26 +4,26 @@ function CtaSection() {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate("/register");
+    navigate("/signup");
   };
 
   return (
-    <div className="mt-12 rounded-[48px] p-14 bg-linear-to-r from-[#0F172A] via-[#142244] to-[#0F172A] text-white text-center">
-      <h2 className="text-3xl md:text-4xl font-bold mb-4">
+    <div className="mt-12 rounded-3xl bg-linear-to-r from-slate-950 via-blue-950 to-indigo-950 p-8 text-center text-white shadow-2xl shadow-blue-950/20 md:p-14">
+      <h2 className="mb-4 text-3xl font-bold md:text-4xl">
         Ready to take control of your finances?
       </h2>
-      <p className="text-gray-300 mb-6 max-w-2xl mx-auto">
+      <p className="mx-auto mb-6 max-w-2xl text-blue-100/80">
         Join thousands of users who have optimized their savings and reached their goals with FinVue.
       </p>
 
-      <div className=" flex flex-wrap items-center justify-center gap-4">
+      <div className="flex flex-wrap items-center justify-center gap-4">
         <button
           onClick={handleClick}
-          className="px-6 py-3 bg-primary text-primary-content hover:bg-primary/90 rounded-xl font-semibold shadow-lg"
+          className="rounded-xl bg-blue-500 px-6 py-3 font-semibold text-white shadow-lg shadow-blue-500/25 transition hover:bg-blue-400"
         >
           Get Started for Free
         </button>
-        <span className="text-gray-400 text-sm">
+        <span className="text-sm text-blue-100/70">
           No credit card required
         </span>
       </div>

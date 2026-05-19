@@ -4,6 +4,10 @@ import com.example.demo.dto.ExpenseRequest;
 import com.example.demo.service.ExpenseService;
 import com.example.demo.service.UserService;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotNull;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -17,6 +21,9 @@ public class Expense extends Categories{
 
     private String description;
 
+    @NotNull
+    @DecimalMin(value = "0.01", message = "Amount cannot be less than 0.01")
+    @DecimalMax(value = "4000000000", message = "Amount cannot be more than 4000000000")
     private BigDecimal amount;
 
     private LocalDate date;
