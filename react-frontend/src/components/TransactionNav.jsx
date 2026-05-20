@@ -57,6 +57,13 @@ function TransactionNav() {
       mobileActiveLink: "bg-yellow-300 text-black",
       mobileActiveIcon: "bg-pink-300",
     },
+    "light-green-pure": {
+      logo: "from-[#22C55E] to-[#14B8A6]",
+      activeLink: "bg-emerald-100 text-emerald-900 shadow-sm",
+      activeIcon: "bg-emerald-200",
+      mobileActiveLink: "bg-emerald-100 text-emerald-900",
+      mobileActiveIcon: "bg-emerald-200",
+    },
   };
 
   const currentThemeStyles = themeStyles[theme] ?? themeStyles.light;

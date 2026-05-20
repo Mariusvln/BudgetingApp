@@ -39,6 +39,10 @@ const ProfilePage = () => {
       accentText: "text-pink-500",
       saveButton: "bg-yellow-300 hover:bg-yellow-400 text-black",
     },
+    "light-green-pure": {
+      accentText: "text-emerald-700",
+      saveButton: "bg-emerald-500 hover:bg-emerald-600 text-emerald-950",
+    },
   };
 
   const currentThemeStyles = themeStyles[theme] ?? themeStyles.light;

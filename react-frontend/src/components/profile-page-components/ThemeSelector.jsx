@@ -97,7 +97,18 @@ const ThemeSelector = () => {
         text: "#181600",
       },
     },
+    {
+      name: "light-green-pure",
+      label: "Light Green Pure",
+      preview: {
+        bg: "#f3fbef",
+        surface: "#ffffff",
+        primary: "#45d88f",
+        text: "#153b34",
+      },
+    },
   ];
+  const selectedTheme = themes.find((item) => item.name === theme);
 
   const checkDropdownPosition = () => {
     if (!dropdownRef.current) return;
@@ -129,7 +140,9 @@ const ThemeSelector = () => {
       >
         <div className="min-w-0">
           <p className="text-xs leading-none text-gray-500">Theme</p>
-          <p className="truncate text-sm font-medium capitalize">{theme}</p>
+          <p className="truncate text-sm font-medium">
+            {selectedTheme?.label || theme}
+          </p>
         </div>
 
         <svg
@@ -163,7 +176,9 @@ const ThemeSelector = () => {
             >
               <div className="flex min-w-0 items-center gap-3">
                 <ThemePreviewCard preview={t.preview} />
-                <span className="truncate font-medium capitalize">{t.name}</span>
+                <span className="truncate font-medium">
+                  {t.label || t.name}
+                </span>
               </div>
 
               {theme === t.name && (
