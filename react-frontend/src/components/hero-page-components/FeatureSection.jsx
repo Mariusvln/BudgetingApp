@@ -6,7 +6,7 @@ import optimize from "../../assets/images/icons/optimization-icon.svg"
 
 function FeatureSection() {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 gap-5 md:grid-cols-3 md:gap-6">
       <FeatureCard
         icon= {analitic}
         title="Real-time Analytics"

@@ -12,27 +12,27 @@ function HeroMaster() {
   };
 
   return (
-    <section className="mx-auto flex w-full max-w-6xl flex-col items-center px-5 pt-14 text-center sm:px-8 md:pt-20">
+    <section className="mx-auto flex w-full max-w-6xl flex-col items-center px-4 pt-10 text-center sm:px-8 sm:pt-14 md:pt-20">
       <div className="flex justify-center">
-        <p className="rounded-full border border-blue-200 bg-blue-50 px-5 py-2 text-xs font-bold uppercase tracking-[0.2em] text-blue-700 shadow-sm">
+        <p className="rounded-full border border-blue-200 bg-blue-50 px-4 py-2 text-[11px] font-bold uppercase tracking-[0.16em] text-blue-700 shadow-sm sm:px-5 sm:text-xs sm:tracking-[0.2em]">
           trusted by over 100K+ users
         </p>
       </div>
 
-      <div className="mt-8 max-w-4xl">
-        <h1 className="text-left text-[34px] font-extrabold leading-[2.4rem] tracking-normal text-slate-950 sm:text-center md:text-6xl md:leading-tight lg:text-7xl">
+      <div className="mt-7 max-w-4xl sm:mt-8">
+        <h1 className="text-center text-[clamp(2.25rem,11vw,4.5rem)] font-extrabold leading-[1.05] tracking-normal text-slate-950 md:text-6xl md:leading-tight lg:text-7xl">
           Master Your Money with{" "}
           <span className="bg-linear-to-r from-blue-600 via-indigo-600 to-sky-500 bg-clip-text text-transparent">
             FinVue
           </span>
         </h1>
-        <p className="mt-5 text-left text-[15px] leading-6 text-slate-500 sm:text-center md:mx-auto md:max-w-2xl md:text-lg">
+        <p className="mx-auto mt-5 max-w-[34rem] text-center text-[15px] leading-6 text-slate-500 md:max-w-2xl md:text-lg">
           The all-in-one financial dashboard that simplifies budgeting, tracks goals,
           and optimizes your wealth. Start your journey to financial freedom today.
         </p>
       </div>
 
-      <div className="mt-8 flex w-full flex-col items-center justify-center gap-3 sm:w-auto sm:flex-row">
+      <div className="mt-8 flex w-full max-w-sm flex-col items-center justify-center gap-3 sm:w-auto sm:max-w-none sm:flex-row">
         <button
           onClick={() => navigate("/signup")}
           className="h-13 w-full rounded-xl bg-blue-600 px-7 text-base font-bold text-white shadow-xl shadow-blue-600/25 transition hover:bg-blue-700 sm:w-auto md:h-15 md:text-lg"
