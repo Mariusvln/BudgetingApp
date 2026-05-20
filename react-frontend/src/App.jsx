@@ -16,6 +16,7 @@ import BudgetingPage from "./pages/BudgetingPage";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router";
 import { AuthProvider } from "./contexts/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
+import PublicOnlyRoute from "./components/PublicOnlyRoute";
 import { ThemeProvider } from "./contexts/ThemeProvider";
 import { AppAlertProvider } from "./contexts/AppAlertProvider";
 
@@ -27,9 +28,11 @@ function App() {
       <AuthProvider>
         <AppAlertProvider>
           <Routes>
-            <Route path="/" element={<HeroPage />} />
-            <Route path="/signin" element={<LoginPage />} />
-            <Route path="/signup" element={<RegisterPage />} />
+            <Route element={<PublicOnlyRoute />}>
+              <Route path="/" element={<HeroPage />} />
+              <Route path="/signin" element={<LoginPage />} />
+              <Route path="/signup" element={<RegisterPage />} />
+            </Route>
 
             <Route element={<ProtectedRoute />}>
               <Route path="/main" element={<MainPage />} />
