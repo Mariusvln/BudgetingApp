@@ -56,9 +56,9 @@ const ProgressBar = ({ value, limit, over }) => {
     }, [percent]);
 
   return (
-    <div className="w-full h-[10px] rounded-full bg-[#edf0f2] overflow-hidden">
+    <div className="w-full h-[10px] rounded-full bg-base-300 overflow-hidden">
       <div
-        className={`h-[10px] rounded-full transition-[width] duration-1000 ease-out ${over ? "bg-[#e5484d]" : "bg-primary"}`}
+        className={`h-[10px] rounded-full transition-[width] duration-1000 ease-out ${over ? "bg-error" : "bg-primary"}`}
         style={{ width: `${animatedPercent}%` }}
       />
     </div>
@@ -126,19 +126,19 @@ const AddCategoryModal = ({ open, onClose, categories, onCategoryAdded }) => {
 
   return (
     <div className="fixed inset-0 z-50 grid place-items-center bg-black/30 p-4">
-      <div className="w-full max-w-[420px] rounded-[16px] bg-white p-6">
-        <h3 className="text-[18px] font-semibold text-[#101828] mb-4">
+      <div className="w-full max-w-[420px] rounded-[16px] bg-base-100 p-6 text-base-content shadow-xl">
+        <h3 className="text-[18px] font-semibold text-base-content mb-4">
           Add Category
         </h3>
 
         <div className="mb-4">
-          <label className="text-[12px] text-[#98a2b3] mb-1 block">
+          <label className="text-[12px] text-base-content/60 mb-1 block">
             Category Type
           </label>
           <select
             value={selected}
             onChange={(e) => setSelected(e.target.value)}
-            className="w-full border border-[#e5e7eb] rounded-[10px] px-3 py-2 text-[14px]"
+            className="w-full border border-base-300 rounded-[10px] bg-base-100 px-3 py-2 text-[14px] text-base-content"
           >
             <option value="">Select category</option>
             {categories.map((category) => (
@@ -150,7 +150,7 @@ const AddCategoryModal = ({ open, onClose, categories, onCategoryAdded }) => {
         </div>
 
         <div className="mb-5">
-          <label className="text-[12px] text-[#98a2b3] mb-1 block">
+          <label className="text-[12px] text-base-content/60 mb-1 block">
             Limit
           </label>
           <input
@@ -158,18 +158,18 @@ const AddCategoryModal = ({ open, onClose, categories, onCategoryAdded }) => {
             value={limit}
             onChange={(e) => setLimit(e.target.value)}
             placeholder={getCurrencyPlaceholder(user?.currency)}
-            className="w-full border border-[#e5e7eb] rounded-[10px] px-3 py-2 text-[14px]"
+            className="w-full border border-base-300 rounded-[10px] bg-base-100 px-3 py-2 text-[14px] text-base-content"
           />
         </div>
 
         {error ? (
-          <p className="mb-4 text-[12px] text-[#e5484d]">{error}</p>
+          <p className="mb-4 text-[12px] text-error">{error}</p>
         ) : null}
 
         <div className="flex justify-end gap-2">
           <button
             onClick={handleClose}
-            className="px-4 py-2 text-[13px] text-[#667085]"
+            className="px-4 py-2 text-[13px] text-base-content/70"
             disabled={submitting}
           >
             Cancel
@@ -197,27 +197,27 @@ const BudgetSummary = ({ totalEarned, totalSpent, totalLimit, currency }) => {
   const remainingBudget = totalLimit - totalSpent;
 
   return (
-    <div className="rounded-[16px] border border-[#edf0f2] bg-base-100 px-10 py-7">
-      <p className="text-[11px] text-center font-medium tracking-[0.08em] text-[#98a2b3]">
+    <div className="rounded-[16px] border border-base-300 bg-base-100 px-10 py-7 text-base-content">
+      <p className="text-[11px] text-center font-medium tracking-[0.08em] text-base-content/60">
         REMAINING BALANCE
       </p>
       <h2
         className={`mt-2 text-center text-[34px] font-semibold tracking-tight ${
-          remainingBalance < 0 ? "text-[#e5484d]" : "text-[#101828]"
+          remainingBalance < 0 ? "text-error" : "text-base-content"
         }`}
       >
         {formatCurrency(remainingBalance, currency)}
       </h2>
-      <p className="mt-1 text-center text-[13px] text-[#98a2b3]">
+      <p className="mt-1 text-center text-[13px] text-base-content/65">
         out of {formatCurrency(totalEarned, currency)} income earned
       </p>
 
       <div className="mt-6">
         <div className="mb-2 flex items-center justify-between">
-          <p className="text-[11px] font-medium tracking-[0.08em] text-[#98a2b3]">
+          <p className="text-[11px] font-medium tracking-[0.08em] text-base-content/60">
             BUDGET USAGE
           </p>
-          <p className="text-[13px] text-[#667085]">
+          <p className="text-[13px] text-base-content/70">
             {formatCurrency(totalSpent, currency)} of {formatCurrency(totalLimit, currency)}
           </p>
         </div>
@@ -228,7 +228,7 @@ const BudgetSummary = ({ totalEarned, totalSpent, totalLimit, currency }) => {
         />
       </div>
 
-      <div className="mt-3 flex justify-between text-[12px] text-[#98a2b3]">
+      <div className="mt-3 flex justify-between text-[12px] text-base-content/60">
         <span>{formatCurrency(0, currency)}</span>
         <span>
           {usedPercent.toFixed(0)}% Used, Remaining from planned budget{" "}
@@ -306,25 +306,25 @@ const EditLimitModal = ({ open, onClose, category, onLimitUpdated }) => {
 
   return (
     <div className="fixed inset-0 z-50 grid place-items-center bg-black/30 p-4">
-      <div className="w-full max-w-[420px] rounded-[16px] bg-white p-6">
-        <h3 className="mb-4 text-[18px] font-semibold text-[#101828]">
+      <div className="w-full max-w-[420px] rounded-[16px] bg-base-100 p-6 text-base-content shadow-xl">
+        <h3 className="mb-4 text-[18px] font-semibold text-base-content">
           Edit Category Limit
         </h3>
 
         <div className="mb-4">
-          <label className="mb-1 block text-[12px] text-[#98a2b3]">
+          <label className="mb-1 block text-[12px] text-base-content/60">
             Category
           </label>
           <input
             type="text"
             value={category?.categoryName ?? ""}
             disabled
-            className="w-full rounded-[10px] border border-[#e5e7eb] bg-[#f9fafb] px-3 py-2 text-[14px] text-[#667085]"
+            className="w-full rounded-[10px] border border-base-300 bg-base-200 px-3 py-2 text-[14px] text-base-content/70"
           />
         </div>
 
         <div className="mb-5">
-          <label className="mb-1 block text-[12px] text-[#98a2b3]">
+          <label className="mb-1 block text-[12px] text-base-content/60">
             Limit
           </label>
           <input
@@ -332,18 +332,18 @@ const EditLimitModal = ({ open, onClose, category, onLimitUpdated }) => {
             value={limit}
             onChange={(e) => setLimit(e.target.value)}
             placeholder={getCurrencyPlaceholder(user?.currency)}
-            className="w-full rounded-[10px] border border-[#e5e7eb] px-3 py-2 text-[14px]"
+            className="w-full rounded-[10px] border border-base-300 bg-base-100 px-3 py-2 text-[14px] text-base-content"
           />
         </div>
 
         {error ? (
-          <p className="mb-4 text-[12px] text-[#e5484d]">{error}</p>
+          <p className="mb-4 text-[12px] text-error">{error}</p>
         ) : null}
 
         <div className="flex justify-end gap-2">
           <button
             onClick={handleClose}
-            className="px-4 py-2 text-[13px] text-[#667085]"
+            className="px-4 py-2 text-[13px] text-base-content/70"
             disabled={submitting}
           >
             Cancel
@@ -403,27 +403,27 @@ const DeleteLimitModal = ({ open, onClose, category, onLimitDeleted }) => {
 
   return (
     <div className="fixed inset-0 z-50 grid place-items-center bg-black/40 p-4 backdrop-blur-[2px]">
-      <div className="w-full max-w-[420px] rounded-[20px] bg-white p-6 shadow-[0_20px_60px_rgba(16,24,40,0.18)]">
-        <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-full bg-[#fff1f2] text-[#e5484d]">
+      <div className="w-full max-w-[420px] rounded-[20px] bg-base-100 p-6 text-base-content shadow-xl">
+        <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-full bg-error/10 text-error">
           !
         </div>
 
-        <h3 className="text-[20px] font-semibold text-[#101828]">
+        <h3 className="text-[20px] font-semibold text-base-content">
           Delete Limit
         </h3>
-        <p className="mt-2 text-[14px] leading-6 text-[#667085]">
+        <p className="mt-2 text-[14px] leading-6 text-base-content/70">
           Are you sure you want to delete "{category.categoryName}" limit?
         </p>
 
         {error ? (
-          <p className="mt-4 text-[12px] text-[#e5484d]">{error}</p>
+          <p className="mt-4 text-[12px] text-error">{error}</p>
         ) : null}
 
         <div className="mt-6 flex justify-end gap-3">
           <button
             type="button"
             onClick={onClose}
-            className="rounded-[12px] border border-[#d0d5dd] px-4 py-2 text-[14px] font-medium text-[#344054]"
+            className="rounded-[12px] border border-base-300 px-4 py-2 text-[14px] font-medium text-base-content"
             disabled={submitting}
           >
             No
@@ -431,7 +431,7 @@ const DeleteLimitModal = ({ open, onClose, category, onLimitDeleted }) => {
           <button
             type="button"
             onClick={handleDelete}
-            className="rounded-[12px] bg-[#e5484d] px-4 py-2 text-[14px] font-medium text-white"
+            className="rounded-[12px] bg-error px-4 py-2 text-[14px] font-medium text-error-content"
             disabled={submitting}
           >
             {submitting ? "Deleting..." : "Yes"}
@@ -468,16 +468,16 @@ const CategoryCard = ({ category, onEdit, onDelete, expenses, currency }) => {
   const paginatedItems = categoryItems.slice(pageStart, pageStart + ITEMS_PER_PAGE);
 
   return (
-    <div className="bg-white rounded-[16px] px-6 py-5 border border-[#edf0f2] mb-4">
+    <div className="bg-base-100 rounded-[16px] px-6 py-5 border border-base-300 mb-4 text-base-content">
       <div className="flex justify-between items-center">
         <div>
-          <p className="text-[15px] font-semibold text-[#101828]">{categoryName}</p>
+          <p className="text-[15px] font-semibold text-base-content">{categoryName}</p>
         </div>
 
         <div className="text-right">
           <p
             className={`text-[15px] font-semibold ${
-              over ? "text-[#e5484d]" : "text-[#101828]"
+              over ? "text-error" : "text-base-content"
             }`}
           >
             {formatCurrency(amount, currency)}
@@ -493,7 +493,7 @@ const CategoryCard = ({ category, onEdit, onDelete, expenses, currency }) => {
             <button
               type="button"
               onClick={() => onDelete(category)}
-              className="cursor-pointer text-[12px] font-medium text-[#e5484d]"
+              className="cursor-pointer text-[12px] font-medium text-error"
             >
               DELETE LIMIT
             </button>
@@ -506,14 +506,14 @@ const CategoryCard = ({ category, onEdit, onDelete, expenses, currency }) => {
       </div>
 
       <div className="flex justify-between text-[12px] mt-3">
-        <span className={over ? "text-[#e5484d]" : "text-[#98a2b3]"}>
+        <span className={over ? "text-error" : "text-base-content/60"}>
           Spent: {formatCurrency(spent, currency)}
         </span>
-        <span className="text-[#98a2b3]">Limit: {formatCurrency(limit, currency)}</span>
+        <span className="text-base-content/60">Limit: {formatCurrency(limit, currency)}</span>
       </div>
 
       {over && (
-        <p className="text-[#e5484d] text-[12px] mt-2 text-right">
+        <p className="text-error text-[12px] mt-2 text-right">
           Over budget by {formatCurrency(spent - limit, currency)}
         </p>
       )}
@@ -524,31 +524,31 @@ const CategoryCard = ({ category, onEdit, onDelete, expenses, currency }) => {
           setIsExpanded((prev) => !prev);
           setCurrentPage(1);
         }}
-        className="mt-4 w-full rounded-[10px] border border-[#e5e7eb] py-2 text-[12px] font-medium text-[#667085]"
+        className="mt-4 w-full rounded-[10px] border border-base-300 py-2 text-[12px] font-medium text-base-content/70 hover:bg-base-200"
       >
         {isExpanded ? "Hide details" : "Show details"}
       </button>
 
       {isExpanded && (
-        <div className="mt-3 rounded-[10px] border border-[#edf0f2]">
+        <div className="mt-3 rounded-[10px] border border-base-300">
           {categoryItems.length === 0 ? (
-            <p className="px-3 py-3 text-[12px] text-[#98a2b3]">
+            <p className="px-3 py-3 text-[12px] text-base-content/60">
               No expenses in this category for selected month.
             </p>
           ) : (
             <>
-              <ul className="divide-y divide-[#edf0f2]">
+              <ul className="divide-y divide-base-300">
                 {paginatedItems.map((item) => (
                   <li key={item.id} className="flex items-center justify-between px-3 py-2">
                     <div>
-                      <p className="text-[12px] font-medium text-[#101828]">
+                      <p className="text-[12px] font-medium text-base-content">
                         {item.description || item.note || item.title || "Expense"}
                       </p>
-                      <p className="text-[11px] text-[#98a2b3]">
+                      <p className="text-[11px] text-base-content/60">
                         {formatItemDate(item.date)}
                       </p>
                     </div>
-                    <p className="text-[12px] font-semibold text-[#101828]">
+                    <p className="text-[12px] font-semibold text-base-content">
                       {formatCurrency(item.amount, currency)}
                     </p>
                   </li>
@@ -556,16 +556,16 @@ const CategoryCard = ({ category, onEdit, onDelete, expenses, currency }) => {
               </ul>
 
               {pageCount > 1 && (
-                <div className="flex items-center justify-between border-t border-[#edf0f2] px-3 py-2 text-[12px]">
+                <div className="flex items-center justify-between border-t border-base-300 px-3 py-2 text-[12px]">
                   <button
                     type="button"
                     onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}
                     disabled={safeCurrentPage === 1}
-                    className="text-[#667085] disabled:opacity-40"
+                    className="text-base-content/70 disabled:opacity-40"
                   >
                     Previous
                   </button>
-                  <span className="text-[#98a2b3]">
+                  <span className="text-base-content/60">
                     Page {safeCurrentPage} of {pageCount}
                   </span>
                   <button
@@ -574,7 +574,7 @@ const CategoryCard = ({ category, onEdit, onDelete, expenses, currency }) => {
                       setCurrentPage((page) => Math.min(pageCount, page + 1))
                     }
                     disabled={safeCurrentPage === pageCount}
-                    className="text-[#667085] disabled:opacity-40"
+                    className="text-base-content/70 disabled:opacity-40"
                   >
                     Next
                   </button>
@@ -606,7 +606,7 @@ const Categories = ({
 
   return (
     <div className="mt-10">
-      <h2 className="text-[20px] font-semibold text-[#101828] mb-5 text-center">
+      <h2 className="text-[20px] font-semibold text-base-content mb-5 text-center">
         Categories
       </h2>
 
@@ -616,7 +616,7 @@ const Categories = ({
           className={`flex-1 rounded-[10px] py-3.5 text-[13px] font-medium transition ${
             active === "expenses"
               ? "bg-base-100 text-primary shadow-sm"
-              : "text-[#98a2b3]"
+              : "text-base-content/60"
           }`}
         >
           Expenses
@@ -625,11 +625,11 @@ const Categories = ({
 
       {active === "expenses" &&
         (loading ? (
-          <div className="text-center text-[#98a2b3] text-sm py-6">
+          <div className="text-center text-base-content/60 text-sm py-6">
             Loading categories...
           </div>
         ) : categories.length === 0 ? (
-          <div className="text-center text-[#98a2b3] text-sm py-6">
+          <div className="text-center text-base-content/60 text-sm py-6">
             No expenses categories yet
           </div>
         ) : (
@@ -649,7 +649,7 @@ const Categories = ({
 
       <button
         onClick={() => setOpen(true)}
-        className="w-full mt-5 py-3 border border-[#e5e7eb] rounded-[14px] text-[#667085] text-[14px] font-medium"
+        className="w-full mt-5 py-3 border border-base-300 rounded-[14px] text-base-content/70 text-[14px] font-medium hover:bg-base-100"
       >
         + Add New Category
       </button>
@@ -822,17 +822,17 @@ const BudgetingPage = () => {
             <button
               type="button"
               onClick={() => handleMonthChange(-1)}
-              className="flex h-8 w-8 items-center justify-center rounded-full border border-[#d0d5dd] bg-white text-[#344054]"
+              className="flex h-8 w-8 items-center justify-center rounded-full border border-base-300 bg-base-100 text-base-content"
             >
               {"<"}
             </button>
-            <p className="min-w-[180px] text-center text-[22px] font-medium text-[#101828]">
+            <p className="min-w-[180px] text-center text-[22px] font-medium text-base-content">
               {formatMonthLabel(selectedMonth)}
             </p>
             <button
               type="button"
               onClick={() => handleMonthChange(1)}
-              className="flex h-8 w-8 items-center justify-center rounded-full border border-[#d0d5dd] bg-white text-[#344054]"
+              className="flex h-8 w-8 items-center justify-center rounded-full border border-base-300 bg-base-100 text-base-content"
             >
               {">"}
             </button>
