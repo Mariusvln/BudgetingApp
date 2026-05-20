@@ -98,15 +98,19 @@ const MonthlyGrowth = ({ incomes = [], expenses = [], formatCurrency }) => {
         backgroundColor: tsMonthSavings.map((value) =>
           value >= 0 ? positiveBarColor : negativeBarColor,
         ),
-        borderRadius: 10,
-        maxBarThickness: 42,
+        barPercentage: 0.62,
+        categoryPercentage: 0.96,
+        borderRadius: 0,
+        maxBarThickness: 31,
       },
       {
         label: "Money saved last month",
         data: prevMonthSavings,
         backgroundColor: ["#B2BEB5"],
-        borderRadius: 10,
-        maxBarThickness: 42,
+        barPercentage: 0.62,
+        categoryPercentage: 0.96,
+        borderRadius: 0,
+        maxBarThickness: 31,
       },
     ],
   };
@@ -165,7 +169,7 @@ const MonthlyGrowth = ({ incomes = [], expenses = [], formatCurrency }) => {
           {growthPercentage}% this month
         </p>
       </div>
-      <div className="mt-4 h-36">
+      <div className="mx-auto mt-4 h-36 w-[85%]">
         <Bar data={chartData} options={chartOptions} />
       </div>
     </div>
