@@ -139,7 +139,7 @@ const ThemeSelector = () => {
         onClick={checkDropdownPosition}
       >
         <div className="min-w-0">
-          <p className="text-xs leading-none text-gray-500">Theme</p>
+          <p className="text-xs leading-none text-base-content/60">Theme</p>
           <p className="truncate text-sm font-medium">
             {selectedTheme?.label || theme}
           </p>
@@ -160,7 +160,7 @@ const ThemeSelector = () => {
         tabIndex={0}
         className="dropdown-content z-50 mt-2 max-h-80 w-[calc(100vw-2rem)] overflow-y-auto rounded-2xl border border-base-300 bg-base-100 p-2 shadow-2xl sm:w-80"
       >
-        <div className="px-3 pb-2 pt-2 text-xs uppercase tracking-wide text-gray-400">
+        <div className="px-3 pb-2 pt-2 text-xs uppercase tracking-wide text-base-content/50">
           Choose theme
         </div>
 

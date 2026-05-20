@@ -24,8 +24,8 @@ import Logout from "./components/Logout";
 
 function App() {
   return (
-    <ThemeProvider>
-      <AuthProvider>
+    <AuthProvider>
+      <ThemeProvider>
         <AppAlertProvider>
           <Routes>
             <Route element={<PublicOnlyRoute />}>
@@ -50,8 +50,8 @@ function App() {
             </Route>
           </Routes>
         </AppAlertProvider>
-      </AuthProvider>
-    </ThemeProvider>
+      </ThemeProvider>
+    </AuthProvider>
   );
 }
 

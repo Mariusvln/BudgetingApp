@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 
-const PAGE_SIZE = 50;
+const PAGE_SIZE = 20;
 
 const AdminEvents = () => {
   const [events, setEvents] = useState([]);
