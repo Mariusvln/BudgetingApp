@@ -41,7 +41,7 @@ public class IncomeController {
     }
 
     @PutMapping("/")
-    public RegisterResponse updateIncome(@Valid @RequestBody Income updated, Authentication authentication) {
+    public RegisterResponse updateIncome(@Valid @RequestBody IncomeRequest updated, Authentication authentication) {
         incomes.updateIncome(authentication.getName(), updated);
         return new RegisterResponse("OK");
     }

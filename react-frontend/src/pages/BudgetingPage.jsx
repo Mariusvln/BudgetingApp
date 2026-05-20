@@ -48,8 +48,6 @@ const ProgressBar = ({ value, limit, over }) => {
   const [animatedPercent, setAnimatedPercent] = useState(0);
 
     useEffect(() => {
-      setAnimatedPercent(0);
-
       const frame = requestAnimationFrame(() => {
         setAnimatedPercent(percent);
       });
@@ -334,7 +332,6 @@ const EditLimitModal = ({ open, onClose, category, onLimitUpdated }) => {
             value={limit}
             onChange={(e) => setLimit(e.target.value)}
             placeholder={getCurrencyPlaceholder(user?.currency)}
-            placeholder="Enter new limit"
             className="w-full rounded-[10px] border border-[#e5e7eb] px-3 py-2 text-[14px]"
           />
         </div>
@@ -797,8 +794,8 @@ const BudgetingPage = () => {
     (category) => category.type === "EXPENSE",
   );
 
-  const totalSpent = expenseCategories.reduce(
-    (sum, category) => sum + category.spent,
+  const totalSpent = visibleExpenses.reduce(
+    (sum, expense) => sum + (Number(expense.amount) || 0),
     0,
   );
 

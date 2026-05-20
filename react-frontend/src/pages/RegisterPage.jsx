@@ -38,7 +38,7 @@ const RegisterPage = () => {
   const {
     register,
     handleSubmit,
-    watch,
+    getValues,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -179,7 +179,7 @@ const RegisterPage = () => {
                   {...register("repeatPassword", {
                     required: "Please repeat password",
                     validate: (value) => {
-                      if (value !== watch("password")) {
+                      if (value !== getValues("password")) {
                         return "Passwords do not match";
                       }
                     },
