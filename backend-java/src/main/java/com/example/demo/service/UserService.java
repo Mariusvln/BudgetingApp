@@ -5,6 +5,7 @@ import com.example.demo.entity.User;
 import com.example.demo.exception.EmailAlreadyUsedException;
 import com.example.demo.exception.InvalidCredentialsException;
 import com.example.demo.exception.UserNotFoundException;
+import com.example.demo.repository.CategoryLimitRepository;
 import com.example.demo.repository.ExpenseRepository;
 import com.example.demo.repository.IncomeRepository;
 import com.example.demo.repository.UserRepository;
@@ -22,6 +23,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final IncomeRepository incomeRepository;
     private final ExpenseRepository expenseRepository;
+    private final CategoryLimitRepository categoryLimitRepository;
     private final PasswordEncoder encoder;
     private final UserActivityService activityService;
 
@@ -180,6 +182,7 @@ public class UserService {
                 "User deleted own account"
         );
 
+        categoryLimitRepository.deleteByUser(user);
         expenseRepository.deleteByUser(user);
         incomeRepository.deleteByUser(user);
 

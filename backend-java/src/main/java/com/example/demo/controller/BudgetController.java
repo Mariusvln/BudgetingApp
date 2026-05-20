@@ -6,6 +6,7 @@ import com.example.demo.dto.RegisterResponse;
 import com.example.demo.entity.CategoryLimit;
 import com.example.demo.service.CategoryLimitService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
@@ -67,6 +68,7 @@ public class BudgetController {
 //    }
 
     @GetMapping("/fetchAllCategoryLimits")
+    @PreAuthorize("hasRole('ADMIN')")
     public List<CategoryLimitResponse> getAllCategoryLimits() {
         List<CategoryLimit> categoryLimitList = categoryLimitService.showAllCategoryLimits();
 

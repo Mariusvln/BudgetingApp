@@ -8,7 +8,11 @@ import com.example.demo.entity.Role;
 import com.example.demo.entity.User;
 import com.example.demo.exception.EmailAlreadyUsedException;
 import com.example.demo.exception.ForbiddenResourceAccessException;
+import com.example.demo.repository.CategoryLimitRepository;
+import com.example.demo.repository.ExpenseRepository;
+import com.example.demo.repository.IncomeRepository;
 import com.example.demo.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -20,11 +24,22 @@ public class AdminService {
     private static final String DEFAULT_ADMIN_EMAIL = "admin@gmail.com";
 
     private final UserRepository userRepository;
+    private final IncomeRepository incomeRepository;
+    private final ExpenseRepository expenseRepository;
+    private final CategoryLimitRepository categoryLimitRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserActivityService activityService;
 
-    public AdminService(UserRepository userRepository, PasswordEncoder passwordEncoder, UserActivityService activityService){
+    public AdminService(UserRepository userRepository,
+                        IncomeRepository incomeRepository,
+                        ExpenseRepository expenseRepository,
+                        CategoryLimitRepository categoryLimitRepository,
+                        PasswordEncoder passwordEncoder,
+                        UserActivityService activityService){
         this.userRepository = userRepository;
+        this.incomeRepository = incomeRepository;
+        this.expenseRepository = expenseRepository;
+        this.categoryLimitRepository = categoryLimitRepository;
         this.passwordEncoder = passwordEncoder;
         this.activityService = activityService;
     }
@@ -57,32 +72,58 @@ public class AdminService {
         return toResponse(savedUser);
     }
 
+    @Transactional
     public void deleteUser(Long id){
-        userRepository.deleteById(id);
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+        if (DEFAULT_ADMIN_EMAIL.equalsIgnoreCase(user.getEmail())) {
+            throw new ForbiddenResourceAccessException("Default admin cannot be deleted");
+        }
+
+        activityService.log(
+                user.getName() != null ? user.getName() : user.getEmail(),
+                user.getEmail(),
+                "Admin deleted user"
+        );
+        categoryLimitRepository.deleteByUser(user);
+        expenseRepository.deleteByUser(user);
+        incomeRepository.deleteByUser(user);
+        userRepository.delete(user);
     }
- public UserResponse updateUser(Long id, UserRequest userRequest) {
-     User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found with id: " + id));
-     Role requestedRole = userRequest.getRole() == null ? user.getRole() : parseRole(userRequest.getRole());
-     boolean isDefaultAdmin = DEFAULT_ADMIN_EMAIL.equalsIgnoreCase(user.getEmail());
 
-     if (isDefaultAdmin && requestedRole != Role.ROLE_ADMIN) {
-         throw new ForbiddenResourceAccessException("Default admin role cannot be changed");
-     }
+    public UserResponse updateUser(Long id, UserRequest userRequest) {
+        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+        Role requestedRole = userRequest.getRole() == null ? user.getRole() : parseRole(userRequest.getRole());
+        boolean isDefaultAdmin = DEFAULT_ADMIN_EMAIL.equalsIgnoreCase(user.getEmail());
+        String requestedEmail = userRequest.getEmail().trim();
 
-     if (isDefaultAdmin && !DEFAULT_ADMIN_EMAIL.equalsIgnoreCase(userRequest.getEmail())) {
-         throw new ForbiddenResourceAccessException("Default admin email cannot be changed");
-     }
+        if (isDefaultAdmin && requestedRole != Role.ROLE_ADMIN) {
+            throw new ForbiddenResourceAccessException("Default admin role cannot be changed");
+        }
 
-     user.setName(userRequest.getName());
-     user.setEmail(userRequest.getEmail());
-     if (userRequest.getRole() != null) {
-         user.setRole(requestedRole);
-     }
-     User savedUser = userRepository.save(user);
+        if (isDefaultAdmin && !DEFAULT_ADMIN_EMAIL.equalsIgnoreCase(requestedEmail)) {
+            throw new ForbiddenResourceAccessException("Default admin email cannot be changed");
+        }
 
-    return toResponse(savedUser);
+        if (!requestedEmail.equalsIgnoreCase(user.getEmail()) && userRepository.existsByEmail(requestedEmail)) {
+            throw new EmailAlreadyUsedException();
+        }
 
-}
+        user.setName(userRequest.getName().trim());
+        user.setEmail(requestedEmail);
+        if (userRequest.getRole() != null) {
+            user.setRole(requestedRole);
+        }
+        User savedUser = userRepository.save(user);
+
+        activityService.log(
+                savedUser.getName(),
+                savedUser.getEmail(),
+                "Admin updated user"
+        );
+
+        return toResponse(savedUser);
+    }
 
     private UserResponse toResponse(User user) {
         return new UserResponse(

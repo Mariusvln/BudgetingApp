@@ -1,7 +1,9 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.CategoryLimitRequest;
+import com.example.demo.entity.Category;
 import com.example.demo.entity.CategoryLimit;
+import com.example.demo.entity.Type;
 import com.example.demo.entity.User;
 import com.example.demo.exception.ForbiddenResourceAccessException;
 import com.example.demo.exception.InvalidCategoryException;
@@ -24,12 +26,14 @@ public class CategoryLimitService {
     private final CategoryRepository categoryRepository;
 
     private final CategoryLimitRepository categoryLimitRepository;
+    private final UserActivityService activityService;
 
     public CategoryLimit fromDTO(CategoryLimitRequest dto, User user) {
         CategoryLimit categoryLimit = new CategoryLimit();
         categoryLimit.setUser(user);
-        categoryLimit.setCategory(categoryRepository.findById(dto.getCategory())
-                .orElseThrow(() -> new InvalidCategoryException("Category not found: " + dto.getCategory())));
+        Category category = categoryRepository.findById(dto.getCategory())
+                .orElseThrow(() -> new InvalidCategoryException("Category not found: " + dto.getCategory()));
+        categoryLimit.setCategory(category);
         categoryLimit.setMaxLimit(dto.getMaxLimit());
 
         return categoryLimit;
@@ -37,8 +41,18 @@ public class CategoryLimitService {
 
     public CategoryLimit addCategoryLimit(String email, CategoryLimitRequest request) {
         User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
+        Category category = categoryRepository.findById(request.getCategory())
+                .orElseThrow(() -> new InvalidCategoryException("Category not found: " + request.getCategory()));
+        if (category.getType() != Type.EXPENSE) {
+            throw new InvalidCategoryException("Budget limit must use an EXPENSE category");
+        }
+        categoryLimitRepository.findByUserAndCategory(user, category).ifPresent(existing -> {
+            throw new InvalidCategoryException("Budget limit already exists for category: " + category.getName());
+        });
         CategoryLimit categoryLimit = fromDTO(request, user);
-        return categoryLimitRepository.save(categoryLimit);
+        CategoryLimit saved = categoryLimitRepository.save(categoryLimit);
+        log(user, "Created budget limit for " + saved.getCategory().getName() + ": " + saved.getMaxLimit());
+        return saved;
     }
 
     public CategoryLimit updateCategoryLimit(String email, Long id, CategoryLimitRequest request) {
@@ -52,7 +66,9 @@ public class CategoryLimitService {
         }
 
         existing.setMaxLimit(request.getMaxLimit());
-        return categoryLimitRepository.save(existing);
+        CategoryLimit saved = categoryLimitRepository.save(existing);
+        log(user, "Updated budget limit for " + saved.getCategory().getName() + ": " + saved.getMaxLimit());
+        return saved;
     }
 
     public void deleteCategoryLimit(String email, Long id) {
@@ -66,6 +82,7 @@ public class CategoryLimitService {
         }
 
         categoryLimitRepository.delete(existing);
+        log(user, "Deleted budget limit for " + existing.getCategory().getName());
     }
 
     public List<CategoryLimit> showAllCategoryLimits(){
@@ -79,6 +96,14 @@ public class CategoryLimitService {
 
 //        BigDecimal total = expenses.stream().map(Expense::getAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
         return listOfCategoryLimits;
+    }
+
+    private void log(User user, String action) {
+        activityService.log(
+                user.getName() != null ? user.getName() : user.getEmail(),
+                user.getEmail(),
+                action
+        );
     }
 
 //    public List<CategoryLimit> fetchAllGivenCategorieLimitsFromDateStartToDateEnd(LocalDate dateStart, LocalDate dateEnd){

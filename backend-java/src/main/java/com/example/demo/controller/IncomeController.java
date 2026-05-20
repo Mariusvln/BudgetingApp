@@ -8,6 +8,7 @@ import com.example.demo.service.IncomeService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -62,6 +63,7 @@ public class IncomeController {
     }
 
     @GetMapping("/showAllIncomes")
+    @PreAuthorize("hasRole('ADMIN')")
     public List<IncomeResponse> showAllIncomes() {
         List<Income> resultIncomes = incomes.showAllIncomes();
 
@@ -70,6 +72,7 @@ public class IncomeController {
 
 
     @GetMapping("/allFromDateStartToDateFinish")
+    @PreAuthorize("hasRole('ADMIN')")
     public List<Income> fetchIncomesFromDateStartToDateFinish(@RequestParam LocalDate dateStart, @RequestParam LocalDate dateEnd) {
         List<Income> total = incomes.fetchAllGivenIncomesFromDateStartToDateEnd(dateStart, dateEnd);
 
@@ -116,10 +119,12 @@ public class IncomeController {
 
         for (Income i : incomesList) {
             writer.println(
-                    i.getDate() + "," +
-                            getCategoryName(categoryNames, i.getCategory()) + "," +
-                            i.getAmount() + "," +
+                    toCsvRow(
+                            i.getDate().toString(),
+                            getCategoryName(categoryNames, i.getCategory()),
+                            i.getAmount().toPlainString(),
                             i.getDescription()
+                    )
             );
         }
 
@@ -163,6 +168,20 @@ public class IncomeController {
 
     private String getCategoryName(Map<Integer, String> categoryNames, int categoryId) {
         return categoryNames.getOrDefault(categoryId, "Category #" + categoryId);
+    }
+
+    private String toCsvRow(String... values) {
+        return java.util.Arrays.stream(values)
+                .map(this::escapeCsv)
+                .collect(Collectors.joining(","));
+    }
+
+    private String escapeCsv(String value) {
+        String safeValue = value == null ? "" : value;
+        if (safeValue.contains(",") || safeValue.contains("\"") || safeValue.contains("\n") || safeValue.contains("\r")) {
+            return "\"" + safeValue.replace("\"", "\"\"") + "\"";
+        }
+        return safeValue;
     }
 
 }

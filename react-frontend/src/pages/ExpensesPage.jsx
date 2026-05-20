@@ -105,6 +105,10 @@ function ExpensesPage() {
   }, [categoryMap, searchQuery, selectedCategory, transactions]);
 
   const hasActiveFilters = searchQuery.trim() || selectedCategory !== "ALL";
+  const filteredTotal = filteredTransactions.reduce(
+    (sum, transaction) => sum + (Number(transaction.amount) || 0),
+    0,
+  );
 
   return (
     <div className="transactions-page flex min-h-screen bg-base-200 md:ml-64">
@@ -231,6 +235,7 @@ function ExpensesPage() {
               setSearchQuery={setSearchQuery}
               setSelectedCategory={setSelectedCategory}
               totalCount={transactions.length}
+              totalAmount={filteredTotal}
             />
 
             <div className="mt-4 hidden lg:block">

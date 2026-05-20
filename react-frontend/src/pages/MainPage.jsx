@@ -81,20 +81,22 @@ const MainPage = () => {
     }, [fetchDashboardData]);
 
     const dashboardTotals = useMemo(() => {
-      const totalIncome = incomeItems.reduce(
+      const monthlyIncomeItems = incomeItems.filter(
+        (income) => income.date >= dateStart && income.date <= dateEnd,
+      );
+      const monthlyExpenseItems = expenseItems.filter(
+        (expense) => expense.date >= dateStart && expense.date <= dateEnd,
+      );
+      const totalIncome = monthlyIncomeItems.reduce(
         (sum, item) => sum + (Number(item.amount) || 0),
         0,
       );
-      const totalExpenses = expenseItems.reduce(
+      const totalExpenses = monthlyExpenseItems.reduce(
         (sum, item) => sum + (Number(item.amount) || 0),
         0,
       );
-      const monthlySpending = expenseItems
-        .filter((expense) => expense.date >= dateStart && expense.date <= dateEnd)
-        .reduce((sum, expense) => sum + (Number(expense.amount) || 0), 0);
-      const monthlyIncome = incomeItems
-        .filter((income) => income.date >= dateStart && income.date <= dateEnd)
-        .reduce((sum, income) => sum + (Number(income.amount) || 0), 0);
+      const monthlySpending = totalExpenses;
+      const monthlyIncome = totalIncome;
       const balance = totalIncome - totalExpenses;
       const monthlySavings = monthlyIncome - monthlySpending;
       const savingsRatio =
@@ -102,7 +104,7 @@ const MainPage = () => {
       const expensesRatio =
         totalIncome > 0 ? Math.min((totalExpenses / totalIncome) * 100, 100) : 0;
       const incomeProgress = totalIncome > 0 ? 100 : 0;
-      const expenseTotalsByCategory = expenseItems.reduce((totals, expense) => {
+      const expenseTotalsByCategory = monthlyExpenseItems.reduce((totals, expense) => {
         const categoryId = Number(expense.category);
         totals[categoryId] = (totals[categoryId] || 0) + (Number(expense.amount) || 0);
         return totals;

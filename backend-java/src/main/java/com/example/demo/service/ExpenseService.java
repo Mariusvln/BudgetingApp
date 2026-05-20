@@ -1,13 +1,17 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.ExpenseRequest;
+import com.example.demo.entity.Category;
 import com.example.demo.entity.Expense;
+import com.example.demo.entity.Type;
 import com.example.demo.entity.User;
 import com.example.demo.exception.ForbiddenResourceAccessException;
+import com.example.demo.exception.InvalidCategoryException;
 import com.example.demo.exception.InvalidDateRangeException;
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.exception.TransactionLimitExceededException;
 import com.example.demo.exception.UserNotFoundException;
+import com.example.demo.repository.CategoryRepository;
 import com.example.demo.repository.ExpenseRepository;
 import com.example.demo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,12 +31,17 @@ public class ExpenseService {
 
     private final ExpenseRepository expenseRepository;
     private final UserRepository userRepository;
+    private final CategoryRepository categoryRepository;
+    private final UserActivityService activityService;
 
     public Expense addExpense(String email, ExpenseRequest request) {
         User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
+        Category category = validateExpenseCategory(request.getCategory());
         validateTotalLimit(user, null, request.getAmount());
         Expense expense = fromDTO(request, user);
-        return expenseRepository.save(expense);
+        Expense saved = expenseRepository.save(expense);
+        log(user, "Created expense " + saved.getDescription() + " in " + category.getName() + ": " + saved.getAmount());
+        return saved;
     }
 
     public Expense fromDTO(ExpenseRequest dto, User user) {
@@ -60,6 +69,7 @@ public class ExpenseService {
             throw new ForbiddenResourceAccessException("Expense does not belong to user");
         }
 
+        Category category = validateExpenseCategory(updated.getCategory());
         validateTotalLimit(user, existing, updated.getAmount());
 
         existing.setDescription(updated.getDescription());
@@ -68,7 +78,9 @@ public class ExpenseService {
         existing.setCategory(updated.getCategory());
         existing.setProcessType(updated.getProcessType());
 
-        return expenseRepository.save(existing);
+        Expense saved = expenseRepository.save(existing);
+        log(user, "Updated expense " + saved.getDescription() + " in " + category.getName() + ": " + saved.getAmount());
+        return saved;
 }
 
     private void validateTotalLimit(User user, Expense existingExpense, BigDecimal newAmount) {
@@ -97,6 +109,7 @@ public class ExpenseService {
         }
 
         expenseRepository.delete(existing);
+        log(user, "Deleted expense " + existing.getDescription() + ": " + existing.getAmount());
     }
 
     public BigDecimal fetchAllGivenExpenses(){
@@ -155,11 +168,28 @@ public class ExpenseService {
         return total;
     }
 
-    public List<Expense> fetchExpensesBySearch(String searchTitle){
-        return showAllExpenses().stream()
+    public List<Expense> fetchExpensesBySearch(String email, String searchTitle){
+        User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
+        return expenseRepository.findByUser(user).stream()
                 .filter(e -> e.getDescription().toLowerCase().contains(searchTitle.toLowerCase()))
                 .collect(Collectors.toList());
     }
 
+    private Category validateExpenseCategory(Integer categoryId) {
+        Category category = categoryRepository.findById(Long.valueOf(categoryId))
+                .orElseThrow(() -> new InvalidCategoryException("Category not found: " + categoryId));
+        if (category.getType() != Type.EXPENSE) {
+            throw new InvalidCategoryException("Expense must use an EXPENSE category");
+        }
+        return category;
+    }
+
+    private void log(User user, String action) {
+        activityService.log(
+                user.getName() != null ? user.getName() : user.getEmail(),
+                user.getEmail(),
+                action
+        );
+    }
 
 }
