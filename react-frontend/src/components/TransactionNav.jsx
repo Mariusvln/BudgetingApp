@@ -6,6 +6,7 @@ import adminIcon from "../assets/images/icons/admin.png";
 import expenseIcon from "../assets/images/icons/expense.png";
 import transactionIcon from "../assets/images/icons/transaction-icon.svg";
 import analyticsIcon from "../assets/images/icons/analytics-icon.svg";
+import homeIcon from "../assets/images/icons/home-icon.svg";
 import incomeIcon from "../assets/images/icons/rent-icon.svg";
 import userIcon from "../assets/images/icons/user-icon.svg";
 
@@ -61,6 +62,11 @@ function TransactionNav() {
   const currentThemeStyles = themeStyles[theme] ?? themeStyles.light;
 
   const navItems = [
+    {
+      label: "Main",
+      href: "/main",
+      icon: homeIcon,
+    },
     {
       label: "Budgeting",
       href: "/budgeting",

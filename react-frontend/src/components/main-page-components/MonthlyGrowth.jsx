@@ -57,7 +57,7 @@ const MonthlyGrowth = ({ incomes = [], expenses = [], formatCurrency }) => {
 
       const rangeIncomes = incomes.filter(isInRange).reduce((sum, item) => sum + (Number(item.amount) || 0), 0);
       const rangeExpenses = expenses.filter(isInRange).reduce((sum, item) => sum + (Number(item.amount) || 0), 0);
-      return Math.max(0, rangeIncomes - rangeExpenses);
+      return rangeIncomes - rangeExpenses;
     });
   };
   return {
@@ -68,17 +68,21 @@ const MonthlyGrowth = ({ incomes = [], expenses = [], formatCurrency }) => {
 
   const totalSavings = tsMonthSavings.reduce((sum, value) => sum + value, 0);
   const previousTotal = prevMonthSavings.reduce((sum, value) => sum + value, 0);
-  const previousAverage = previousTotal / Math.max(prevMonthSavings.length, 1);
   const growthPercentage =
-    previousAverage > 0
+    previousTotal !== 0
       ? Math.round(
-          ((totalSavings - previousTotal) / previousTotal) * 100,
+          ((totalSavings - previousTotal) / Math.abs(previousTotal)) * 100,
         )
       : totalSavings > 0
         ? 100
+        : totalSavings < 0
+          ? -100
         : 0;
   const growthPrefix = growthPercentage > 0 ? "+" : "";
   const growthTone = growthPercentage >= 0 ? "text-success" : "text-error";
+  const totalTone = totalSavings >= 0 ? "text-base-content" : "text-error";
+  const positiveBarColor = "#22c55e";
+  const negativeBarColor = "#ef4444";
 
   const daysInThisMonth = () => {
   const now = new Date();
@@ -91,7 +95,9 @@ const MonthlyGrowth = ({ incomes = [], expenses = [], formatCurrency }) => {
       {
         label: "Money saved this month",
         data: tsMonthSavings,
-        backgroundColor: ["#22c55e"],
+        backgroundColor: tsMonthSavings.map((value) =>
+          value >= 0 ? positiveBarColor : negativeBarColor,
+        ),
         borderRadius: 10,
         maxBarThickness: 42,
       },
@@ -146,7 +152,7 @@ const MonthlyGrowth = ({ incomes = [], expenses = [], formatCurrency }) => {
         <p className="text-sm font-bold text-base-content/60">Monthly Growth</p>
         <p className="font-bold text-base-content/35">...</p>
       </div>
-      <h3 className="mt-2 text-3xl font-extrabold tracking-tight text-base-content">
+      <h3 className={`mt-2 text-3xl font-extrabold tracking-tight ${totalTone}`}>
         {formatCurrency
           ? formatCurrency(totalSavings)
           : `EUR ${totalSavings.toLocaleString("en-US", { minimumFractionDigits: 2 })}`}
