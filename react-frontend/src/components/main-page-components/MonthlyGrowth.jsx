@@ -2,7 +2,6 @@ import profitIcon from "../../assets/images/icons/profit-icon.svg";
 import lossIcon from "../../assets/images/icons/loss-icon.svg"
 import { Chart as ChartJS } from "chart.js/auto";
 import { Bar } from "react-chartjs-2";
-import { useMemo } from "react";
 
 const MonthlyGrowth = ({ incomes = [], expenses = [], formatCurrency }) => {
   const today = new Date();
@@ -41,8 +40,7 @@ const MonthlyGrowth = ({ incomes = [], expenses = [], formatCurrency }) => {
     return result;
   };
 
-  const {tsMonthSavings, prevMonthSavings} = useMemo(() => {
-    const calculateSavings = (dateRanges) => {
+  const calculateSavings = (dateRanges) => {
     return dateRanges.map((dayRange) => {
       const isInRange = (item) => {
         const itemDay = new Date(item.date);
@@ -60,11 +58,9 @@ const MonthlyGrowth = ({ incomes = [], expenses = [], formatCurrency }) => {
       return rangeIncomes - rangeExpenses;
     });
   };
-  return {
-    tsMonthSavings: calculateSavings(getTsMonthDays()),
-    prevMonthSavings: calculateSavings(getPrevMonthDays())
-  }
-  }, [incomes, expenses]);
+
+  const tsMonthSavings = calculateSavings(getTsMonthDays());
+  const prevMonthSavings = calculateSavings(getPrevMonthDays());
 
   const totalSavings = tsMonthSavings.reduce((sum, value) => sum + value, 0);
   const previousTotal = prevMonthSavings.reduce((sum, value) => sum + value, 0);

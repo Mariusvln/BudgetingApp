@@ -248,7 +248,7 @@ const AdminUsers = () => {
 
   const getRoleBadgeClass = (role) => {
     if (role === "ADMIN" || role === "ROLE_ADMIN") {
-      return "bg-red-100 text-red-700 border-none";
+      return "bg-error/15 text-error border-none";
     }
 
     return "bg-primary/15 text-primary border-none";
@@ -262,7 +262,7 @@ const AdminUsers = () => {
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
               <div>
               <h2 className="text-xl font-semibold">User Directory</h2>
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-base-content/60">
                 {loading ? "Loading..." : `Showing ${filteredUsers.length} users`}
               </p>
               </div>
@@ -279,7 +279,7 @@ const AdminUsers = () => {
             <input
               type="text"
               placeholder="Search name, email, role..."
-              className="input w-full rounded-xl border-none bg-[#F2F3FF] md:w-80"
+              className="input input-bordered w-full rounded-xl border-base-300 bg-base-200 text-base-content placeholder:text-base-content/45 md:w-80"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               autoComplete="off"
@@ -289,7 +289,7 @@ const AdminUsers = () => {
 
           <div className="overflow-x-auto">
             <table className="table min-w-190">
-              <thead className="text-sm text-gray-500">
+              <thead className="text-sm text-base-content/60">
                 <tr>
                   <th>ID</th>
                   <th>Name</th>
@@ -327,7 +327,7 @@ const AdminUsers = () => {
                           <button
                             onClick={() => openEditModal(user)}
                             disabled={actionLoadingId === user.id}
-                            className="inline-flex items-center gap-2 rounded-xl border border-blue-200 bg-blue-50 px-3 py-2 text-sm font-medium text-blue-700 hover:bg-blue-100 disabled:opacity-50"
+                            className="inline-flex items-center gap-2 rounded-xl border border-info/25 bg-info/10 px-3 py-2 text-sm font-medium text-info hover:bg-info/20 disabled:opacity-50"
                           >
                             ✏️ Edit
                           </button>
@@ -335,7 +335,7 @@ const AdminUsers = () => {
                           <button
                             onClick={() => handleDeleteUser(user)}
                             disabled={actionLoadingId === user.id}
-                            className="inline-flex items-center gap-2 rounded-xl bg-red-600 px-3 py-2 text-sm font-medium text-white hover:bg-red-700 disabled:opacity-50"
+                            className="inline-flex items-center gap-2 rounded-xl bg-error px-3 py-2 text-sm font-medium text-error-content hover:bg-error/90 disabled:opacity-50"
                           >
                             {actionLoadingId === user.id
                               ? "Deleting..."
@@ -347,7 +347,7 @@ const AdminUsers = () => {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="5" className="py-8 text-center text-gray-400">
+                    <td colSpan="5" className="py-8 text-center text-base-content/50">
                       No users found
                     </td>
                   </tr>
@@ -360,7 +360,7 @@ const AdminUsers = () => {
 
       {isCreateModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
-          <div className="w-full max-w-md rounded-2xl bg-white p-5 shadow-lg sm:p-6">
+          <div className="w-full max-w-md rounded-2xl bg-base-100 p-5 text-base-content shadow-lg sm:p-6">
             <h3 className="mb-4 text-lg font-semibold">Create User</h3>
 
             <div className="space-y-4">
@@ -408,14 +408,14 @@ const AdminUsers = () => {
             </div>
 
             {createError && (
-              <p className="mt-4 text-sm font-medium text-red-600">
+              <p className="mt-4 text-sm font-medium text-error">
                 {createError}
               </p>
             )}
 
             <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
               <button
-                className="btn rounded-xl bg-black text-white hover:bg-black/80"
+                className="btn rounded-xl"
                 onClick={closeCreateModal}
                 disabled={actionLoadingId === "create-user"}
               >
@@ -436,7 +436,7 @@ const AdminUsers = () => {
 
       {editingUser && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
-          <div className="w-full max-w-md rounded-2xl bg-white p-5 shadow-lg sm:p-6">
+          <div className="w-full max-w-md rounded-2xl bg-base-100 p-5 text-base-content shadow-lg sm:p-6">
             <h3 className="mb-4 text-lg font-semibold">Edit User</h3>
 
             <div className="space-y-4">
@@ -473,7 +473,7 @@ const AdminUsers = () => {
                   <option value="ROLE_ADMIN">ADMIN</option>
                 </select>
                 {editingUser.email?.toLowerCase() === DEFAULT_ADMIN_EMAIL && (
-                  <p className="mt-2 text-sm text-gray-500">
+                  <p className="mt-2 text-sm text-base-content/60">
                     Default admin role cannot be changed.
                   </p>
                 )}

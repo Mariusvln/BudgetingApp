@@ -60,7 +60,7 @@ public class ExpenseService {
 //        Expense expense = fromDTO(givenExpenseRequest);
 //        return expenseRepository.save(expense);
 //    }
-    public Expense updateExpense(String email, Expense updated) {
+    public Expense updateExpense(String email, ExpenseRequest updated) {
         User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
         Expense existing = expenseRepository.findById(updated.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Expense", updated.getId()));

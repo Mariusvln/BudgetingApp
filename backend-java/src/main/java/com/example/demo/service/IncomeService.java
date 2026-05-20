@@ -60,7 +60,7 @@ public class IncomeService {
         return income;
     }
 
-    public Income updateIncome(String email, Income updated) {
+    public Income updateIncome(String email, IncomeRequest updated) {
         User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
         Income existing = incomeRepository.findById(updated.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Income", updated.getId()));

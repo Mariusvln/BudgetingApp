@@ -134,11 +134,13 @@ function TransactionNav() {
     <>
       <aside className="fixed left-0 top-0 z-40 hidden h-screen w-64 flex-col border-r border-base-300 bg-base-100 lg:flex">
         <div className="border-b border-base-200 px-6 py-6">
-          <h1
-            className={`bg-linear-to-r ${currentThemeStyles.logo} bg-clip-text text-3xl font-bold text-transparent`}
-          >
-            FinVue
-          </h1>
+          <a href="/main" className="inline-block">
+            <h1
+              className={`bg-linear-to-r ${currentThemeStyles.logo} bg-clip-text text-3xl font-bold text-transparent`}
+            >
+              FinVue
+            </h1>
+          </a>
 
           <p className="mt-1 text-sm text-base-content/50">
             Finance dashboard

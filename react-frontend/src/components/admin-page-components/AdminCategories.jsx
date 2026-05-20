@@ -123,23 +123,23 @@ const AdminCategories = () => {
       <div className="card rounded-2xl bg-base-100 p-5 shadow-sm sm:p-6 lg:col-span-1">
         <h2 className="mb-4 text-xl font-bold sm:text-2xl">Add Category</h2>
 
-        <label className="mb-2 block text-sm uppercase text-[#64748B]">
+        <label className="mb-2 block text-sm uppercase text-base-content/60">
           Category name
         </label>
 
         <input
-          className="input input-bordered mb-3 w-full rounded-xl border-none bg-[#F2F3FF]"
+          className="input input-bordered mb-3 w-full rounded-xl border-base-300 bg-base-200 text-base-content placeholder:text-base-content/45"
           placeholder="Category name"
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
 
-        <label className="mb-2 block text-sm uppercase text-[#64748B]">
+        <label className="mb-2 block text-sm uppercase text-base-content/60">
           Type
         </label>
 
         <select
-          className="select select-bordered mb-3 w-full rounded-xl border-none bg-[#F2F3FF]"
+          className="select select-bordered mb-3 w-full rounded-xl border-base-300 bg-base-200 text-base-content"
           value={type}
           onChange={(e) => setType(e.target.value)}
         >
@@ -159,7 +159,7 @@ const AdminCategories = () => {
         <div className="mb-6 flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
           <div>
             <h2 className="text-xl font-bold sm:text-2xl">Categories List</h2>
-            <p className="mt-1 text-sm text-gray-500">
+            <p className="mt-1 text-sm text-base-content/60">
               Showing {filteredCategories.length} categories
             </p>
           </div>
@@ -168,7 +168,7 @@ const AdminCategories = () => {
             <input
               type="text"
               placeholder="Search categories..."
-              className="input w-full rounded-xl border-none bg-[#F2F3FF] sm:w-64"
+              className="input input-bordered w-full rounded-xl border-base-300 bg-base-200 text-base-content placeholder:text-base-content/45 sm:w-64"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
@@ -179,7 +179,7 @@ const AdminCategories = () => {
                 className={`btn btn-sm rounded-xl border-none px-3 sm:px-4 ${
                   filterType === "INCOME"
                     ? "bg-primary text-primary-content"
-                    : "bg-transparent text-slate-600 hover:bg-base-100"
+                    : "bg-transparent text-base-content/65 hover:bg-base-100"
                 }`}
               >
                 Income
@@ -190,7 +190,7 @@ const AdminCategories = () => {
                 className={`btn btn-sm rounded-xl border-none px-3 sm:px-4 ${
                   filterType === "EXPENSE"
                     ? "bg-primary text-primary-content"
-                    : "bg-transparent text-slate-600 hover:bg-base-100"
+                    : "bg-transparent text-base-content/65 hover:bg-base-100"
                 }`}
               >
                 Expense
@@ -201,7 +201,7 @@ const AdminCategories = () => {
                 className={`btn btn-sm rounded-xl border-none px-3 sm:px-4 ${
                   filterType === "ALL"
                     ? "bg-primary text-primary-content"
-                    : "bg-transparent text-slate-600 hover:bg-base-100"
+                    : "bg-transparent text-base-content/65 hover:bg-base-100"
                 }`}
               >
                 All
@@ -210,7 +210,7 @@ const AdminCategories = () => {
           </div>
         </div>
 
-        <div className="hidden px-3 py-2 text-sm font-semibold uppercase text-gray-500 sm:flex">
+        <div className="hidden px-3 py-2 text-sm font-semibold uppercase text-base-content/60 sm:flex">
           <div className="w-1/3">Name</div>
           <div className="w-1/3 text-center">Type</div>
           <div className="w-1/3 text-right">Actions</div>
@@ -229,7 +229,7 @@ const AdminCategories = () => {
                   className={`badge border-none px-3 py-3 ${
                     cat.type === "INCOME"
                       ? "bg-primary/15 text-primary"
-                      : "bg-red-100 text-red-700"
+                      : "bg-error/15 text-error"
                   }`}
                 >
                   {cat.type === "INCOME" ? "Income" : "Expense"}
@@ -238,14 +238,14 @@ const AdminCategories = () => {
 
               <div className="flex gap-3 sm:w-1/3 sm:justify-end">
                 <button
-                  className="btn btn-sm rounded-xl border-none bg-blue-50 text-blue-700 hover:bg-blue-100"
+                  className="btn btn-sm rounded-xl border border-info/25 bg-info/10 text-info hover:bg-info/20"
                   onClick={() => handleEdit(cat)}
                 >
                   ✏️ Edit
                 </button>
 
                 <button
-                  className="btn btn-sm rounded-xl border-none bg-red-50 text-red-700 hover:bg-red-100"
+                  className="btn btn-sm rounded-xl border border-error/25 bg-error/10 text-error hover:bg-error/20"
                   onClick={() => handleDelete(cat.id)}
                 >
                   🗑 Delete
@@ -255,7 +255,7 @@ const AdminCategories = () => {
           ))}
 
           {filteredCategories.length === 0 && (
-            <div className="rounded-xl bg-base-200 p-6 text-center text-gray-400">
+            <div className="rounded-xl bg-base-200 p-6 text-center text-base-content/50">
               No categories found
             </div>
           )}

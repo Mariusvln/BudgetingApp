@@ -78,5 +78,5 @@ export const formatCurrency = (amount, currency = DEFAULT_CURRENCY) => {
 
 export const getCurrencyPlaceholder = (currency = DEFAULT_CURRENCY) => {
   const normalizedCurrency = normalizeCurrency(currency);
-  return normalizedCurrency === "EUR" ? "€ 0.00" : "$ 0.00";
+  return normalizedCurrency === "EUR" ? "EUR 0.00" : "$ 0.00";
 };
