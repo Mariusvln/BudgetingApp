@@ -9,7 +9,7 @@ const DashboardDesktop = (props) => {
   const incomeCards = ["Total Income", "Total Expenses", "Monthly Savings"]
 
   return (
-    <div className="hidden px-6 pb-8 pt-6 min-[930px]:block md:px-8">
+    <div className="hidden px-6 pb-8 pt-6 lg:block md:px-8">
       <div className="mx-auto max-w-7xl">
         {props.error ? (
           <div className="mb-6 rounded-2xl border border-error/30 bg-error/10 px-4 py-3 text-sm font-semibold text-error">

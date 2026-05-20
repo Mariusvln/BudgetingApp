@@ -154,7 +154,20 @@ const MainPage = () => {
         <DashboardHeaderDesktop />
 
         <main className="flex flex-col gap-6 bg-[radial-gradient(circle_at_top_left,color-mix(in_oklch,var(--color-primary)_10%,transparent),transparent_34rem),var(--color-base-200)]">
-          <DashboardMobile balance={formatCurrency(dashboardTotals.balance)} />
+          <DashboardMobile
+            balance={formatCurrency(dashboardTotals.balance)}
+            budgetGoals={dashboardTotals.budgetGoals}
+            error={error}
+            expenses={formatCurrency(dashboardTotals.totalExpenses)}
+            expenseItems={expenseItems}
+            formatCurrency={formatCurrency}
+            incomeItems={incomeItems}
+            incomes={formatCurrency(dashboardTotals.totalIncome)}
+            loading={loading}
+            monthlySavings={dashboardTotals.monthlySavings}
+            monthlySpending={dashboardTotals.monthlySpending}
+            savingsRatio={dashboardTotals.savingsRatio}
+          />
           <DashboardDesktop
             formatCurrency={formatCurrency}
             balance={dashboardTotals.balance}
