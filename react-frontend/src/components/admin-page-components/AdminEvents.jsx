@@ -4,9 +4,22 @@ const AdminEvents = () => {
   const [events, setEvents] = useState([]);
 
   useEffect(() => {
-    fetch("/api/events")
-      .then((res) => res.json())
-      .then((data) => setEvents(Array.isArray(data) ? data : []))
+    fetch("http://localhost:8080/api/activity", { credentials: "include" })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`Events request failed: ${res.status}`);
+        }
+        return res.json();
+      })
+      .then((data) =>
+        setEvents(
+          Array.isArray(data)
+            ? [...data]
+                .sort((left, right) => new Date(right.timestamp) - new Date(left.timestamp))
+                .slice(0, 8)
+            : [],
+        ),
+      )
       .catch((error) => {
         console.error("Error loading events:", error);
         setEvents([]);
@@ -29,8 +42,10 @@ const AdminEvents = () => {
               key={ev.id}
               className="flex flex-col gap-1 rounded-xl bg-base-200 p-4 sm:flex-row sm:items-center sm:justify-between"
             >
-              <span className="font-medium">{ev.description}</span>
-              <span className="text-sm text-gray-500">{ev.time}</span>
+              <span className="font-medium">{ev.action}</span>
+              <span className="text-sm text-gray-500">
+                {new Date(ev.timestamp).toLocaleString()}
+              </span>
             </div>
           ))
         ) : (

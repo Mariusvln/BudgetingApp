@@ -6,6 +6,7 @@ import adminIcon from "../assets/images/icons/admin.png";
 import expenseIcon from "../assets/images/icons/expense.png";
 import transactionIcon from "../assets/images/icons/transaction-icon.svg";
 import analyticsIcon from "../assets/images/icons/analytics-icon.svg";
+import homeIcon from "../assets/images/icons/home-icon.svg";
 import incomeIcon from "../assets/images/icons/rent-icon.svg";
 import userIcon from "../assets/images/icons/user-icon.svg";
 
@@ -56,11 +57,23 @@ function TransactionNav() {
       mobileActiveLink: "bg-yellow-300 text-black",
       mobileActiveIcon: "bg-pink-300",
     },
+    "light-green-pure": {
+      logo: "from-[#22C55E] to-[#14B8A6]",
+      activeLink: "bg-emerald-100 text-emerald-900 shadow-sm",
+      activeIcon: "bg-emerald-200",
+      mobileActiveLink: "bg-emerald-100 text-emerald-900",
+      mobileActiveIcon: "bg-emerald-200",
+    },
   };
 
   const currentThemeStyles = themeStyles[theme] ?? themeStyles.light;
 
   const navItems = [
+    {
+      label: "Main",
+      href: "/main",
+      icon: homeIcon,
+    },
     {
       label: "Budgeting",
       href: "/budgeting",
@@ -119,7 +132,7 @@ function TransactionNav() {
 
   return (
     <>
-      <aside className="fixed left-0 top-0 z-40 hidden h-screen w-64 flex-col border-r border-base-300 bg-base-100 md:flex">
+      <aside className="fixed left-0 top-0 z-40 hidden h-screen w-64 flex-col border-r border-base-300 bg-base-100 lg:flex">
         <div className="border-b border-base-200 px-6 py-6">
           <h1
             className={`bg-linear-to-r ${currentThemeStyles.logo} bg-clip-text text-3xl font-bold text-transparent`}
@@ -198,7 +211,7 @@ function TransactionNav() {
         </div>
       </aside>
 
-      <nav className="fixed inset-x-0 bottom-0 z-50 overflow-x-auto border-t border-base-300 bg-base-100/95 px-3 pb-3 pt-2 shadow-2xl backdrop-blur md:hidden">
+      <nav className="fixed inset-x-0 bottom-0 z-50 overflow-x-auto border-t border-base-300 bg-base-100/95 px-3 pb-3 pt-2 shadow-2xl backdrop-blur lg:hidden">
         <ul className="flex min-w-max gap-1">
           {visibleNavItems.map((item) => {
             const isActive = currentPath === item.href;

@@ -1,15 +1,17 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.ExpenseRequest;
 import com.example.demo.dto.IncomeRequest;
-import com.example.demo.entity.Expense;
+import com.example.demo.entity.Category;
 import com.example.demo.entity.Income;
+import com.example.demo.entity.Type;
 import com.example.demo.entity.User;
 import com.example.demo.exception.ForbiddenResourceAccessException;
+import com.example.demo.exception.InvalidCategoryException;
 import com.example.demo.exception.InvalidDateRangeException;
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.exception.TransactionLimitExceededException;
 import com.example.demo.exception.UserNotFoundException;
+import com.example.demo.repository.CategoryRepository;
 import com.example.demo.repository.IncomeRepository;
 import com.example.demo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +31,8 @@ public class IncomeService {
 
     private final IncomeRepository incomeRepository;
     private final UserRepository userRepository;
+    private final CategoryRepository categoryRepository;
+    private final UserActivityService activityService;
 
     public Income addIncome(Income givenIncome){
         return incomeRepository.save(givenIncome);
@@ -36,9 +40,12 @@ public class IncomeService {
 
     public Income addIncome(String email, IncomeRequest request) {
         User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
+        Category category = validateIncomeCategory(request.getCategory());
         validateTotalLimit(user, null, request.getAmount());
         Income income = fromDTO(request, user);
-        return incomeRepository.save(income);
+        Income saved = incomeRepository.save(income);
+        log(user, "Created income " + saved.getDescription() + " in " + category.getName() + ": " + saved.getAmount());
+        return saved;
     }
 
     public Income fromDTO(IncomeRequest dto, User user) {
@@ -62,6 +69,7 @@ public class IncomeService {
             throw new ForbiddenResourceAccessException("Income does not belong to user");
         }
 
+        Category category = validateIncomeCategory(updated.getCategory());
         validateTotalLimit(user, existing, updated.getAmount());
 
         existing.setDescription(updated.getDescription());
@@ -70,7 +78,9 @@ public class IncomeService {
         existing.setCategory(updated.getCategory());
         existing.setProcessType(updated.getProcessType());
 
-        return incomeRepository.save(existing);
+        Income saved = incomeRepository.save(existing);
+        log(user, "Updated income " + saved.getDescription() + " in " + category.getName() + ": " + saved.getAmount());
+        return saved;
     }
 
     private void validateTotalLimit(User user, Income existingIncome, BigDecimal newAmount) {
@@ -99,6 +109,7 @@ public class IncomeService {
         }
 
         incomeRepository.delete(existing);
+        log(user, "Deleted income " + existing.getDescription() + ": " + existing.getAmount());
     }
 
 
@@ -154,4 +165,20 @@ public class IncomeService {
     }
 
 
+    private Category validateIncomeCategory(Integer categoryId) {
+        Category category = categoryRepository.findById(Long.valueOf(categoryId))
+                .orElseThrow(() -> new InvalidCategoryException("Category not found: " + categoryId));
+        if (category.getType() != Type.INCOME) {
+            throw new InvalidCategoryException("Income must use an INCOME category");
+        }
+        return category;
+    }
+
+    private void log(User user, String action) {
+        activityService.log(
+                user.getName() != null ? user.getName() : user.getEmail(),
+                user.getEmail(),
+                action
+        );
+    }
 }

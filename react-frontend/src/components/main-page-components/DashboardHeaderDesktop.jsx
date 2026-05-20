@@ -4,7 +4,7 @@ const DashboardHeaderDesktop = () => {
     const { user } = useAuth();
 
     return (
-        <header className="hidden px-6 pt-6 min-[930px]:block md:px-8">
+        <header className="hidden px-6 pt-6 lg:block md:px-8">
             <div className="mx-auto flex max-w-7xl items-center justify-between gap-6">
                 <div>
                     <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">

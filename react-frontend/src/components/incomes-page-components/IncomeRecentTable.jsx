@@ -1,5 +1,8 @@
+import { Fragment, useState } from "react";
 import Transaction from "./Transaction";
+import IncomeEditForm from "./IncomeEditForm";
 import { useAuth } from "../../contexts/AuthContext";
+import { useAppAlert } from "../../contexts/useAppAlert";
 import { formatCurrency } from "../../utils/currency";
 
 function IncomeRecentTable({
@@ -18,6 +21,9 @@ function IncomeRecentTable({
   totalCount,
 }) {
   const { user } = useAuth();
+  const appAlert = useAppAlert();
+  const [editingTransactionId, setEditingTransactionId] = useState(null);
+  const [deletingTransactionId, setDeletingTransactionId] = useState(null);
   const formatMobileDate = (dateValue) => {
     const date = new Date(dateValue);
     const today = new Date();
@@ -47,6 +53,52 @@ function IncomeRecentTable({
     `Category #${categoryId}`;
 
   const mobileTransactions = transactions.slice(0, 10);
+  const toggleMobileEdit = (transactionId) => {
+    setEditingTransactionId((currentId) =>
+      currentId === transactionId ? null : transactionId,
+    );
+  };
+
+  const handleMobileDelete = async (transactionId) => {
+    const confirmed = await appAlert.confirm("Delete this income?", {
+      confirmText: "Delete",
+      description: "This action cannot be undone.",
+      type: "error",
+    });
+
+    if (!confirmed) {
+      return;
+    }
+
+    setDeletingTransactionId(transactionId);
+
+    try {
+      const response = await fetch(
+        `http://localhost:8080/api/app/incomes/?incomeId=${encodeURIComponent(transactionId)}`,
+        {
+          method: "DELETE",
+          credentials: "include",
+        },
+      );
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText || "Failed to delete income");
+      }
+
+      if (editingTransactionId === transactionId) {
+        setEditingTransactionId(null);
+      }
+
+      onTransactionAdded?.();
+      await appAlert.alert("Income deleted successfully!", { type: "success" });
+    } catch (error) {
+      console.error("Error deleting income:", error);
+      await appAlert.alert("Could not delete income.", { type: "error" });
+    } finally {
+      setDeletingTransactionId(null);
+    }
+  };
 
   const IncomeMobileIcon = () => (
     <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -62,7 +114,6 @@ function IncomeRecentTable({
       <section className="transactions-mobile lg:hidden">
         <div className="transactions-mobile__header">
           <h2>Incomes</h2>
-          <button type="button">See All</button>
         </div>
 
         <div className="transactions-mobile__list">
@@ -75,26 +126,58 @@ function IncomeRecentTable({
               const categoryName = getCategoryName(transaction.category);
 
               return (
-                <article
-                  className="transactions-mobile__item"
-                  key={transaction.id}
-                >
-                  <div className="transactions-mobile__icon transactions-mobile__icon--income">
-                    <IncomeMobileIcon />
-                  </div>
+                <Fragment key={transaction.id}>
+                  <article className="transactions-mobile__item">
+                    <div className="transactions-mobile__icon transactions-mobile__icon--income">
+                      <IncomeMobileIcon />
+                    </div>
 
-                  <div className="transactions-mobile__details">
-                    <h3>{transaction.description || "No description"}</h3>
-                    <p>
-                      {categoryName} <span>&middot;</span>{" "}
-                      {formatMobileDate(transaction.date)}
+                    <div className="transactions-mobile__details">
+                      <h3>{transaction.description || "No description"}</h3>
+                      <p>
+                        {categoryName} <span>&middot;</span>{" "}
+                        {formatMobileDate(transaction.date)}
+                      </p>
+                    </div>
+
+                    <p className="transactions-mobile__amount transactions-mobile__amount--income">
+                      {formatAmount(transaction.amount)}
                     </p>
-                  </div>
 
-                  <p className="transactions-mobile__amount transactions-mobile__amount--income">
-                    {formatAmount(transaction.amount)}
-                  </p>
-                </article>
+                    <div className="transactions-mobile__actions">
+                      <button
+                        type="button"
+                        className="transactions-mobile__edit-button"
+                        onClick={() => toggleMobileEdit(transaction.id)}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        type="button"
+                        className="transactions-mobile__delete-button"
+                        onClick={() => handleMobileDelete(transaction.id)}
+                        disabled={deletingTransactionId === transaction.id}
+                      >
+                        {deletingTransactionId === transaction.id
+                          ? "Deleting..."
+                          : "Delete"}
+                      </button>
+                    </div>
+                  </article>
+
+                  {editingTransactionId === transaction.id && (
+                    <IncomeEditForm
+                      id={transaction.id}
+                      description={transaction.description}
+                      category={transaction.category}
+                      amount={transaction.amount}
+                      date={transaction.date}
+                      show={() => toggleMobileEdit(transaction.id)}
+                      onTransactionAdded={onTransactionAdded}
+                      categories={categories}
+                    />
+                  )}
+                </Fragment>
               );
             })
           )}

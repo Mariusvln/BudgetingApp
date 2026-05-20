@@ -315,7 +315,12 @@ function AnalyticChart({ dateStart, dateEnd, setDateStart, setDateEnd }) {
         labels: { colors: themeColors.content },
       },
       tooltip: {
-        theme: theme === "light" || theme === "mint-ice-cream" ? "light" : "dark",
+        theme:
+          theme === "light" ||
+          theme === "mint-ice-cream" ||
+          theme === "light-green-pure"
+            ? "light"
+            : "dark",
         y: { formatter: formatCurrency },
       },
     }),

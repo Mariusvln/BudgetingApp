@@ -31,7 +31,7 @@ BudgetingApp/
 | Requirement | Status | Implementation notes |
 | --- | --- | --- |
 | FR0: Administrator manages users and expense categories | Implemented | Admin users are handled by `/api/admin/users`; categories are handled by `/api/categories`; admin UI is available at `/admin`. |
-| FR0: Administrator views event log | Partially implemented | Activity log exists at `/api/activity` and in the admin UI. It records registration, login, logout, profile changes, admin-created users, and account deletion. It does not currently log every income/expense/category change. |
+| FR0: Administrator views event log | Implemented | Activity log exists at `/api/activity` and in the admin UI. It records authentication, profile, user-management, category, income, expense, budget-limit, and account-deletion actions. |
 | FR1: User registration, login, logout | Implemented | `/api/auth/register`, `/api/auth/login`, `/api/auth/logout`, and `/api/auth/me`. |
 | FR2: User manages income | Implemented | `/api/app/incomes/` supports create, update, delete, list, date filtering, and export. |
 | FR3: User manages expenses | Implemented | `/api/app/expenses/` supports create, update, delete, list, search, date filtering, and export. |
@@ -42,7 +42,7 @@ BudgetingApp/
 | NFR1: Java 8+ and Spring 5+ | Implemented with newer versions | Backend uses Java 21 and Spring Boot 4.0.0. |
 | NFR2: React frontend | Implemented with newer version | Frontend uses React 19 instead of the originally specified React 17. |
 | NFR3: Relational database | Implemented | Development uses file-based H2; production profile is configured for MySQL. |
-| NFR4: All actions logged | Partially implemented | User/admin account actions are logged. Financial transaction actions are not logged yet. |
+| NFR4: All actions logged | Implemented | User/admin account actions, category changes, income/expense changes, and budget-limit changes are written to the activity log. |
 | NFR5: Installation and usage documentation | Implemented | This README contains setup, run, and usage instructions. |
 | NFR6: Responses under 2 seconds for up to 1000 expenses | Not automatically verified | The implementation uses simple database queries and in-memory filtering; no performance test is included. |
 

@@ -10,6 +10,7 @@ import com.example.demo.service.IncomeService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -65,6 +66,7 @@ public class ExpensesController {
     }
 
     @GetMapping("/calculateExpenses")
+    @PreAuthorize("hasRole('ADMIN')")
     public RegisterResponse calculateExpenses() {
         BigDecimal total = expenses.fetchAllGivenExpenses();
 
@@ -73,6 +75,7 @@ public class ExpensesController {
     }
 
     @GetMapping("/showAllExpenses")
+    @PreAuthorize("hasRole('ADMIN')")
     public List<ExpenseResponse> showAllExpenses() {
         List<Expense> resultExpenses = expenses.showAllExpenses();
 
@@ -80,6 +83,7 @@ public class ExpensesController {
     }
 
     @GetMapping("/fetchAllFromDateStartToDateFinish")
+    @PreAuthorize("hasRole('ADMIN')")
     public List<Expense> fetchExpensesFromDateStartToDateFinish(@RequestParam LocalDate dateStart, @RequestParam LocalDate dateEnd) {
         List<Expense> total = expenses.fetchAllGivenExpensesFromDateStartToDateEnd(dateStart, dateEnd);
 
@@ -101,9 +105,9 @@ public class ExpensesController {
     }
 
     @GetMapping("/searchExpenses")
-    public List<ExpenseResponse> fetchExpensesBySearch(@RequestParam String title) {
+    public List<ExpenseResponse> fetchExpensesBySearch(@RequestParam String title, Authentication authentication) {
        
-        List<Expense> filteredExpenses = expenses.fetchExpensesBySearch(title);
+        List<Expense> filteredExpenses = expenses.fetchExpensesBySearch(authentication.getName(), title);
         return mapUsersToDTOs(filteredExpenses);
     }
 
@@ -134,12 +138,12 @@ public class ExpensesController {
         writer.println("Date,Category,Amount,Description");
 
         for (Expense e : expensesList) {
-            writer.println(
-                    e.getDate() + " , " +
-                            getCategoryName(categoryNames, e.getCategory()) + " , " +
-                            e.getAmount() + " , " +
-                            e.getDescription()
-            );
+            writer.println(toCsvRow(
+                    e.getDate().toString(),
+                    getCategoryName(categoryNames, e.getCategory()),
+                    e.getAmount().toPlainString(),
+                    e.getDescription()
+            ));
         }
 
         writer.flush();
@@ -182,6 +186,20 @@ public class ExpensesController {
 
     private String getCategoryName(Map<Integer, String> categoryNames, int categoryId) {
         return categoryNames.getOrDefault(categoryId, "Category #" + categoryId);
+    }
+
+    private String toCsvRow(String... values) {
+        return java.util.Arrays.stream(values)
+                .map(this::escapeCsv)
+                .collect(Collectors.joining(","));
+    }
+
+    private String escapeCsv(String value) {
+        String safeValue = value == null ? "" : value;
+        if (safeValue.contains(",") || safeValue.contains("\"") || safeValue.contains("\n") || safeValue.contains("\r")) {
+            return "\"" + safeValue.replace("\"", "\"\"") + "\"";
+        }
+        return safeValue;
     }
 
     @GetMapping("/transactions-overview")

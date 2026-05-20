@@ -9,7 +9,7 @@ const DashboardDesktop = (props) => {
   const incomeCards = ["Total Income", "Total Expenses", "Monthly Savings"]
 
   return (
-    <div className="hidden px-6 pb-8 pt-6 min-[930px]:block md:px-8">
+    <div className="hidden px-6 pb-8 pt-6 lg:block md:px-8">
       <div className="mx-auto max-w-7xl">
         {props.error ? (
           <div className="mb-6 rounded-2xl border border-error/30 bg-error/10 px-4 py-3 text-sm font-semibold text-error">
@@ -60,31 +60,50 @@ const DashboardDesktop = (props) => {
           <section className="flex flex-col justify-between gap-4 rounded-3xl border border-base-300 bg-base-100 p-4 shadow-[0_16px_36px_color-mix(in_oklch,var(--color-base-content)_7%,transparent)]">
             <div className="flex justify-between">
               <h4 className="text-lg font-bold text-base-content">Budget Limits</h4>
-              <button className="rounded-full bg-base-200 px-2 pb-1 text-base-content transition hover:bg-base-300">+</button>
+              <a
+                href="/budgeting"
+                aria-label="Add budget limit"
+                className="grid h-7 w-7 place-items-center rounded-full bg-base-200 text-base-content transition hover:bg-base-300"
+              >
+                +
+              </a>
             </div>
             {props.budgetGoals?.length ? (
-              props.budgetGoals.map((goal) => (
-                <div key={goal.id}>
-                  <div className="flex justify-between gap-4">
-                    <p className="font-semibold text-base-content">{goal.name}</p>
-                    <p className="text-base-content/55">
-                      {props.formatCurrency(goal.spent)} / {props.formatCurrency(goal.maxLimit)}
-                    </p>
+              props.budgetGoals.map((goal) => {
+                const isOverBudget = Number(goal.spent) > Number(goal.maxLimit);
+
+                return (
+                  <div key={goal.id}>
+                    <div className="flex justify-between gap-4">
+                      <p className={`font-semibold ${isOverBudget ? "text-error" : "text-base-content"}`}>
+                        {goal.name}
+                      </p>
+                      <p className={isOverBudget ? "font-semibold text-error" : "text-base-content/55"}>
+                        {props.formatCurrency(goal.spent)} / {props.formatCurrency(goal.maxLimit)}
+                      </p>
+                    </div>
+                    <div className="mt-3 h-2 overflow-hidden rounded-full bg-base-300">
+                      <div
+                        className={`h-full rounded-full transition-[width] duration-700 ease-out ${
+                          isOverBudget ? "bg-error" : "bg-primary"
+                        }`}
+                        style={{ width: `${goal.percent}%` }}
+                      />
+                    </div>
                   </div>
-                  <div className="mt-3 h-2 overflow-hidden rounded-full bg-base-300">
-                    <div
-                      className="h-full rounded-full bg-primary transition-[width] duration-700 ease-out"
-                      style={{ width: `${goal.percent}%` }}
-                    />
-                  </div>
-                </div>
-              ))
+                );
+              })
             ) : (
               <div className="rounded-2xl bg-base-200 p-4 text-sm font-semibold text-base-content/55">
                 No budget limits yet
               </div>
             )}
-            <button className="rounded-xl bg-primary px-3 py-3 font-bold text-primary-content transition hover:bg-primary/90">+ View Budgeting</button>
+            <a
+              href="/budgeting"
+              className="rounded-xl bg-primary px-3 py-3 text-center font-bold text-primary-content transition hover:bg-primary/90"
+            >
+              + View Budgeting
+            </a>
           </section>
         </div>
       </div>

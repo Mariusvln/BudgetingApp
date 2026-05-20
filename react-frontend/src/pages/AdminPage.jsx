@@ -9,7 +9,7 @@ const AdminPage = () => {
     <div className="min-h-screen bg-base-200 text-base-content">
       <TransactionNav />
 
-      <main className="min-h-screen px-4 pt-5 pb-28 sm:px-6 md:ml-64 md:px-8 md:py-8">
+      <main className="min-h-screen px-4 pt-5 pb-28 sm:px-6 md:px-8 lg:ml-64 lg:py-8">
         <div className="mx-auto w-full max-w-7xl">
           <div className="mb-5 md:mb-8">
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary md:hidden">

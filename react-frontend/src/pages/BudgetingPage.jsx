@@ -813,7 +813,7 @@ const BudgetingPage = () => {
   );
 
   return (
-    <div className="flex min-h-screen bg-base-200 md:ml-64">
+    <div className="flex min-h-screen bg-base-200 lg:ml-64">
       <TransactionNav />
 
       <div className="flex-1 bg-base-200 px-4 py-10 md:px-6 md:py-14">

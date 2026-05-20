@@ -1,5 +1,8 @@
+import { Fragment, useState } from "react";
 import ExpenseTransaction from "./ExpenseTransaction";
+import ExpenseEditForm from "./ExpenseEditForm";
 import { useAuth } from "../../contexts/AuthContext";
+import { useAppAlert } from "../../contexts/useAppAlert";
 import { formatCurrency } from "../../utils/currency";
 
 function ExpenseRecentTable({
@@ -16,8 +19,12 @@ function ExpenseRecentTable({
   setSearchQuery,
   setSelectedCategory,
   totalCount,
+  totalAmount = 0,
 }) {
   const { user } = useAuth();
+  const appAlert = useAppAlert();
+  const [editingTransactionId, setEditingTransactionId] = useState(null);
+  const [deletingTransactionId, setDeletingTransactionId] = useState(null);
   const formatMobileDate = (dateValue) => {
     const date = new Date(dateValue);
     const today = new Date();
@@ -108,13 +115,58 @@ function ExpenseRecentTable({
   };
 
   const mobileTransactions = transactions.slice(0, 10);
+  const toggleMobileEdit = (transactionId) => {
+    setEditingTransactionId((currentId) =>
+      currentId === transactionId ? null : transactionId,
+    );
+  };
+
+  const handleMobileDelete = async (transactionId) => {
+    const confirmed = await appAlert.confirm("Delete this expense?", {
+      confirmText: "Delete",
+      description: "This action cannot be undone.",
+      type: "error",
+    });
+
+    if (!confirmed) {
+      return;
+    }
+
+    setDeletingTransactionId(transactionId);
+
+    try {
+      const response = await fetch(
+        `http://localhost:8080/api/app/expenses/?expenseId=${encodeURIComponent(transactionId)}`,
+        {
+          method: "DELETE",
+          credentials: "include",
+        },
+      );
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText || "Failed to delete expense");
+      }
+
+      if (editingTransactionId === transactionId) {
+        setEditingTransactionId(null);
+      }
+
+      onTransactionAdded?.();
+      await appAlert.alert("Expense deleted successfully!", { type: "success" });
+    } catch (error) {
+      console.error("Error deleting expense:", error);
+      await appAlert.alert("Could not delete expense.", { type: "error" });
+    } finally {
+      setDeletingTransactionId(null);
+    }
+  };
 
   return (
     <>
       <section className="transactions-mobile lg:hidden">
         <div className="transactions-mobile__header">
           <h2>Expenses</h2>
-          <button type="button">See All</button>
         </div>
 
         <div className="transactions-mobile__list">
@@ -128,28 +180,60 @@ function ExpenseRecentTable({
               const iconType = getMobileIconType(transaction);
 
               return (
-                <article
-                  className="transactions-mobile__item"
-                  key={transaction.id}
-                >
-                  <div
-                    className={`transactions-mobile__icon transactions-mobile__icon--${iconType}`}
-                  >
-                    <ExpenseMobileIcon type={iconType} />
-                  </div>
+                <Fragment key={transaction.id}>
+                  <article className="transactions-mobile__item">
+                    <div
+                      className={`transactions-mobile__icon transactions-mobile__icon--${iconType}`}
+                    >
+                      <ExpenseMobileIcon type={iconType} />
+                    </div>
 
-                  <div className="transactions-mobile__details">
-                    <h3>{transaction.description || "No description"}</h3>
-                    <p>
-                      {categoryName} <span>&middot;</span>{" "}
-                      {formatMobileDate(transaction.date)}
+                    <div className="transactions-mobile__details">
+                      <h3>{transaction.description || "No description"}</h3>
+                      <p>
+                        {categoryName} <span>&middot;</span>{" "}
+                        {formatMobileDate(transaction.date)}
+                      </p>
+                    </div>
+
+                    <p className="transactions-mobile__amount">
+                      {formatAmount(transaction.amount)}
                     </p>
-                  </div>
 
-                  <p className="transactions-mobile__amount">
-                    {formatAmount(transaction.amount)}
-                  </p>
-                </article>
+                    <div className="transactions-mobile__actions">
+                      <button
+                        type="button"
+                        className="transactions-mobile__edit-button"
+                        onClick={() => toggleMobileEdit(transaction.id)}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        type="button"
+                        className="transactions-mobile__delete-button"
+                        onClick={() => handleMobileDelete(transaction.id)}
+                        disabled={deletingTransactionId === transaction.id}
+                      >
+                        {deletingTransactionId === transaction.id
+                          ? "Deleting..."
+                          : "Delete"}
+                      </button>
+                    </div>
+                  </article>
+
+                  {editingTransactionId === transaction.id && (
+                    <ExpenseEditForm
+                      id={transaction.id}
+                      description={transaction.description}
+                      category={transaction.category}
+                      amount={transaction.amount}
+                      date={transaction.date}
+                      show={() => toggleMobileEdit(transaction.id)}
+                      onTransactionAdded={onTransactionAdded}
+                      categories={categories}
+                    />
+                  )}
+                </Fragment>
               );
             })
           )}
@@ -170,6 +254,11 @@ function ExpenseRecentTable({
                 ? "Loading..."
                 : `Showing ${transactions.length} of ${totalCount ?? transactions.length} entries`}
             </p>
+            {!loading && (
+              <p className="mt-1 text-sm font-semibold text-error">
+                Total: {formatCurrency(totalAmount, user?.currency)}
+              </p>
+            )}
           </div>
             <div className="rounded-full bg-error/10 px-4 py-2 text-sm font-bold text-error">
               Expenses
