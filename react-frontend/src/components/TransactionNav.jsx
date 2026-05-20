@@ -125,7 +125,7 @@ function TransactionNav() {
 
   return (
     <>
-      <aside className="fixed left-0 top-0 z-40 hidden h-screen w-64 flex-col border-r border-base-300 bg-base-100 md:flex">
+      <aside className="fixed left-0 top-0 z-40 hidden h-screen w-64 flex-col border-r border-base-300 bg-base-100 lg:flex">
         <div className="border-b border-base-200 px-6 py-6">
           <h1
             className={`bg-linear-to-r ${currentThemeStyles.logo} bg-clip-text text-3xl font-bold text-transparent`}
@@ -204,7 +204,7 @@ function TransactionNav() {
         </div>
       </aside>
 
-      <nav className="fixed inset-x-0 bottom-0 z-50 overflow-x-auto border-t border-base-300 bg-base-100/95 px-3 pb-3 pt-2 shadow-2xl backdrop-blur md:hidden">
+      <nav className="fixed inset-x-0 bottom-0 z-50 overflow-x-auto border-t border-base-300 bg-base-100/95 px-3 pb-3 pt-2 shadow-2xl backdrop-blur lg:hidden">
         <ul className="flex min-w-max gap-1">
           {visibleNavItems.map((item) => {
             const isActive = currentPath === item.href;

@@ -108,7 +108,7 @@ const ProfilePage = () => {
         <TransactionNav variant="desktop" />
       </div>
 
-      <main className="min-h-screen px-4 pt-5 pb-28 sm:px-6 md:ml-64 md:px-8 md:py-8">
+      <main className="min-h-screen px-4 pt-5 pb-28 sm:px-6 md:px-8 lg:ml-64 lg:py-8">
         <div className="mx-auto w-full max-w-6xl">
           <div className="mb-5 flex items-center justify-between gap-4 md:mb-8">
             <div>

@@ -149,7 +149,7 @@ const MainPage = () => {
     <div className="min-h-screen bg-base-200 text-base-content">
       <TransactionNav />
 
-      <div className="min-h-screen pb-28 md:ml-64 md:pb-0">
+      <div className="min-h-screen pb-28 lg:ml-64 lg:pb-0">
         <DashboardHeaderMobile />
         <DashboardHeaderDesktop />
 

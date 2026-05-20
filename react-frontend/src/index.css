@@ -787,7 +787,7 @@ a {
 
   .transactions-mobile__item {
     display: grid;
-    grid-template-columns: 38px minmax(0, 1fr) auto;
+    grid-template-columns: 38px minmax(0, 1fr) auto auto;
     align-items: center;
     min-height: 60px;
     gap: 12px;
@@ -868,6 +868,38 @@ a {
     color: #22c55e;
   }
 
+  .transactions-mobile__actions {
+    display: flex;
+    flex-direction: row;
+    gap: 6px;
+  }
+
+  .transactions-mobile__edit-button,
+  .transactions-mobile__delete-button {
+    min-height: 32px;
+    border: 0;
+    border-radius: 8px;
+    padding: 0 10px;
+    font-size: 12px;
+    font-weight: 800;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  .transactions-mobile__edit-button {
+    background: var(--color-primary);
+    color: var(--color-primary-content);
+  }
+
+  .transactions-mobile__delete-button {
+    background: var(--color-error);
+    color: var(--color-error-content);
+  }
+
+  .transactions-mobile__delete-button:disabled {
+    opacity: 0.6;
+  }
+
   .transactions-mobile__empty {
     border-radius: 11px;
     background: #ffffff;
@@ -935,7 +967,7 @@ a {
 
   .transactions-mobile__item {
     display: grid;
-    grid-template-columns: 48px minmax(0, 1fr) auto;
+    grid-template-columns: 48px minmax(0, 1fr) auto auto;
     align-items: center;
     min-height: 76px;
     gap: 16px;
@@ -1014,6 +1046,38 @@ a {
 
   .transactions-mobile__amount--income {
     color: #22c55e;
+  }
+
+  .transactions-mobile__actions {
+    display: flex;
+    flex-direction: row;
+    gap: 7px;
+  }
+
+  .transactions-mobile__edit-button,
+  .transactions-mobile__delete-button {
+    min-height: 36px;
+    border: 0;
+    border-radius: 9px;
+    padding: 0 13px;
+    font-size: 13px;
+    font-weight: 800;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  .transactions-mobile__edit-button {
+    background: var(--color-primary);
+    color: var(--color-primary-content);
+  }
+
+  .transactions-mobile__delete-button {
+    background: var(--color-error);
+    color: var(--color-error-content);
+  }
+
+  .transactions-mobile__delete-button:disabled {
+    opacity: 0.6;
   }
 
   .transactions-mobile__empty {

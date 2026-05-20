@@ -107,10 +107,10 @@ function IncomesPage() {
   const hasActiveFilters = searchQuery.trim() || selectedCategory !== "ALL";
 
   return (
-    <div className="transactions-page flex min-h-screen bg-base-200 md:ml-64">
+    <div className="transactions-page flex min-h-screen bg-base-200 lg:ml-64">
       <TransactionNav />
 
-      <div className="transactions-page__content flex-1 p-6 pb-28 md:pb-6">
+      <div className="transactions-page__content flex-1 p-6 pb-28 lg:pb-6">
         {/* <input
           type="text"
           placeholder="Search incomes"
