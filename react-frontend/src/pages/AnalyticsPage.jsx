@@ -13,7 +13,7 @@ const getInitialDateRange = () => {
   const today = new Date();
   return {
     start: formatDate(new Date(today.getFullYear(), today.getMonth(), 1)),
-    end: formatDate(new Date(today.getFullYear(), today.getMonth() + 1, 0)),
+    end: formatDate(today),
   };
 };
 
