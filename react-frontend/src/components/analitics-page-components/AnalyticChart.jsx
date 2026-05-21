@@ -111,6 +111,7 @@ function AnalyticChart({ dateStart, dateEnd, setDateStart, setDateEnd }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [themeColors, setThemeColors] = useState(getThemeColors);
+  const [selectedActivity, setSelectedActivity] = useState(null);
 
   const currency = normalizeCurrency(user?.currency);
   const locale = currency === "EUR" ? "lt-LT" : "en-US";
@@ -289,64 +290,86 @@ function AnalyticChart({ dateStart, dateEnd, setDateStart, setDateEnd }) {
   );
 
   const sCurveData = useMemo(() => {
-    let cumulativeTotal = 0;
+    const rangeStart = parseLocalDate(dateStart);
+    let runningBalance =
+      allIncomes
+        .filter((transaction) => transaction.date && parseLocalDate(transaction.date) < rangeStart)
+        .reduce((sum, transaction) => sum + toNumber(transaction.amount), 0) -
+      allExpenses
+        .filter((transaction) => transaction.date && parseLocalDate(transaction.date) < rangeStart)
+        .reduce((sum, transaction) => sum + toNumber(transaction.amount), 0);
 
     return dailyFlowData.map((item) => {
-      cumulativeTotal += item.income + item.expenses;
+      runningBalance += item.income - item.expenses;
 
       return {
         day: item.day,
-        total: cumulativeTotal,
+        total: runningBalance,
       };
     });
-  }, [dailyFlowData]);
+  }, [allExpenses, allIncomes, dailyFlowData, dateStart]);
 
   const selectedMonthKey = useMemo(() => getMonthKey(dateEnd), [dateEnd]);
 
-  const expenseHeatmap = useMemo(() => {
+  const activityHeatmap = useMemo(() => {
     const monthStart = parseLocalDate(`${selectedMonthKey}-01`);
+    const firstDayIndex = (monthStart.getDay() + 6) % 7;
     const daysInMonth = new Date(
       monthStart.getFullYear(),
       monthStart.getMonth() + 1,
       0,
     ).getDate();
-    const firstDayIndex = (monthStart.getDay() + 6) % 7;
-    const days = Array.from({ length: daysInMonth }, (_, index) => {
-      const day = index + 1;
-      const dateKey = `${selectedMonthKey}-${String(day).padStart(2, "0")}`;
-      const total = allExpenses
-        .filter((transaction) => transaction.date === dateKey)
-        .reduce((sum, transaction) => sum + toNumber(transaction.amount), 0);
-
-      return {
-        date: dateKey,
-        day,
-        total,
-      };
+    const cellCount = Math.ceil((firstDayIndex + daysInMonth) / 7) * 7;
+    const calendarStart = new Date(monthStart);
+    calendarStart.setDate(monthStart.getDate() - firstDayIndex);
+    const dates = Array.from({ length: cellCount }, (_, index) => {
+      const date = new Date(calendarStart);
+      date.setDate(calendarStart.getDate() + index);
+      return formatDateKey(date);
     });
-    const maxTotal = Math.max(...days.map((day) => day.total), 0);
-    const leadingBlanks = Array.from({ length: firstDayIndex }, (_, index) => ({
-      id: `blank-${index}`,
-      blank: true,
-    }));
-    const cells = [
-      ...leadingBlanks,
-      ...days.map((day) => ({
-        ...day,
+    const buildCells = (transactions, type) => {
+      const rawCells = dates.map((dateKey) => {
+        const inSelectedMonth = getMonthKey(dateKey) === selectedMonthKey;
+        const total = inSelectedMonth
+          ? transactions
+              .filter((transaction) => transaction.date === dateKey)
+              .reduce((sum, transaction) => sum + toNumber(transaction.amount), 0)
+          : 0;
+
+        return {
+          date: dateKey,
+          total,
+          type,
+          outsideMonth: !inSelectedMonth,
+        };
+      });
+      const maxTotal = Math.max(...rawCells.map((cell) => cell.total), 0);
+
+      return rawCells.map((cell) => ({
+        ...cell,
         level:
-          day.total <= 0 || maxTotal <= 0
+          cell.total <= 0 || maxTotal <= 0
             ? 0
-            : Math.min(4, Math.ceil((day.total / maxTotal) * 4)),
-      })),
-    ];
+            : Math.min(4, Math.ceil((cell.total / maxTotal) * 4)),
+      }));
+    };
+    const incomeCells = buildCells(allIncomes, "income");
+    const expenseCells = buildCells(allExpenses, "expense");
 
     return {
       monthLabel: formatMonthLabel(selectedMonthKey),
-      cells,
-      total: days.reduce((sum, day) => sum + day.total, 0),
-      activeDays: days.filter((day) => day.total > 0).length,
+      income: {
+        cells: incomeCells,
+        total: incomeCells.reduce((sum, cell) => sum + cell.total, 0),
+        activeDays: incomeCells.filter((cell) => cell.total > 0).length,
+      },
+      expenses: {
+        cells: expenseCells,
+        total: expenseCells.reduce((sum, cell) => sum + cell.total, 0),
+        activeDays: expenseCells.filter((cell) => cell.total > 0).length,
+      },
     };
-  }, [allExpenses, selectedMonthKey]);
+  }, [allExpenses, allIncomes, selectedMonthKey]);
 
   const incomeCategories = useMemo(
     () => groupByCategory(rangeIncomes, categories).slice(0, 8),
@@ -466,7 +489,7 @@ function AnalyticChart({ dateStart, dateEnd, setDateStart, setDateEnd }) {
               <div class="analytics-tooltip__date">${formatReadableDate(day)}</div>
               <div class="analytics-tooltip__row">
                 <span class="analytics-tooltip__dot" style="background:#f97316"></span>
-                <span>Cumulative activity</span>
+                <span>Total balance</span>
                 <strong>${formatCurrency(series[0]?.[dataPointIndex] ?? 0)}</strong>
               </div>
               <div class="analytics-tooltip__row">
@@ -496,8 +519,7 @@ function AnalyticChart({ dateStart, dateEnd, setDateStart, setDateEnd }) {
       },
       yaxis: [
         {
-          min: 0,
-          title: { text: "Cumulative amount", style: { color: themeColors.content } },
+          title: { text: "Total balance", style: { color: themeColors.content } },
           labels: { formatter: formatCompactCurrency },
         },
       ],
@@ -666,7 +688,7 @@ function AnalyticChart({ dateStart, dateEnd, setDateStart, setDateEnd }) {
             ))}
           </section>
 
-          <section className="grid gap-5 xl:grid-cols-[1.15fr_1fr]">
+          <section className="grid gap-5 xl:grid-cols-2">
             <div className="rounded-2xl border border-base-300 bg-base-100 p-4 shadow-sm">
               <h2 className="mb-2 text-center text-base font-bold text-base-content">
                 S-curve Chart
@@ -677,7 +699,7 @@ function AnalyticChart({ dateStart, dateEnd, setDateStart, setDateEnd }) {
                   options={dailyFlowOptions}
                   series={[
                     {
-                      name: "Cumulative activity",
+                      name: "Total balance",
                       type: "line",
                       data: sCurveData.map((item) => item.total),
                     },
@@ -710,7 +732,7 @@ function AnalyticChart({ dateStart, dateEnd, setDateStart, setDateEnd }) {
             </div>
           </section>
 
-          <section className="mt-5 grid gap-5 xl:grid-cols-[0.9fr_0.9fr_1.1fr]">
+          <section className="mt-5 grid gap-5 xl:grid-cols-3">
             <div className="rounded-2xl border border-base-300 bg-base-100 p-4 shadow-sm">
               <h2 className="mb-2 text-center text-base font-bold text-base-content">
                 Income by Category
@@ -769,57 +791,108 @@ function AnalyticChart({ dateStart, dateEnd, setDateStart, setDateEnd }) {
             </div>
           </section>
 
-          <section className="mt-5 rounded-2xl border border-base-300 bg-base-100 p-4 shadow-sm">
+          <section className="analytics-activity-card mt-5 rounded-2xl border border-base-300 bg-base-100 p-4 shadow-sm">
             <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
               <div>
                 <h2 className="text-base font-bold text-base-content">
-                  Monthly Expense Activity
+                  Monthly Activity
                 </h2>
                 <p className="mt-1 text-sm font-medium text-base-content/60">
-                  {expenseHeatmap.monthLabel} · {expenseHeatmap.activeDays} spending days · {formatCurrency(expenseHeatmap.total)}
+                  {activityHeatmap.monthLabel} · Income {formatCurrency(activityHeatmap.income.total)} · Expenses {formatCurrency(activityHeatmap.expenses.total)}
                 </p>
               </div>
-              <div className="expense-heatmap__legend" aria-hidden="true">
-                <span>Less</span>
-                {[0, 1, 2, 3, 4].map((level) => (
-                  <span
-                    key={level}
-                    className={`expense-heatmap__cell expense-heatmap__cell--${level}`}
-                  />
+              <div className="expense-heatmap__legends" aria-hidden="true">
+                {[
+                  { label: "Income", tone: "income" },
+                  { label: "Expenses", tone: "expense" },
+                ].map((legend) => (
+                  <div className="expense-heatmap__legend" key={legend.tone}>
+                    <span>{legend.label}</span>
+                    <span>Less</span>
+                    {[0, 1, 2, 3, 4].map((level) => (
+                      <span
+                        key={level}
+                        className={`expense-heatmap__cell expense-heatmap__cell--${legend.tone} expense-heatmap__cell--${level}`}
+                      />
+                    ))}
+                    <span>More</span>
+                  </div>
                 ))}
-                <span>More</span>
               </div>
             </div>
 
-            <div className="expense-heatmap" aria-label="Monthly expense heatmap">
-              <div className="expense-heatmap__days" aria-hidden="true">
-                <span>Mon</span>
-                <span>Tue</span>
-                <span>Wed</span>
-                <span>Thu</span>
-                <span>Fri</span>
-                <span>Sat</span>
-                <span>Sun</span>
-              </div>
-              <div className="expense-heatmap__grid">
-                {expenseHeatmap.cells.map((cell, index) =>
-                  cell.blank ? (
-                    <span key={cell.id} className="expense-heatmap__cell expense-heatmap__cell--blank" />
-                  ) : (
-                    <span
-                      key={cell.date}
-                      className={`expense-heatmap__cell expense-heatmap__cell--${cell.level}`}
-                      title={`${formatReadableDate(cell.date)}: ${formatCurrency(cell.total)}`}
-                      aria-label={`${formatReadableDate(cell.date)} expenses ${formatCurrency(cell.total)}`}
-                    >
-                      <span className="sr-only">
-                        {index + 1}: {formatCurrency(cell.total)}
-                      </span>
-                    </span>
-                  ),
-                )}
-              </div>
+            <div className="expense-heatmap-panels">
+              {[
+                {
+                  title: "Income",
+                  tone: "income",
+                  data: activityHeatmap.income,
+                },
+                {
+                  title: "Expenses",
+                  tone: "expense",
+                  data: activityHeatmap.expenses,
+                },
+              ].map((panel) => (
+                <div className="expense-heatmap-panel" key={panel.tone}>
+                  <div className="expense-heatmap-panel__header">
+                    <div>
+                      <h3>{panel.title}</h3>
+                      <p>{panel.data.activeDays} active days · {formatCurrency(panel.data.total)}</p>
+                    </div>
+                    {selectedActivity?.type === panel.tone && (
+                      <div className="expense-heatmap-panel__selected">
+                        {formatReadableDate(selectedActivity.date)} · {formatCurrency(selectedActivity.total)}
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="expense-heatmap" aria-label={`${panel.title} heatmap`}>
+                    <div className="expense-heatmap__days" aria-hidden="true">
+                      <span>Mon</span>
+                      <span>Tue</span>
+                      <span>Wed</span>
+                      <span>Thu</span>
+                      <span>Fri</span>
+                      <span>Sat</span>
+                      <span>Sun</span>
+                    </div>
+                    <div className="expense-heatmap__grid">
+                      {panel.data.cells.map((cell) => (
+                        <button
+                          type="button"
+                          key={`${panel.tone}-${cell.date}`}
+                          className={`expense-heatmap__cell expense-heatmap__cell--${panel.tone} expense-heatmap__cell--${cell.level} ${
+                            cell.outsideMonth ? "expense-heatmap__cell--outside" : ""
+                          } ${
+                            selectedActivity?.type === panel.tone &&
+                            selectedActivity?.date === cell.date
+                              ? "expense-heatmap__cell--selected"
+                              : ""
+                          }`}
+                          title={`${formatReadableDate(cell.date)}: ${formatCurrency(cell.total)}`}
+                          aria-label={`${formatReadableDate(cell.date)} ${panel.title.toLowerCase()} ${formatCurrency(cell.total)}`}
+                          onClick={() => setSelectedActivity({ ...cell, type: panel.tone })}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
+
+            {!selectedActivity && (
+              <p className="mt-3 text-center text-xs font-semibold text-base-content/50">
+                Click any square to inspect that day's amount.
+              </p>
+            )}
+            {selectedActivity && (
+              <div className="expense-heatmap-detail">
+                <span>{selectedActivity.type === "income" ? "Income" : "Expenses"}</span>
+                <strong>{formatCurrency(selectedActivity.total)}</strong>
+                <span>{formatReadableDate(selectedActivity.date)}</span>
+              </div>
+            )}
           </section>
         </>
       )}
