@@ -305,16 +305,16 @@ const BudgetSummary = ({ totalEarned, totalSpent, totalLimit, currency }) => {
         {summaryCards.map((card) => (
           <article
             key={card.label}
-            className="flex items-center gap-4 rounded-[1.6rem] border border-base-300 bg-base-100 p-5 shadow-sm"
+            className="flex min-w-0 items-center gap-3 rounded-[1.6rem] border border-base-300 bg-base-100 p-4 shadow-sm sm:gap-4 sm:p-5"
           >
-            <div className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-base-200 text-primary">
+            <div className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-base-200 text-primary sm:h-12 sm:w-12">
               {card.icon}
             </div>
-            <div className="min-w-0">
+            <div className="min-w-0 flex-1">
               <p className="text-xs font-bold uppercase tracking-wide text-base-content/45">
                 {card.label}
               </p>
-              <p className={`mt-1 truncate text-2xl font-black ${card.tone}`}>
+              <p className={`mt-1 break-words text-xl font-black leading-tight sm:text-2xl ${card.tone}`}>
                 {card.value}
               </p>
             </div>
