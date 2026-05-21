@@ -173,6 +173,114 @@ a {
   @apply cursor-pointer;
 }
 
+.analytics-tooltip {
+  min-width: 210px;
+  border: 1px solid var(--color-base-300);
+  border-radius: 12px;
+  background: var(--color-base-100);
+  padding: 10px 12px;
+  color: var(--color-base-content);
+  box-shadow: 0 16px 34px color-mix(in oklch, var(--color-base-content) 14%, transparent);
+}
+
+.analytics-tooltip__date {
+  margin: -10px -12px 8px;
+  border-bottom: 1px solid var(--color-base-300);
+  border-radius: 12px 12px 0 0;
+  background: var(--color-base-200);
+  padding: 8px 12px;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.analytics-tooltip__row {
+  display: grid;
+  grid-template-columns: 10px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 9px;
+  padding: 5px 0;
+  font-size: 13px;
+}
+
+.analytics-tooltip__row strong {
+  font-weight: 900;
+}
+
+.analytics-tooltip__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+}
+
+.expense-heatmap {
+  display: grid;
+  grid-template-columns: 38px minmax(0, max-content);
+  align-items: start;
+  gap: 10px;
+  overflow-x: auto;
+  padding: 4px 0 8px;
+}
+
+.expense-heatmap__days {
+  display: grid;
+  grid-template-rows: repeat(7, 14px);
+  gap: 5px;
+  color: color-mix(in oklch, var(--color-base-content) 58%, var(--color-base-100));
+  font-size: 11px;
+  line-height: 14px;
+}
+
+.expense-heatmap__grid {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 14px;
+  grid-template-rows: repeat(7, 14px);
+  gap: 5px;
+}
+
+.expense-heatmap__cell {
+  display: block;
+  width: 14px;
+  height: 14px;
+  border: 1px solid color-mix(in oklch, var(--color-base-content) 8%, var(--color-base-100));
+  border-radius: 3px;
+  background: var(--color-base-200);
+}
+
+.expense-heatmap__cell--blank {
+  border-color: transparent;
+  background: transparent;
+}
+
+.expense-heatmap__cell--0 {
+  background: color-mix(in oklch, var(--color-base-200) 92%, var(--color-error));
+}
+
+.expense-heatmap__cell--1 {
+  background: color-mix(in oklch, var(--color-error) 22%, var(--color-base-100));
+}
+
+.expense-heatmap__cell--2 {
+  background: color-mix(in oklch, var(--color-error) 42%, var(--color-base-100));
+}
+
+.expense-heatmap__cell--3 {
+  background: color-mix(in oklch, var(--color-error) 68%, var(--color-base-100));
+}
+
+.expense-heatmap__cell--4 {
+  background: color-mix(in oklch, var(--color-error) 88%, black);
+}
+
+.expense-heatmap__legend {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: color-mix(in oklch, var(--color-base-content) 58%, var(--color-base-100));
+  font-size: 12px;
+  font-weight: 600;
+}
+
 .app-alert-toast-region {
   position: fixed;
   z-index: 110;

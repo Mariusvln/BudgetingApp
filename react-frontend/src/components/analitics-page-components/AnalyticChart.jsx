@@ -35,6 +35,32 @@ const formatShortDate = (date) => {
   }).format(parsedDate);
 };
 
+const formatReadableDate = (date) => {
+  const parsedDate =
+    typeof date === "string" && /^\d{4}-\d{2}-\d{2}$/.test(date)
+      ? parseLocalDate(date)
+      : new Date(date);
+
+  if (Number.isNaN(parsedDate.getTime())) return String(date ?? "");
+
+  return new Intl.DateTimeFormat("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  }).format(parsedDate);
+};
+
+const formatMonthLabel = (monthKey) => {
+  const parsedDate = parseLocalDate(`${monthKey}-01`);
+
+  if (Number.isNaN(parsedDate.getTime())) return String(monthKey ?? "");
+
+  return new Intl.DateTimeFormat("en-US", {
+    month: "long",
+    year: "numeric",
+  }).format(parsedDate);
+};
+
 const getCategoryName = (categoryId, categories) =>
   categories.find((category) => Number(category.id) === Number(categoryId))?.name ||
   `Category #${categoryId}`;
@@ -262,6 +288,66 @@ function AnalyticChart({ dateStart, dateEnd, setDateStart, setDateEnd }) {
     [dayKeys, rangeExpenses, rangeIncomes],
   );
 
+  const sCurveData = useMemo(() => {
+    let cumulativeTotal = 0;
+
+    return dailyFlowData.map((item) => {
+      cumulativeTotal += item.income + item.expenses;
+
+      return {
+        day: item.day,
+        total: cumulativeTotal,
+      };
+    });
+  }, [dailyFlowData]);
+
+  const selectedMonthKey = useMemo(() => getMonthKey(dateEnd), [dateEnd]);
+
+  const expenseHeatmap = useMemo(() => {
+    const monthStart = parseLocalDate(`${selectedMonthKey}-01`);
+    const daysInMonth = new Date(
+      monthStart.getFullYear(),
+      monthStart.getMonth() + 1,
+      0,
+    ).getDate();
+    const firstDayIndex = (monthStart.getDay() + 6) % 7;
+    const days = Array.from({ length: daysInMonth }, (_, index) => {
+      const day = index + 1;
+      const dateKey = `${selectedMonthKey}-${String(day).padStart(2, "0")}`;
+      const total = allExpenses
+        .filter((transaction) => transaction.date === dateKey)
+        .reduce((sum, transaction) => sum + toNumber(transaction.amount), 0);
+
+      return {
+        date: dateKey,
+        day,
+        total,
+      };
+    });
+    const maxTotal = Math.max(...days.map((day) => day.total), 0);
+    const leadingBlanks = Array.from({ length: firstDayIndex }, (_, index) => ({
+      id: `blank-${index}`,
+      blank: true,
+    }));
+    const cells = [
+      ...leadingBlanks,
+      ...days.map((day) => ({
+        ...day,
+        level:
+          day.total <= 0 || maxTotal <= 0
+            ? 0
+            : Math.min(4, Math.ceil((day.total / maxTotal) * 4)),
+      })),
+    ];
+
+    return {
+      monthLabel: formatMonthLabel(selectedMonthKey),
+      cells,
+      total: days.reduce((sum, day) => sum + day.total, 0),
+      activeDays: days.filter((day) => day.total > 0).length,
+    };
+  }, [allExpenses, selectedMonthKey]);
+
   const incomeCategories = useMemo(
     () => groupByCategory(rangeIncomes, categories).slice(0, 8),
     [categories, rangeIncomes],
@@ -330,29 +416,93 @@ function AnalyticChart({ dateStart, dateEnd, setDateStart, setDateEnd }) {
   const dailyFlowOptions = useMemo(
     () => ({
       ...chartBase,
-      chart: { ...chartBase.chart, type: "area", zoom: { enabled: true } },
-      colors: [themeColors.success, themeColors.error, themeColors.info],
-      fill: {
-        type: ["gradient", "gradient", "solid"],
-        opacity: [0.34, 0.3, 0.95],
-        gradient: { opacityFrom: 0.52, opacityTo: 0.08 },
+      chart: {
+        ...chartBase.chart,
+        type: "line",
+        toolbar: { show: false },
+        zoom: { enabled: false },
       },
-      markers: { size: [0, 0, 3], hover: { size: 5 } },
-      stroke: { curve: "straight", width: [2, 2, 3] },
+      colors: ["#f97316"],
+      fill: { type: "solid", opacity: 1 },
+      markers: {
+        size: 4,
+        colors: ["#f97316"],
+        strokeColors: themeColors.base100,
+        strokeWidth: 2,
+        hover: { size: 6 },
+      },
+      stroke: {
+        curve: "smooth",
+        dashArray: 0,
+        lineCap: "round",
+        width: 3,
+      },
+      annotations: {
+        xaxis:
+          dayKeys.length > 4
+            ? [
+                {
+                  x: dayKeys[Math.floor(dayKeys.length * 0.25)],
+                  borderColor: themeColors.info,
+                  strokeDashArray: 7,
+                },
+                {
+                  x: dayKeys[Math.floor(dayKeys.length * 0.8)],
+                  borderColor: themeColors.info,
+                  strokeDashArray: 7,
+                },
+              ]
+            : [],
+      },
       tooltip: {
-        ...chartBase.tooltip,
-        shared: true,
+        shared: false,
         intersect: false,
-        x: { formatter: (value) => formatShortDate(value) },
+        custom: ({ series, dataPointIndex }) => {
+          const day = dailyFlowData[dataPointIndex]?.day;
+          const dayFlow = dailyFlowData[dataPointIndex];
+
+          return `
+            <div class="analytics-tooltip">
+              <div class="analytics-tooltip__date">${formatReadableDate(day)}</div>
+              <div class="analytics-tooltip__row">
+                <span class="analytics-tooltip__dot" style="background:#f97316"></span>
+                <span>Cumulative activity</span>
+                <strong>${formatCurrency(series[0]?.[dataPointIndex] ?? 0)}</strong>
+              </div>
+              <div class="analytics-tooltip__row">
+                <span class="analytics-tooltip__dot" style="background:${themeColors.success}"></span>
+                <span>Income</span>
+                <strong>${formatCurrency(dayFlow?.income ?? 0)}</strong>
+              </div>
+              <div class="analytics-tooltip__row">
+                <span class="analytics-tooltip__dot" style="background:${themeColors.error}"></span>
+                <span>Expenses</span>
+                <strong>${formatCurrency(dayFlow?.expenses ?? 0)}</strong>
+              </div>
+            </div>
+          `;
+        },
       },
       xaxis: {
         categories: dayKeys,
-        labels: { formatter: (value) => formatShortDate(value), rotate: -35 },
-        tickAmount: Math.min(dayKeys.length, 12),
+        tickAmount: Math.min(dayKeys.length, 8),
+        tooltip: { enabled: false },
+        labels: {
+          formatter: (value) => formatShortDate(value),
+          hideOverlappingLabels: true,
+          rotate: 0,
+          style: { fontSize: "12px", fontWeight: 700 },
+        },
       },
-      yaxis: [{ labels: { formatter: formatCompactCurrency } }],
+      yaxis: [
+        {
+          min: 0,
+          title: { text: "Cumulative amount", style: { color: themeColors.content } },
+          labels: { formatter: formatCompactCurrency },
+        },
+      ],
     }),
-    [chartBase, dayKeys, formatCompactCurrency, themeColors],
+    [chartBase, dailyFlowData, dayKeys, formatCompactCurrency, formatCurrency, themeColors],
   );
 
   const cashFlowOptions = useMemo(
@@ -519,18 +669,20 @@ function AnalyticChart({ dateStart, dateEnd, setDateStart, setDateEnd }) {
           <section className="grid gap-5 xl:grid-cols-[1.15fr_1fr]">
             <div className="rounded-2xl border border-base-300 bg-base-100 p-4 shadow-sm">
               <h2 className="mb-2 text-center text-base font-bold text-base-content">
-                Daily Income, Expenses and Net Growth
+                S-curve Chart
               </h2>
               {hasAnalyticsData ? (
                 <Chart
                   key={`daily-flow-${theme}-${currency}`}
                   options={dailyFlowOptions}
                   series={[
-                    { name: "Income", type: "area", data: dailyFlowData.map((item) => item.income) },
-                    { name: "Expenses", type: "area", data: dailyFlowData.map((item) => item.expenses) },
-                    { name: "Net Growth", type: "line", data: dailyFlowData.map((item) => item.netGrowth) },
+                    {
+                      name: "Cumulative activity",
+                      type: "line",
+                      data: sCurveData.map((item) => item.total),
+                    },
                   ]}
-                  type="area"
+                  type="line"
                   height={320}
                 />
               ) : (
@@ -614,6 +766,59 @@ function AnalyticChart({ dateStart, dateEnd, setDateStart, setDateEnd }) {
                   No expense data
                 </div>
               )}
+            </div>
+          </section>
+
+          <section className="mt-5 rounded-2xl border border-base-300 bg-base-100 p-4 shadow-sm">
+            <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <h2 className="text-base font-bold text-base-content">
+                  Monthly Expense Activity
+                </h2>
+                <p className="mt-1 text-sm font-medium text-base-content/60">
+                  {expenseHeatmap.monthLabel} · {expenseHeatmap.activeDays} spending days · {formatCurrency(expenseHeatmap.total)}
+                </p>
+              </div>
+              <div className="expense-heatmap__legend" aria-hidden="true">
+                <span>Less</span>
+                {[0, 1, 2, 3, 4].map((level) => (
+                  <span
+                    key={level}
+                    className={`expense-heatmap__cell expense-heatmap__cell--${level}`}
+                  />
+                ))}
+                <span>More</span>
+              </div>
+            </div>
+
+            <div className="expense-heatmap" aria-label="Monthly expense heatmap">
+              <div className="expense-heatmap__days" aria-hidden="true">
+                <span>Mon</span>
+                <span>Tue</span>
+                <span>Wed</span>
+                <span>Thu</span>
+                <span>Fri</span>
+                <span>Sat</span>
+                <span>Sun</span>
+              </div>
+              <div className="expense-heatmap__grid">
+                {expenseHeatmap.cells.map((cell, index) =>
+                  cell.blank ? (
+                    <span key={cell.id} className="expense-heatmap__cell expense-heatmap__cell--blank" />
+                  ) : (
+                    <span
+                      key={cell.date}
+                      className={`expense-heatmap__cell expense-heatmap__cell--${cell.level}`}
+                      title={`${formatReadableDate(cell.date)}: ${formatCurrency(cell.total)}`}
+                      aria-label={`${formatReadableDate(cell.date)} expenses ${formatCurrency(cell.total)}`}
+                    >
+                      <span className="sr-only">
+                        {index + 1}: {formatCurrency(cell.total)}
+                      </span>
+                    </span>
+                  ),
+                )}
+              </div>
             </div>
           </section>
         </>
