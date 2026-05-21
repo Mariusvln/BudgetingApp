@@ -65,23 +65,25 @@ const ExpenseTransaction = ({
 
   return (
     <Fragment>
-      <tr className="hover">
-        <td className="text-xs font-mono text-gray-400">#{id}</td>
-        <td className="text-sm text-gray-500">{date}</td>
-        <td className="text-sm font-medium text-gray-700">{description}</td>
+      <tr className="hover:bg-base-200/45">
+        <td className="font-mono text-xs text-base-content/45">#{id}</td>
+        <td className="text-sm text-base-content/60">{date}</td>
+        <td className="text-sm font-medium text-base-content">
+          {description || "No description"}
+        </td>
         <td>
-          <span className="badge badge-soft badge-primary text-xs">
+          <span className="badge border-primary/15 bg-primary/10 text-xs text-primary">
             {categoryName}
           </span>
         </td>
-        <td className="text-right font-medium text-red-600">
+        <td className="text-right font-medium text-error">
           -{formatCurrency(amount, user?.currency)}
         </td>
         <td>
           <div className="flex justify-end gap-2">
             <button
               type="button"
-              className="bg-primary text-primary-content font-bold px-2 py-1 rounded-lg hover:bg-primary/90"
+              className="rounded-lg bg-primary px-2 py-1 font-bold text-primary-content hover:bg-primary/90"
               onClick={show}
             >
               Edit

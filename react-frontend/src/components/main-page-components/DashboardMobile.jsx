@@ -1,5 +1,12 @@
 import MonthlyGrowth from "./MonthlyGrowth";
 
+const BudgetIcon = () => (
+  <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5">
+    <rect x="6" y="5" width="12" height="15" rx="2" fill="none" stroke="currentColor" strokeWidth="2" />
+    <path d="M9 3v4M15 3v4M9 10h6M9 14h4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+  </svg>
+);
+
 const DashboardMobile = ({
   balance,
   budgetGoals = [],
@@ -114,32 +121,52 @@ const DashboardMobile = ({
         </div>
 
         {budgetGoals.length ? (
-          <div className="grid gap-4 md:grid-cols-2">
+          <div className="max-h-[360px] overflow-y-auto pr-1">
+          <div className="grid gap-3 md:grid-cols-2">
             {budgetGoals.map((goal) => {
               const isOverBudget = Number(goal.spent) > Number(goal.maxLimit);
 
               return (
-                <div key={goal.id} className="rounded-xl bg-base-200/70 p-3">
-                  <div className="flex justify-between gap-3">
-                    <p className={`font-bold ${isOverBudget ? "text-error" : "text-base-content"}`}>
-                      {goal.name}
-                    </p>
-                    <p className={isOverBudget ? "text-sm font-bold text-error" : "text-sm font-semibold text-base-content/55"}>
-                      {formatCurrency(goal.spent)}
-                    </p>
+                <article
+                  key={goal.id}
+                  className="rounded-2xl border border-base-300 bg-base-200/60 p-3"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className={`grid h-10 w-10 shrink-0 place-items-center rounded-xl ${
+                      isOverBudget
+                        ? "bg-error/10 text-error"
+                        : "bg-base-100 text-base-content/70"
+                    }`}>
+                      <BudgetIcon />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="min-w-0">
+                          <p className={`truncate font-extrabold ${
+                            isOverBudget ? "text-error" : "text-base-content"
+                          }`}>
+                            {goal.name}
+                          </p>
+                          <p className="mt-0.5 text-xs font-semibold text-base-content/45">
+                            Limit · {formatCurrency(goal.maxLimit)}
+                          </p>
+                        </div>
+                        <p className={isOverBudget ? "shrink-0 text-sm font-bold text-error" : "shrink-0 text-sm font-semibold text-base-content/60"}>
+                          {formatCurrency(goal.spent)}
+                        </p>
+                      </div>
+                      <div className="mt-3 h-2 overflow-hidden rounded-full bg-base-300">
+                        <div
+                          className={`h-full rounded-full ${isOverBudget ? "bg-error" : "bg-primary"}`}
+                          style={{ width: `${goal.percent}%` }}
+                        />
+                      </div>
+                    </div>
                   </div>
-                  <p className="mt-1 text-xs font-semibold text-base-content/45">
-                    Limit {formatCurrency(goal.maxLimit)}
-                  </p>
-                  <div className="mt-3 h-2 overflow-hidden rounded-full bg-base-300">
-                    <div
-                      className={`h-full rounded-full ${isOverBudget ? "bg-error" : "bg-primary"}`}
-                      style={{ width: `${goal.percent}%` }}
-                    />
-                  </div>
-                </div>
+                </article>
               );
             })}
+          </div>
           </div>
         ) : (
           <div className="rounded-xl bg-base-200 p-4 text-sm font-semibold text-base-content/55">

@@ -123,8 +123,7 @@ const MainPage = () => {
             percent: maxLimit > 0 ? Math.min((spent / maxLimit) * 100, 100) : 0,
           };
         })
-        .sort((left, right) => right.percent - left.percent)
-        .slice(0, 2);
+        .sort((left, right) => right.percent - left.percent);
 
       return {
         balance,
