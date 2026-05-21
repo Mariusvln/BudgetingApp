@@ -791,7 +791,7 @@ a {
 
 @media (max-width: 767px) {
   .transactions-page {
-    background: #f7f9f8;
+    background: var(--color-base-200);
   }
 
   .transactions-page__content {
@@ -812,7 +812,7 @@ a {
 
   .transactions-mobile__header h2 {
     margin: 0;
-    color: #1f2937;
+    color: var(--color-base-content);
     font-size: 18px;
     font-weight: 800;
     line-height: 1.2;
@@ -821,7 +821,7 @@ a {
   .transactions-mobile__header button {
     border: 0;
     background: transparent;
-    color: #22c55e;
+    color: var(--color-primary);
     font-size: 13px;
     font-weight: 800;
     line-height: 1;
@@ -840,7 +840,8 @@ a {
     min-height: 60px;
     gap: 12px;
     border-radius: 11px;
-    background: #ffffff;
+    border: 1px solid var(--color-base-300);
+    background: var(--color-base-100);
     padding: 11px 12px;
     box-shadow:
       0 8px 18px rgba(15, 23, 42, 0.045),
@@ -854,8 +855,8 @@ a {
     align-items: center;
     justify-content: center;
     border-radius: 9px;
-    background: #f1f5f9;
-    color: #64748b;
+    background: color-mix(in oklab, var(--color-base-content) 8%, transparent);
+    color: color-mix(in oklab, var(--color-base-content) 68%, transparent);
   }
 
   .transactions-mobile__icon svg {
@@ -869,8 +870,8 @@ a {
   }
 
   .transactions-mobile__icon--income {
-    background: #dcfce7;
-    color: #22c55e;
+    background: color-mix(in oklab, var(--color-success) 14%, transparent);
+    color: var(--color-success);
   }
 
   .transactions-mobile__details {
@@ -880,7 +881,7 @@ a {
   .transactions-mobile__details h3 {
     margin: 0 0 2px;
     overflow: hidden;
-    color: #1f2937;
+    color: var(--color-base-content);
     font-size: 13px;
     font-weight: 800;
     line-height: 1.1;
@@ -891,7 +892,7 @@ a {
   .transactions-mobile__details p {
     margin: 0;
     overflow: hidden;
-    color: #8a97aa;
+    color: color-mix(in oklab, var(--color-base-content) 58%, transparent);
     font-size: 11px;
     font-weight: 600;
     line-height: 1.15;
@@ -900,12 +901,12 @@ a {
   }
 
   .transactions-mobile__details span {
-    color: #a7b0bf;
+    color: color-mix(in oklab, var(--color-base-content) 42%, transparent);
   }
 
   .transactions-mobile__amount {
     margin: 0;
-    color: #1f2937;
+    color: var(--color-error);
     font-size: 13px;
     font-weight: 900;
     line-height: 1;
@@ -913,7 +914,7 @@ a {
   }
 
   .transactions-mobile__amount--income {
-    color: #22c55e;
+    color: var(--color-success);
   }
 
   .transactions-mobile__actions {
@@ -950,9 +951,10 @@ a {
 
   .transactions-mobile__empty {
     border-radius: 11px;
-    background: #ffffff;
+    border: 1px solid var(--color-base-300);
+    background: var(--color-base-100);
     padding: 22px 12px;
-    color: #8a97aa;
+    color: color-mix(in oklab, var(--color-base-content) 58%, transparent);
     font-size: 13px;
     font-weight: 700;
     text-align: center;
@@ -965,7 +967,7 @@ a {
 @media (min-width: 768px) and (max-width: 1023px) {
   .transactions-page {
     margin-left: 0 !important;
-    background: #f7f9f8;
+    background: var(--color-base-200);
   }
 
   .transactions-page > aside {
@@ -992,7 +994,7 @@ a {
 
   .transactions-mobile__header h2 {
     margin: 0;
-    color: #1f2937;
+    color: var(--color-base-content);
     font-size: 22px;
     font-weight: 800;
     line-height: 1.2;
@@ -1001,7 +1003,7 @@ a {
   .transactions-mobile__header button {
     border: 0;
     background: transparent;
-    color: #22c55e;
+    color: var(--color-primary);
     font-size: 15px;
     font-weight: 800;
     line-height: 1;
@@ -1020,7 +1022,8 @@ a {
     min-height: 76px;
     gap: 16px;
     border-radius: 13px;
-    background: #ffffff;
+    border: 1px solid var(--color-base-300);
+    background: var(--color-base-100);
     padding: 14px 18px;
     box-shadow:
       0 10px 22px rgba(15, 23, 42, 0.045),
@@ -1034,8 +1037,8 @@ a {
     align-items: center;
     justify-content: center;
     border-radius: 11px;
-    background: #f1f5f9;
-    color: #64748b;
+    background: color-mix(in oklab, var(--color-base-content) 8%, transparent);
+    color: color-mix(in oklab, var(--color-base-content) 68%, transparent);
   }
 
   .transactions-mobile__icon svg {
@@ -1049,8 +1052,8 @@ a {
   }
 
   .transactions-mobile__icon--income {
-    background: #dcfce7;
-    color: #22c55e;
+    background: color-mix(in oklab, var(--color-success) 14%, transparent);
+    color: var(--color-success);
   }
 
   .transactions-mobile__details {
@@ -1060,7 +1063,7 @@ a {
   .transactions-mobile__details h3 {
     margin: 0 0 4px;
     overflow: hidden;
-    color: #1f2937;
+    color: var(--color-base-content);
     font-size: 16px;
     font-weight: 800;
     line-height: 1.15;
@@ -1071,7 +1074,7 @@ a {
   .transactions-mobile__details p {
     margin: 0;
     overflow: hidden;
-    color: #8a97aa;
+    color: color-mix(in oklab, var(--color-base-content) 58%, transparent);
     font-size: 13px;
     font-weight: 600;
     line-height: 1.2;
@@ -1080,12 +1083,12 @@ a {
   }
 
   .transactions-mobile__details span {
-    color: #a7b0bf;
+    color: color-mix(in oklab, var(--color-base-content) 42%, transparent);
   }
 
   .transactions-mobile__amount {
     margin: 0;
-    color: #1f2937;
+    color: var(--color-error);
     font-size: 16px;
     font-weight: 900;
     line-height: 1;
@@ -1093,7 +1096,7 @@ a {
   }
 
   .transactions-mobile__amount--income {
-    color: #22c55e;
+    color: var(--color-success);
   }
 
   .transactions-mobile__actions {
@@ -1130,9 +1133,10 @@ a {
 
   .transactions-mobile__empty {
     border-radius: 13px;
-    background: #ffffff;
+    border: 1px solid var(--color-base-300);
+    background: var(--color-base-100);
     padding: 28px 18px;
-    color: #8a97aa;
+    color: color-mix(in oklab, var(--color-base-content) 58%, transparent);
     font-size: 15px;
     font-weight: 700;
     text-align: center;
