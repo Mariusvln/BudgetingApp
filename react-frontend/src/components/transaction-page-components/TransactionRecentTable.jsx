@@ -2,48 +2,30 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import { formatCurrency } from "../../utils/currency";
 
+const tabs = [
+  { value: "ALL", label: "All" },
+  { value: "INCOME", label: "Income" },
+  { value: "EXPENSE", label: "Expenses" },
+];
+
+const toNumber = (value) => Number(value) || 0;
+
 function TransactionRecentTable() {
   const { user } = useAuth();
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("ALL");
+  const [searchQuery, setSearchQuery] = useState("");
 
   const formatDate = (dateValue) => {
     const date = new Date(dateValue);
+
+    if (Number.isNaN(date.getTime())) return "Unknown date";
+
     return new Intl.DateTimeFormat("en-US", {
       month: "short",
       day: "numeric",
       year: "numeric",
-    }).format(date);
-  };
-
-  const formatMobileDate = (dateValue) => {
-    const date = new Date(dateValue);
-    const today = new Date();
-    const yesterday = new Date();
-
-    yesterday.setDate(today.getDate() - 1);
-
-    const isSameDay = (left, right) =>
-      left.getFullYear() === right.getFullYear() &&
-      left.getMonth() === right.getMonth() &&
-      left.getDate() === right.getDate();
-
-    if (Number.isNaN(date.getTime())) {
-      return "Today";
-    }
-
-    if (isSameDay(date, today)) {
-      return "Today";
-    }
-
-    if (isSameDay(date, yesterday)) {
-      return "Yesterday";
-    }
-
-    return new Intl.DateTimeFormat("en-US", {
-      month: "short",
-      day: "numeric",
     }).format(date);
   };
 
@@ -82,257 +64,270 @@ function TransactionRecentTable() {
   }, [fetchTransactions]);
 
   const filteredTransactions = useMemo(() => {
-    if (activeTab === "ALL") {
-      return transactions;
-    }
+    const normalizedSearch = searchQuery.trim().toLowerCase();
 
-    return transactions.filter(
-      (transaction) => transaction.transactionType === activeTab,
-    );
-  }, [activeTab, transactions]);
+    return transactions.filter((transaction) => {
+      const matchesTab =
+        activeTab === "ALL" || transaction.transactionType === activeTab;
+
+      if (!matchesTab) return false;
+      if (!normalizedSearch) return true;
+
+      return [
+        transaction.description,
+        transaction.categoryName,
+        transaction.transactionType,
+        transaction.date,
+      ]
+        .filter(Boolean)
+        .some((value) => String(value).toLowerCase().includes(normalizedSearch));
+    });
+  }, [activeTab, searchQuery, transactions]);
+
+  const stats = useMemo(() => {
+    const income = transactions
+      .filter((transaction) => transaction.transactionType === "INCOME")
+      .reduce((sum, transaction) => sum + toNumber(transaction.amount), 0);
+    const expenses = transactions
+      .filter((transaction) => transaction.transactionType === "EXPENSE")
+      .reduce((sum, transaction) => sum + toNumber(transaction.amount), 0);
+
+    return [
+      {
+        label: "Total Income",
+        value: formatCurrency(income, user?.currency),
+        tone: "text-success",
+      },
+      {
+        label: "Total Expenses",
+        value: formatCurrency(expenses, user?.currency),
+        tone: "text-error",
+      },
+      {
+        label: "Balance",
+        value: formatCurrency(income - expenses, user?.currency),
+        tone: income - expenses >= 0 ? "text-primary" : "text-error",
+      },
+      {
+        label: "Transactions",
+        value: transactions.length.toLocaleString("en-US"),
+        tone: "text-base-content",
+      },
+    ];
+  }, [transactions, user?.currency]);
 
   const getCategoryName = (transaction) =>
     transaction.categoryName ||
-    (transaction.transactionType === "INCOME"
-      ? "Income"
-      : "Expense");
+    (transaction.transactionType === "INCOME" ? "Income" : "Expense");
 
-  const getMobileIconType = (transaction) => {
-    const text =
-      `${getCategoryName(transaction)} ${transaction.description || ""}`.toLowerCase();
-
-    if (transaction.transactionType === "INCOME") return "income";
-    if (
-      text.includes("food") ||
-      text.includes("drink") ||
-      text.includes("coffee")
-    ) {
-      return "food";
-    }
-    if (
-      text.includes("transport") ||
-      text.includes("uber") ||
-      text.includes("trip")
-    ) {
-      return "transport";
-    }
-
-    return "calendar";
-  };
-
-  const MobileTransactionIcon = ({ type }) => {
-    if (type === "income") {
-      return (
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <rect x="3" y="6" width="18" height="13" rx="2.5" />
-          <path d="M7 9.5h10" />
-          <rect x="8" y="11" width="8" height="5" rx="1.5" />
-          <circle cx="12" cy="13.5" r="1.2" />
-        </svg>
-      );
-    }
-
-    if (type === "food") {
-      return (
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M7 4v7" />
-          <path d="M5 4v7" />
-          <path d="M9 4v7" />
-          <path d="M5 11h4" />
-          <path d="M7 11v9" />
-          <path d="M16 4v16" />
-          <path d="M16 4c2.2 1.3 3.2 3 3.2 5.4 0 1.9-.9 3.2-3.2 3.2" />
-        </svg>
-      );
-    }
-
-    if (type === "transport") {
-      return (
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M5 12l1.6-4.2A2 2 0 0 1 8.5 6.5h7a2 2 0 0 1 1.9 1.3L19 12" />
-          <path d="M5 12h14v5H5z" />
-          <path d="M7 17v1.5" />
-          <path d="M17 17v1.5" />
-          <circle cx="8" cy="14.5" r="1" />
-          <circle cx="16" cy="14.5" r="1" />
-        </svg>
-      );
-    }
-
-    return (
-      <svg viewBox="0 0 24 24" aria-hidden="true">
-        <rect x="5" y="5" width="14" height="16" rx="2" />
-        <path d="M8 3v4" />
-        <path d="M16 3v4" />
-        <path d="M8 10h8" />
-      </svg>
-    );
-  };
-
-  const mobileTransactions = filteredTransactions.slice(0, 10);
+  const visibleCountText = loading
+    ? "Loading transactions..."
+    : `Showing ${filteredTransactions.length.toLocaleString("en-US")} of ${transactions.length.toLocaleString("en-US")}`;
 
   return (
-    <>
-      <section className="transactions-mobile lg:hidden">
-        <div className="transactions-mobile__header">
-          <h2>Recent Transactions</h2>
-          <button type="button">See All</button>
-        </div>
-
-        <div className="transactions-mobile__list">
-          {loading ? (
-            <div className="transactions-mobile__empty">Loading transactions...</div>
-          ) : mobileTransactions.length === 0 ? (
-            <div className="transactions-mobile__empty">No transactions found</div>
-          ) : (
-            mobileTransactions.map((transaction) => {
-              const categoryName = getCategoryName(transaction);
-              const iconType = getMobileIconType(transaction);
-              const isIncome = transaction.transactionType === "INCOME";
-
-              return (
-                <article
-                  className="transactions-mobile__item"
-                  key={transaction.id}
-                >
-                  <div
-                    className={`transactions-mobile__icon transactions-mobile__icon--${iconType}`}
-                  >
-                    <MobileTransactionIcon type={iconType} />
-                  </div>
-
-                  <div className="transactions-mobile__details">
-                    <h3>{transaction.description || "No description"}</h3>
-                    <p>
-                      {categoryName} <span>&middot;</span>{" "}
-                      {formatMobileDate(transaction.date)}
-                    </p>
-                  </div>
-
-                  <p
-                    className={`transactions-mobile__amount ${
-                      isIncome ? "transactions-mobile__amount--income" : ""
-                    }`}
-                  >
-                    {formatAmount(transaction.amount, transaction.transactionType)}
-                  </p>
-                </article>
-              );
-            })
-          )}
-        </div>
-      </section>
-
-      <div className="card hidden border border-base-200 bg-base-100 lg:block">
-      <div className="card-body">
-        <div className="mb-4 flex items-center justify-between">
+    <main className="mx-auto w-full max-w-[1440px]">
+      <section className="mb-5 rounded-lg border border-base-300 bg-base-100 p-5 shadow-sm">
+        <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
           <div>
-            <h2 className="text-xl font-semibold">Recent Transactions</h2>
-            <p className="text-sm text-gray-500">
-              {loading
-                ? "Loading transactions..."
-                : `You have ${filteredTransactions.length} transactions`}
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">
+              Transactions
+            </p>
+            <h1 className="mt-1 text-2xl font-bold text-base-content sm:text-3xl">
+              Transaction history
+            </h1>
+            <p className="mt-2 text-sm font-medium text-base-content/60">
+              Review income and expenses in one clean journal.
             </p>
           </div>
 
-          <div
-            className="flex w-fit space-x-1 overflow-x-auto rounded-xl bg-base-200 p-1"
-            aria-label="Tabs"
-            role="tablist"
-            aria-orientation="horizontal"
-          >
-            {["ALL", "INCOME", "EXPENSE"].map((tab) => (
-              <button
-                key={tab}
-                type="button"
-                onClick={() => setActiveTab(tab)}
-                className={`btn btn-sm rounded-xl border-none px-4 ${
-                  activeTab === tab
-                    ? "bg-primary text-primary-content"
-                    : "bg-transparent text-base-content/65 hover:bg-base-100 hover:text-base-content"
-                }`}
-                aria-selected={activeTab === tab}
-              >
-                {tab === "ALL"
-                  ? "All"
-                  : tab === "INCOME"
-                    ? "Income"
-                    : "Expenses"}
-              </button>
-            ))}
+          <div className="flex w-full flex-col gap-3 sm:flex-row xl:w-auto">
+            <label className="input input-bordered flex h-11 min-w-0 items-center gap-2 rounded-lg border-base-300 bg-base-100 sm:min-w-80">
+              <span className="text-base-content/45">Search</span>
+              <input
+                value={searchQuery}
+                onChange={(event) => setSearchQuery(event.target.value)}
+                type="search"
+                className="grow text-sm text-base-content placeholder:text-base-content/40"
+                placeholder="description, category, date..."
+              />
+            </label>
+
+            <div
+              className="flex w-full overflow-hidden rounded-lg border border-base-300 bg-base-200/60 p-1 sm:w-fit"
+              aria-label="Transaction filters"
+            >
+              {tabs.map((tab) => (
+                <button
+                  key={tab.value}
+                  type="button"
+                  onClick={() => setActiveTab(tab.value)}
+                  className={`h-9 flex-1 rounded-md px-4 text-sm font-semibold transition sm:flex-none ${
+                    activeTab === tab.value
+                      ? "bg-primary text-primary-content shadow-sm"
+                      : "text-base-content/65 hover:bg-base-100 hover:text-base-content"
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
+      </section>
 
-        <div className="overflow-x-auto">
+      <section className="mb-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+        {stats.map((item) => (
+          <div
+            key={item.label}
+            className="rounded-lg border border-base-300 bg-base-100 p-4 shadow-sm"
+          >
+            <p className="text-sm font-semibold text-base-content/55">{item.label}</p>
+            <p className={`mt-2 text-2xl font-black ${item.tone}`}>{item.value}</p>
+          </div>
+        ))}
+      </section>
+
+      <section className="overflow-hidden rounded-lg border border-base-300 bg-base-100 shadow-sm">
+        <div className="flex flex-col gap-2 border-b border-base-300 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h2 className="text-lg font-bold text-base-content">Recent Transactions</h2>
+            <p className="text-sm font-medium text-base-content/55">{visibleCountText}</p>
+          </div>
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-base-content/45">
+            Newest first
+          </p>
+        </div>
+
+        <div className="hidden overflow-x-auto lg:block">
           <table className="table">
-            <thead className="text-sm text-gray-500">
+            <thead className="text-xs uppercase tracking-[0.14em] text-base-content/55">
               <tr>
-                <th>Date</th>
-                <th>Description</th>
-                <th>Category</th>
-                <th className="text-right">Amount</th>
+                <th className="px-5 py-4">Date</th>
+                <th className="px-5 py-4">Description</th>
+                <th className="px-5 py-4">Category</th>
+                <th className="px-5 py-4">Type</th>
+                <th className="px-5 py-4 text-right">Amount</th>
               </tr>
             </thead>
 
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan="4" className="py-8 text-center text-gray-500">
+                  <td colSpan="5" className="px-5 py-12 text-center text-base-content/55">
                     Loading transactions...
                   </td>
                 </tr>
               ) : filteredTransactions.length === 0 ? (
                 <tr>
-                  <td colSpan="4" className="py-8 text-center text-gray-500">
+                  <td colSpan="5" className="px-5 py-12 text-center text-base-content/55">
                     No transactions found
                   </td>
                 </tr>
               ) : (
-                filteredTransactions.map((transaction) => (
-                  <tr key={transaction.id}>
-                    <td className="text-sm text-gray-500">
-                      {formatDate(transaction.date)}
-                    </td>
+                filteredTransactions.map((transaction) => {
+                  const isIncome = transaction.transactionType === "INCOME";
 
-                    <td className="font-medium">
-                      {transaction.description || "No description"}
-                    </td>
-
-                    <td>
-                      <span className="badge badge-soft badge-primary text-xs">
-                        {transaction.categoryName}
-                      </span>
-                    </td>
-
-                    <td
-                      className={`text-right font-medium ${
-                        transaction.transactionType === "INCOME"
-                          ? "text-green-500"
-                          : "text-red-600"
-                      }`}
+                  return (
+                    <tr
+                      key={transaction.id}
+                      className="border-base-200 hover:bg-base-200/45"
                     >
-                      {formatAmount(
-                        transaction.amount,
-                        transaction.transactionType,
-                      )}
-                    </td>
-                  </tr>
-                ))
+                      <td className="px-5 py-4 text-sm font-medium text-base-content/65">
+                        {formatDate(transaction.date)}
+                      </td>
+                      <td className="max-w-[360px] px-5 py-4">
+                        <p className="truncate font-semibold text-base-content">
+                          {transaction.description || "No description"}
+                        </p>
+                      </td>
+                      <td className="px-5 py-4">
+                        <span className="badge border-primary/15 bg-primary/10 text-primary">
+                          {getCategoryName(transaction)}
+                        </span>
+                      </td>
+                      <td className="px-5 py-4">
+                        <span
+                          className={`badge ${
+                            isIncome
+                              ? "border-success/15 bg-success/10 text-success"
+                              : "border-error/15 bg-error/10 text-error"
+                          }`}
+                        >
+                          {isIncome ? "Income" : "Expense"}
+                        </span>
+                      </td>
+                      <td
+                        className={`px-5 py-4 text-right font-black ${
+                          isIncome ? "text-success" : "text-error"
+                        }`}
+                      >
+                        {formatAmount(transaction.amount, transaction.transactionType)}
+                      </td>
+                    </tr>
+                  );
+                })
               )}
             </tbody>
           </table>
         </div>
 
-        <div className="mt-4 flex items-center justify-between">
-          <p className="text-sm text-gray-500">
-            {loading
-              ? "Loading..."
-              : `Showing ${filteredTransactions.length} results`}
-          </p>
+        <div className="grid gap-3 p-4 lg:hidden">
+          {loading ? (
+            <div className="rounded-lg border border-base-300 p-6 text-center text-sm font-semibold text-base-content/55">
+              Loading transactions...
+            </div>
+          ) : filteredTransactions.length === 0 ? (
+            <div className="rounded-lg border border-base-300 p-6 text-center text-sm font-semibold text-base-content/55">
+              No transactions found
+            </div>
+          ) : (
+            filteredTransactions.map((transaction) => {
+              const isIncome = transaction.transactionType === "INCOME";
+
+              return (
+                <article
+                  key={transaction.id}
+                  className="rounded-lg border border-base-300 bg-base-100 p-4"
+                >
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="min-w-0">
+                      <p className="truncate font-bold text-base-content">
+                        {transaction.description || "No description"}
+                      </p>
+                      <p className="mt-1 text-sm font-medium text-base-content/55">
+                        {formatDate(transaction.date)}
+                      </p>
+                    </div>
+                    <p
+                      className={`shrink-0 font-black ${
+                        isIncome ? "text-success" : "text-error"
+                      }`}
+                    >
+                      {formatAmount(transaction.amount, transaction.transactionType)}
+                    </p>
+                  </div>
+
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    <span className="badge border-primary/15 bg-primary/10 text-primary">
+                      {getCategoryName(transaction)}
+                    </span>
+                    <span
+                      className={`badge ${
+                        isIncome
+                          ? "border-success/15 bg-success/10 text-success"
+                          : "border-error/15 bg-error/10 text-error"
+                      }`}
+                    >
+                      {isIncome ? "Income" : "Expense"}
+                    </span>
+                  </div>
+                </article>
+              );
+            })
+          )}
         </div>
-      </div>
-    </div>
-    </>
+      </section>
+    </main>
   );
 }
 

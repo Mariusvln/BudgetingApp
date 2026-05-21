@@ -4,13 +4,13 @@ import { useAuth } from "../../contexts/AuthContext";
 import { useTheme } from "../../contexts/useTheme";
 import {
   convertFromEuro,
-  formatCurrency as formatMoney,
   normalizeCurrency,
 } from "../../utils/currency";
 
 const API_BASE = "http://localhost:8080/api";
 
 const toNumber = (value) => Number(value) || 0;
+const roundCurrency = (value) => Math.round((toNumber(value) + Number.EPSILON) * 100) / 100;
 const parseLocalDate = (date) => new Date(`${date}T00:00:00`);
 const getMonthKey = (date) => String(date || "").slice(0, 7);
 
@@ -50,7 +50,7 @@ const groupByCategory = (transactions, categories) => {
     .map(([categoryId, total]) => ({
       categoryId: Number(categoryId),
       name: getCategoryName(categoryId, categories),
-      total,
+      total: roundCurrency(total),
     }))
     .sort((left, right) => right.total - left.total);
 };
@@ -87,22 +87,35 @@ function AnalyticChart({ dateStart, dateEnd, setDateStart, setDateEnd }) {
   const [themeColors, setThemeColors] = useState(getThemeColors);
 
   const currency = normalizeCurrency(user?.currency);
-  const locale = currency === "EUR" ? "lt-LT" : "en-US";
 
   const formatCurrency = useCallback(
-    (value) => formatMoney(value, currency),
+    (value) => {
+      const safeValue = roundCurrency(value);
+
+      return new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency,
+        currencyDisplay: "narrowSymbol",
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }).format(convertFromEuro(safeValue, currency));
+    },
     [currency],
   );
 
   const formatCompactCurrency = useCallback(
-    (value) =>
-      new Intl.NumberFormat(locale, {
+    (value) => {
+      const safeValue = roundCurrency(value);
+
+      return new Intl.NumberFormat("en-US", {
         style: "currency",
         currency,
+        currencyDisplay: "narrowSymbol",
         notation: "compact",
         maximumFractionDigits: 1,
-      }).format(convertFromEuro(value, currency)),
-    [currency, locale],
+      }).format(convertFromEuro(safeValue, currency));
+    },
+    [currency],
   );
 
   useEffect(() => {
@@ -239,9 +252,9 @@ function AnalyticChart({ dateStart, dateEnd, setDateStart, setDateEnd }) {
 
         return {
           month,
-          income,
-          expense,
-          cashFlow: income - expense,
+          income: roundCurrency(income),
+          expense: roundCurrency(expense),
+          cashFlow: roundCurrency(income - expense),
         };
       }),
     [monthKeys, rangeExpenses, rangeIncomes],
@@ -257,7 +270,12 @@ function AnalyticChart({ dateStart, dateEnd, setDateStart, setDateEnd }) {
           .filter((transaction) => transaction.date === day)
           .reduce((sum, transaction) => sum + toNumber(transaction.amount), 0);
 
-        return { day, income, expenses, netGrowth: income - expenses };
+        return {
+          day,
+          income: roundCurrency(income),
+          expenses: roundCurrency(expenses),
+          netGrowth: roundCurrency(income - expenses),
+        };
       }),
     [dayKeys, rangeExpenses, rangeIncomes],
   );
@@ -291,10 +309,10 @@ function AnalyticChart({ dateStart, dateEnd, setDateStart, setDateEnd }) {
     );
 
     return {
-      netWorth: allIncomeTotal - allExpenseTotal,
-      income: totalIncome,
-      expenses: totalExpenses,
-      cashFlow: totalIncome - totalExpenses,
+      netWorth: roundCurrency(allIncomeTotal - allExpenseTotal),
+      income: roundCurrency(totalIncome),
+      expenses: roundCurrency(totalExpenses),
+      cashFlow: roundCurrency(totalIncome - totalExpenses),
     };
   }, [allExpenses, allIncomes, rangeExpenses, rangeIncomes]);
 
@@ -387,6 +405,9 @@ function AnalyticChart({ dateStart, dateEnd, setDateStart, setDateEnd }) {
             size: "68%",
             labels: {
               show: true,
+              value: {
+                formatter: formatCurrency,
+              },
               total: {
                 show: true,
                 label: type === "INCOME" ? "Income" : "Expenses",
@@ -398,7 +419,7 @@ function AnalyticChart({ dateStart, dateEnd, setDateStart, setDateEnd }) {
         },
       },
     }),
-    [chartBase, formatCompactCurrency, themeColors],
+    [chartBase, formatCompactCurrency, formatCurrency, themeColors],
   );
 
   const expenseBarOptions = useMemo(
@@ -457,7 +478,7 @@ function AnalyticChart({ dateStart, dateEnd, setDateStart, setDateEnd }) {
               type="date"
               value={dateStart}
               onChange={(event) => setDateStart(event.target.value)}
-              className="input input-bordered h-10 rounded-xl bg-base-200/60 text-sm"
+              className="input input-bordered h-10 rounded-xl border-base-300 bg-base-100 text-sm text-base-content"
             />
           </label>
           <label className="grid gap-1">
@@ -466,18 +487,20 @@ function AnalyticChart({ dateStart, dateEnd, setDateStart, setDateEnd }) {
               type="date"
               value={dateEnd}
               onChange={(event) => setDateEnd(event.target.value)}
-              className="input input-bordered h-10 rounded-xl bg-base-200/60 text-sm"
+              className="input input-bordered h-10 rounded-xl border-base-300 bg-base-100 text-sm text-base-content"
             />
           </label>
           <div className="grid gap-1">
             <span className="text-xs font-semibold text-base-content/60">Year</span>
-            <div className="join">
+            <div className="flex overflow-hidden rounded-xl border border-base-300 bg-base-100">
               {years.map((year) => (
                 <button
                   type="button"
                   key={year}
-                  className={`btn join-item btn-sm min-w-18 ${
-                    selectedYear === year ? "btn-primary" : "btn-ghost bg-base-200"
+                  className={`flex h-10 min-w-[4.5rem] items-center justify-center px-4 text-sm font-semibold transition ${
+                    selectedYear === year
+                      ? "bg-primary text-primary-content hover:bg-primary/90"
+                      : "bg-base-100 text-base-content hover:bg-base-200"
                   }`}
                   onClick={() => setYearRange(year)}
                 >
