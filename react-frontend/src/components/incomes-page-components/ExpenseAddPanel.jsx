@@ -105,7 +105,7 @@ function ExpenseAddPanel({ onTransactionAdded, categories = [] }) {
           <div className="flex flex-col gap-3">
             <input
               type="date"
-              className="input input-bordered"
+              className="input input-bordered border-base-300 bg-base-100 text-base-content"
               value={date}
               onChange={(e) => setDate(e.target.value)}
             />
@@ -116,7 +116,7 @@ function ExpenseAddPanel({ onTransactionAdded, categories = [] }) {
               min={MIN_TRANSACTION_AMOUNT}
               step="0.01"
               placeholder={getCurrencyPlaceholder(user?.currency)}
-              className="input input-bordered"
+              className="input input-bordered border-base-300 bg-base-100 text-base-content placeholder:text-base-content/45"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
             />
@@ -124,13 +124,13 @@ function ExpenseAddPanel({ onTransactionAdded, categories = [] }) {
             <input
               type="text"
               placeholder="Description (e.g. Grass cutting)"
-              className="input input-bordered"
+              className="input input-bordered border-base-300 bg-base-100 text-base-content placeholder:text-base-content/45"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
             />
 
             <select
-              className="select select-bordered"
+              className="select select-bordered border-base-300 bg-base-100 text-base-content"
               value={category}
               onChange={(e) => setCategory(e.target.value)}
             >

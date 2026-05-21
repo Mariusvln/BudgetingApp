@@ -130,7 +130,7 @@ function IncomeAddPanel({ onTransactionAdded, categories = [] }) {
             <input
               type="date"
               id="date"
-              className="input input-bordered"
+              className="input input-bordered border-base-300 bg-base-100 text-base-content"
               {...register("date")}
             />
 
@@ -141,7 +141,7 @@ function IncomeAddPanel({ onTransactionAdded, categories = [] }) {
               min={MIN_TRANSACTION_AMOUNT}
               step="0.01"
               placeholder={getCurrencyPlaceholder(user?.currency)}
-              className="input input-bordered"
+              className="input input-bordered border-base-300 bg-base-100 text-base-content placeholder:text-base-content/45"
               {...register("amount", {
                 required:
                   "Please input your income, letters and symbols not allowed",
@@ -150,24 +150,24 @@ function IncomeAddPanel({ onTransactionAdded, categories = [] }) {
               })}
             />
             {errors.amount?.message && (
-              <p className="text-red-500">{errors.amount?.message}</p>
+              <p className="text-error">{errors.amount?.message}</p>
             )}
 
             <input
               type="text"
               id="description"
               placeholder="Description (e.g. Grass cutting)"
-              className="input input-bordered"
+              className="input input-bordered border-base-300 bg-base-100 text-base-content placeholder:text-base-content/45"
               {...register("description", {
                 maxLength: { value: 50, message: "Description is too long" },
               })}
             />
             {errors.description?.message && (
-              <p className="text-red-500">{errors.description?.message}</p>
+              <p className="text-error">{errors.description?.message}</p>
             )}
 
             <select
-              className="select select-bordered"
+              className="select select-bordered border-base-300 bg-base-100 text-base-content"
               {...register("category", {
                 required: "Please select a category",
               })}
@@ -186,7 +186,7 @@ function IncomeAddPanel({ onTransactionAdded, categories = [] }) {
               )}
             </select>
             {errors.category?.message && (
-              <p className="text-red-500">{errors.category.message}</p>
+              <p className="text-error">{errors.category.message}</p>
             )}
 
             <button

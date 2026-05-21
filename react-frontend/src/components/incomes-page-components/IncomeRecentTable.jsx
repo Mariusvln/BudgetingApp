@@ -205,14 +205,14 @@ function IncomeRecentTable({
           </div>
 
           <div className="rounded-2xl bg-base-200/60 p-3">
-            <div className="grid grid-cols-1 gap-3 xl:grid-cols-[minmax(240px,1fr)_210px_160px_160px_auto]">
+            <div className="grid grid-cols-1 gap-3 xl:grid-cols-2 2xl:grid-cols-[minmax(240px,1fr)_210px_160px_160px_auto]">
             <label className="flex flex-col gap-1">
               <span className="text-[11px] font-semibold uppercase tracking-wide text-base-content/50">
                 Search
               </span>
               <input
                 type="text"
-                className="input input-bordered h-11 rounded-xl bg-base-100 text-sm"
+                className="input input-bordered h-11 rounded-xl border-base-300 bg-base-100 text-sm text-base-content placeholder:text-base-content/45"
                 placeholder="Title or category..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery?.(e.target.value)}
@@ -243,7 +243,7 @@ function IncomeRecentTable({
               </span>
               <input
                 type="date"
-                className="input input-bordered h-11 rounded-xl bg-base-100 text-sm"
+                className="input input-bordered h-11 rounded-xl border-base-300 bg-base-100 text-sm text-base-content"
                 value={dateStart}
                 onChange={(e) => setDateStart(e.target.value)}
               />
@@ -255,7 +255,7 @@ function IncomeRecentTable({
               </span>
               <input
                 type="date"
-                className="input input-bordered h-11 rounded-xl bg-base-100 text-sm"
+                className="input input-bordered h-11 rounded-xl border-base-300 bg-base-100 text-sm text-base-content"
                 value={dateEnd}
                 onChange={(e) => setDateEnd(e.target.value)}
               />
@@ -263,7 +263,7 @@ function IncomeRecentTable({
 
             <button
               type="button"
-              className="btn h-11 self-end rounded-xl border-base-300 bg-base-100 px-5 text-base-content/75 hover:bg-base-200 disabled:bg-base-200/80 disabled:text-base-content/45 disabled:opacity-100"
+              className="btn h-11 self-end rounded-xl border-base-300 bg-base-100 px-5 text-base-content/75 hover:bg-base-200 disabled:bg-base-200/80 disabled:text-base-content/45 disabled:opacity-100 xl:justify-self-start 2xl:justify-self-auto"
               onClick={() => {
                 setSearchQuery?.("");
                 setSelectedCategory?.("ALL");

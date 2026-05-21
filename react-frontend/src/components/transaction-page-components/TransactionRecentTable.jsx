@@ -8,6 +8,7 @@ const tabs = [
   { value: "EXPENSE", label: "Expenses" },
 ];
 
+const PAGE_SIZE = 50;
 const toNumber = (value) => Number(value) || 0;
 
 function TransactionRecentTable() {
@@ -16,6 +17,7 @@ function TransactionRecentTable() {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("ALL");
   const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
 
   const formatDate = (dateValue) => {
     const date = new Date(dateValue);
@@ -62,6 +64,10 @@ function TransactionRecentTable() {
   useEffect(() => {
     fetchTransactions();
   }, [fetchTransactions]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [activeTab, searchQuery]);
 
   const filteredTransactions = useMemo(() => {
     const normalizedSearch = searchQuery.trim().toLowerCase();
@@ -120,15 +126,26 @@ function TransactionRecentTable() {
     transaction.categoryName ||
     (transaction.transactionType === "INCOME" ? "Income" : "Expense");
 
+  const totalPages = Math.max(1, Math.ceil(filteredTransactions.length / PAGE_SIZE));
+  const safePage = Math.min(currentPage, totalPages);
+  const pageStart = (safePage - 1) * PAGE_SIZE;
+  const pageEnd = Math.min(pageStart + PAGE_SIZE, filteredTransactions.length);
+  const visibleTransactions = useMemo(
+    () => filteredTransactions.slice(pageStart, pageEnd),
+    [filteredTransactions, pageEnd, pageStart],
+  );
+
   const visibleCountText = loading
     ? "Loading transactions..."
-    : `Showing ${filteredTransactions.length.toLocaleString("en-US")} of ${transactions.length.toLocaleString("en-US")}`;
+    : `Showing ${
+        filteredTransactions.length === 0 ? 0 : pageStart + 1
+      }-${pageEnd} of ${filteredTransactions.length.toLocaleString("en-US")} filtered`;
 
   return (
     <main className="mx-auto w-full max-w-[1440px]">
       <section className="mb-5 rounded-lg border border-base-300 bg-base-100 p-5 shadow-sm">
-        <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
-          <div>
+        <div className="flex flex-col gap-4 xl:flex-row xl:flex-wrap xl:items-end xl:justify-between">
+          <div className="min-w-0">
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">
               Transactions
             </p>
@@ -140,8 +157,8 @@ function TransactionRecentTable() {
             </p>
           </div>
 
-          <div className="flex w-full flex-col gap-3 sm:flex-row xl:w-auto">
-            <label className="input input-bordered flex h-11 min-w-0 items-center gap-2 rounded-lg border-base-300 bg-base-100 sm:min-w-80">
+          <div className="flex min-w-0 w-full flex-col gap-3 sm:flex-row xl:w-auto xl:max-w-full">
+            <label className="input input-bordered flex h-11 min-w-0 items-center gap-2 rounded-lg border-base-300 bg-base-100 sm:min-w-80 xl:w-[390px] xl:max-w-[42vw]">
               <span className="text-base-content/45">Search</span>
               <input
                 value={searchQuery}
@@ -153,7 +170,7 @@ function TransactionRecentTable() {
             </label>
 
             <div
-              className="flex w-full overflow-hidden rounded-lg border border-base-300 bg-base-200/60 p-1 sm:w-fit"
+              className="flex w-full min-w-0 overflow-x-auto rounded-lg border border-base-300 bg-base-200/60 p-1 sm:w-fit sm:max-w-full"
               aria-label="Transaction filters"
             >
               {tabs.map((tab) => (
@@ -161,7 +178,7 @@ function TransactionRecentTable() {
                   key={tab.value}
                   type="button"
                   onClick={() => setActiveTab(tab.value)}
-                  className={`h-9 flex-1 rounded-md px-4 text-sm font-semibold transition sm:flex-none ${
+                  className={`h-9 min-w-24 flex-1 rounded-md px-4 text-sm font-semibold transition sm:flex-none ${
                     activeTab === tab.value
                       ? "bg-primary text-primary-content shadow-sm"
                       : "text-base-content/65 hover:bg-base-100 hover:text-base-content"
@@ -191,7 +208,12 @@ function TransactionRecentTable() {
         <div className="flex flex-col gap-2 border-b border-base-300 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h2 className="text-lg font-bold text-base-content">Recent Transactions</h2>
-            <p className="text-sm font-medium text-base-content/55">{visibleCountText}</p>
+            <p className="text-sm font-medium text-base-content/55">
+              {visibleCountText}
+              {!loading && filteredTransactions.length !== transactions.length
+                ? ` from ${transactions.length.toLocaleString("en-US")} total`
+                : ""}
+            </p>
           </div>
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-base-content/45">
             Newest first
@@ -217,14 +239,14 @@ function TransactionRecentTable() {
                     Loading transactions...
                   </td>
                 </tr>
-              ) : filteredTransactions.length === 0 ? (
+              ) : visibleTransactions.length === 0 ? (
                 <tr>
                   <td colSpan="5" className="px-5 py-12 text-center text-base-content/55">
                     No transactions found
                   </td>
                 </tr>
               ) : (
-                filteredTransactions.map((transaction) => {
+                visibleTransactions.map((transaction) => {
                   const isIncome = transaction.transactionType === "INCOME";
 
                   return (
@@ -276,12 +298,12 @@ function TransactionRecentTable() {
             <div className="rounded-lg border border-base-300 p-6 text-center text-sm font-semibold text-base-content/55">
               Loading transactions...
             </div>
-          ) : filteredTransactions.length === 0 ? (
+          ) : visibleTransactions.length === 0 ? (
             <div className="rounded-lg border border-base-300 p-6 text-center text-sm font-semibold text-base-content/55">
               No transactions found
             </div>
           ) : (
-            filteredTransactions.map((transaction) => {
+            visibleTransactions.map((transaction) => {
               const isIncome = transaction.transactionType === "INCOME";
 
               return (
@@ -326,6 +348,35 @@ function TransactionRecentTable() {
             })
           )}
         </div>
+
+        {filteredTransactions.length > PAGE_SIZE ? (
+          <div className="flex flex-col gap-3 border-t border-base-300 px-5 py-4 text-sm text-base-content/60 sm:flex-row sm:items-center sm:justify-between">
+            <span>
+              Page {safePage} of {totalPages}
+            </span>
+
+            <div className="join">
+              <button
+                type="button"
+                className="btn join-item btn-sm"
+                disabled={safePage === 1}
+                onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}
+              >
+                Previous
+              </button>
+              <button
+                type="button"
+                className="btn join-item btn-sm"
+                disabled={safePage === totalPages}
+                onClick={() =>
+                  setCurrentPage((page) => Math.min(totalPages, page + 1))
+                }
+              >
+                Next
+              </button>
+            </div>
+          </div>
+        ) : null}
       </section>
     </main>
   );

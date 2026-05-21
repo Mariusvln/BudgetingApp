@@ -1,24 +1,24 @@
-import React from 'react';
+import React from "react";
 
 function TransactionRecentTable({ transactions, loading, dateStart, dateEnd, setDateStart, setDateEnd }) {
   return (
-    <div className="card bg-base-100 border border-base-200 shadow-sm">
+    <div className="card border border-base-300 bg-base-100 shadow-sm">
       <div className="card-body">
         
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+        <div className="mb-6 flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
           <div>
             <h2 className="text-xl font-semibold">Income History</h2>
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-base-content/60">
               {loading ? "Loading..." : `Showing ${transactions.length} entries`}
             </p>
           </div>
 
-          <div className="flex flex-wrap gap-2 items-center">
+          <div className="flex flex-wrap items-center gap-2">
             <div className="form-control">
               <label className="label py-0"><span className="label-text text-xs">Start</span></label>
               <input 
                 type="date" 
-                className="input input-bordered input-sm" 
+                className="input input-bordered input-sm border-base-300 bg-base-100 text-base-content"
                 value={dateStart}
                 onChange={(e) => setDateStart(e.target.value)}
               />
@@ -27,7 +27,7 @@ function TransactionRecentTable({ transactions, loading, dateStart, dateEnd, set
               <label className="label py-0"><span className="label-text text-xs">End</span></label>
               <input 
                 type="date" 
-                className="input input-bordered input-sm" 
+                className="input input-bordered input-sm border-base-300 bg-base-100 text-base-content"
                 value={dateEnd}
                 onChange={(e) => setDateEnd(e.target.value)}
               />
@@ -37,7 +37,7 @@ function TransactionRecentTable({ transactions, loading, dateStart, dateEnd, set
 
         <div className="overflow-x-auto">
           <table className="table">
-            <thead className="text-gray-500 text-sm">
+            <thead className="text-sm text-base-content/55">
               <tr>
                 <th>ID</th>
                 <th>Date</th>
@@ -50,22 +50,22 @@ function TransactionRecentTable({ transactions, loading, dateStart, dateEnd, set
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan="5" className="text-center py-8">
+                  <td colSpan="5" className="py-8 text-center">
                     <span className="loading loading-spinner loading-md text-primary"></span>
                   </td>
                 </tr>
               ) : (
                 transactions.map((t) => (
-                  <tr key={t.id} className="hover">
-                    <td className="text-xs font-mono text-gray-400">#{t.id}</td>
-                    <td className="text-sm text-gray-500">{t.date}</td>
-                    <td className="text-sm font-medium text-gray-700">{t.description}</td>
+                  <tr key={t.id} className="hover:bg-base-200/45">
+                    <td className="font-mono text-xs text-base-content/45">#{t.id}</td>
+                    <td className="text-sm text-base-content/60">{t.date}</td>
+                    <td className="text-sm font-medium text-base-content">{t.description}</td>
                     <td>
-                      <span className="badge badge-soft badge-primary text-xs">
+                      <span className="badge border-primary/15 bg-primary/10 text-xs text-primary">
                         Cat: {t.category}
                       </span>
                     </td>
-                    <td className="text-right font-medium text-green-600">
+                    <td className="text-right font-medium text-success">
                       +${t.amount?.toFixed(2)}
                     </td>
                   </tr>
@@ -75,7 +75,7 @@ function TransactionRecentTable({ transactions, loading, dateStart, dateEnd, set
           </table>
 
           {!loading && transactions.length === 0 && (
-            <div className="text-center py-10 text-gray-400">No data found for this range</div>
+            <div className="py-10 text-center text-base-content/40">No data found for this range</div>
           )}
         </div>
       </div>

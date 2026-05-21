@@ -139,7 +139,7 @@ function IncomesPage() {
               </span>
               <input
                 type="text"
-                className="input input-bordered h-11 rounded-xl bg-base-200/60"
+                className="input input-bordered h-11 rounded-xl border-base-300 bg-base-200/60 text-base-content placeholder:text-base-content/45"
                 placeholder="Search by title or category..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -187,7 +187,7 @@ function IncomesPage() {
               <span className="text-xs font-medium text-base-content/70">From</span>
               <input
                 type="date"
-                className="input input-bordered h-11 rounded-xl bg-base-200/60 text-sm"
+                className="input input-bordered h-11 rounded-xl border-base-300 bg-base-200/60 text-sm text-base-content"
                 value={dateStart}
                 onChange={(e) => setDateStart(e.target.value)}
               />
@@ -197,7 +197,7 @@ function IncomesPage() {
               <span className="text-xs font-medium text-base-content/70">To</span>
               <input
                 type="date"
-                className="input input-bordered h-11 rounded-xl bg-base-200/60 text-sm"
+                className="input input-bordered h-11 rounded-xl border-base-300 bg-base-200/60 text-sm text-base-content"
                 value={dateEnd}
                 onChange={(e) => setDateEnd(e.target.value)}
               />
@@ -215,8 +215,8 @@ function IncomesPage() {
           </button>
         </div>
 
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-          <div className="lg:col-span-2">
+        <div className="grid grid-cols-1 gap-6 min-[1800px]:grid-cols-[minmax(0,1fr)_minmax(320px,360px)]">
+          <div className="min-w-0">
             <IncomeRecentTable
               transactions={filteredTransactions}
               loading={loading}
@@ -238,7 +238,7 @@ function IncomesPage() {
             </div>
           </div>
 
-          <div className="hidden lg:block">
+          <div className="hidden min-w-0 lg:block">
             <IncomeAddPanel
               onTransactionAdded={fetchIncomes}
               categories={incomeCategories}

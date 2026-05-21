@@ -98,41 +98,41 @@ const IncomeEditForm = ({
   return ReactDom.createPortal(
     <div className="fixed inset-0 z-50 grid place-items-center bg-black/40 p-4 backdrop-blur-[2px]">
       <form
-        className="w-full max-w-[560px] rounded-[20px] bg-white p-6 shadow-[0_20px_60px_rgba(16,24,40,0.18)]"
+        className="w-full max-w-[560px] rounded-[20px] border border-base-300 bg-base-100 p-6 text-base-content shadow-[0_20px_60px_rgba(16,24,40,0.18)]"
         onSubmit={handleSubmit(handleSave)}
       >
         <div className="mb-6 flex items-center justify-between">
           <div>
-            <h3 className="text-[22px] font-semibold text-[#101828]">
+            <h3 className="text-[22px] font-semibold text-base-content">
               Edit Income
             </h3>
-            <p className="mt-1 text-sm text-[#667085]">Transaction #{id}</p>
+            <p className="mt-1 text-sm text-base-content/60">Transaction #{id}</p>
           </div>
         </div>
 
         <label className="mb-4 block">
-          <span className="mb-2 block text-sm font-medium text-[#344054]">
+          <span className="mb-2 block text-sm font-medium text-base-content/70">
             Date
           </span>
           <input
             type="date"
             id="date"
-            className="w-full rounded-xl border border-[#d0d5dd] px-3 py-2.5 text-[#101828] focus:border-primary focus:outline-none"
+            className="w-full rounded-xl border border-base-300 bg-base-100 px-3 py-2.5 text-base-content focus:border-primary focus:outline-none"
             {...register("date")}
           />
         </label>
 
         <label className="mb-2 block">
-          <span className="mb-2 block text-sm font-medium text-[#344054]">
+          <span className="mb-2 block text-sm font-medium text-base-content/70">
             Description
           </span>
           <input
             type="text"
             id="description"
-            className={`w-full rounded-xl border px-3 py-2.5 text-[#101828] focus:outline-none ${
+            className={`w-full rounded-xl border bg-base-100 px-3 py-2.5 text-base-content focus:outline-none ${
               errors.description?.message
-                ? "border-[#e5484d] focus:border-[#e5484d]"
-                : "border-[#d0d5dd] focus:border-primary"
+                ? "border-error focus:border-error"
+                : "border-base-300 focus:border-primary"
             }`}
             {...register("description", {
               maxLength: {value: 50, message: "Description is too long"}
@@ -142,15 +142,15 @@ const IncomeEditForm = ({
         </label>
 
         {errors.description?.message && (
-          <p className="mb-3 text-xs text-[#e5484d]">{errors.description?.message}</p>
+          <p className="mb-3 text-xs text-error">{errors.description?.message}</p>
         )}
 
         <label className="mb-4 block">
-          <span className="mb-2 block text-sm font-medium text-[#344054]">
+          <span className="mb-2 block text-sm font-medium text-base-content/70">
             Category
           </span>
           <select
-            className="w-full rounded-xl border border-[#d0d5dd] px-3 py-2.5 text-[#101828] focus:border-primary focus:outline-none"
+            className="w-full rounded-xl border border-base-300 bg-base-100 px-3 py-2.5 text-base-content focus:border-primary focus:outline-none"
             {...register("category")}
             value={selectedCategory || ""}
           >
@@ -169,7 +169,7 @@ const IncomeEditForm = ({
         </label>
 
         <label className="mb-2 block">
-          <span className="mb-2 block text-sm font-medium text-[#344054]">
+          <span className="mb-2 block text-sm font-medium text-base-content/70">
             Amount
           </span>
           <input
@@ -179,10 +179,10 @@ const IncomeEditForm = ({
             min={MIN_TRANSACTION_AMOUNT}
             step="0.01"
             placeholder={getCurrencyPlaceholder(user?.currency)}
-            className={`w-full rounded-xl border px-3 py-2.5 text-[#101828] focus:outline-none ${
+            className={`w-full rounded-xl border bg-base-100 px-3 py-2.5 text-base-content placeholder:text-base-content/45 focus:outline-none ${
               errors.amount?.message
-                ? "border-[#e5484d] focus:border-[#e5484d]"
-                : "border-[#d0d5dd] focus:border-primary"
+                ? "border-error focus:border-error"
+                : "border-base-300 focus:border-primary"
             }`}
             {...register("amount", {
               required: "Please input your income amount, letters and symbols not allowed",
@@ -192,13 +192,13 @@ const IncomeEditForm = ({
         </label>
 
         {errors.amount?.message && (
-          <p className="mb-3 text-xs text-[#e5484d]">{errors.amount?.message}</p>
+          <p className="mb-3 text-xs text-error">{errors.amount?.message}</p>
         )}
 
         <div className="mt-6 flex justify-end gap-3">
           <button
             type="button"
-            className="rounded-xl border border-[#d0d5dd] px-4 py-2.5 text-sm font-medium text-[#344054] hover:bg-[#f9fafb]"
+            className="rounded-xl border border-base-300 bg-base-100 px-4 py-2.5 text-sm font-medium text-base-content/75 hover:bg-base-200"
             onClick={show}
           >
             Cancel
