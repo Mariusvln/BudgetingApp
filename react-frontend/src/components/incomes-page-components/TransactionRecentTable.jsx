@@ -65,7 +65,7 @@ function TransactionRecentTable({ transactions, loading, dateStart, dateEnd, set
                         Cat: {t.category}
                       </span>
                     </td>
-                    <td className="text-right font-medium text-success">
+                    <td className="numeric-text text-right font-medium text-success">
                       +${t.amount?.toFixed(2)}
                     </td>
                   </tr>

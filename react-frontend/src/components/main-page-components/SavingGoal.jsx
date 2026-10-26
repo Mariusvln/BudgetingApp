@@ -10,9 +10,9 @@ const SavingGoal = () => {
         <div>
           <div className="flex justify-between gap-22 text-base-content/55">
             <h4 className="text-lg font-bold text-base-content">Saving Goal</h4>
-            <p className="font-bold">{formatCurrency(2300, user?.currency)}</p>
+            <p className="numeric-text font-bold">{formatCurrency(2300, user?.currency)}</p>
           </div>
-          <h2 className="text-3xl font-bold text-base-content">
+          <h2 className="numeric-text text-3xl font-bold text-base-content">
             {formatCurrency(1840, user?.currency)}
           </h2>
         </div>

@@ -76,7 +76,7 @@ const ExpenseTransaction = ({
             {categoryName}
           </span>
         </td>
-        <td className="text-right font-medium text-error">
+        <td className="numeric-text text-right font-medium text-error">
           -{formatCurrency(amount, user?.currency)}
         </td>
         <td>

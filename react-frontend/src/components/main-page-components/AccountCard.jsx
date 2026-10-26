@@ -17,7 +17,7 @@ const AccountCard = ({balance}) => {
                     />
                   </button>
                 </div>
-                <h2 className="self-start text-3xl font-bold text-white">{balance}</h2>
+                <h2 className="numeric-text self-start text-3xl font-bold text-white">{balance}</h2>
                 <hr className="my-5" />
                 <div className="flex justify-between">
                   <div className="flex flex-col justify-center">
