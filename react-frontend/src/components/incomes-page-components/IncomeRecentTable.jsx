@@ -140,7 +140,7 @@ function IncomeRecentTable({
                       </p>
                     </div>
 
-                    <p className="transactions-mobile__amount transactions-mobile__amount--income">
+                    <p className="transactions-mobile__amount transactions-mobile__amount--income numeric-text">
                       {formatAmount(transaction.amount)}
                     </p>
 

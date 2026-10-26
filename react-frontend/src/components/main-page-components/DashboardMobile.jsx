@@ -38,11 +38,11 @@ const DashboardMobile = ({
             <p className="text-xs font-bold uppercase tracking-[0.16em] text-primary-content/70">
               Total Balance
             </p>
-            <h2 className="mt-3 text-4xl font-black tracking-tight sm:text-5xl">
+            <h2 className="numeric-text mt-3 text-4xl font-black tracking-tight sm:text-5xl">
               {loading ? formatCurrency(0) : balance}
             </h2>
           </div>
-          <div className="rounded-full bg-primary-content/18 px-3 py-1 text-xs font-bold backdrop-blur">
+          <div className="numeric-text rounded-full bg-primary-content/18 px-3 py-1 text-xs font-bold backdrop-blur">
             {savingsPercent}%
           </div>
         </div>
@@ -51,7 +51,7 @@ const DashboardMobile = ({
             <p className="text-xs font-bold uppercase tracking-wide text-primary-content/60">
               Spending
             </p>
-            <p className="mt-1 text-lg font-extrabold">
+            <p className="numeric-text mt-1 text-lg font-extrabold">
               {formatCurrency(loading ? 0 : monthlySpending)}
             </p>
           </div>
@@ -59,7 +59,7 @@ const DashboardMobile = ({
             <p className="text-xs font-bold uppercase tracking-wide text-primary-content/60">
               Savings
             </p>
-            <p className="mt-1 text-lg font-extrabold">
+            <p className="numeric-text mt-1 text-lg font-extrabold">
               {formatCurrency(loading ? 0 : monthlySavings)}
             </p>
           </div>
@@ -71,7 +71,7 @@ const DashboardMobile = ({
           <p className="text-xs font-bold uppercase tracking-wide text-base-content/45">
             Income
           </p>
-          <p className="mt-2 text-xl font-extrabold text-base-content">
+          <p className="numeric-text mt-2 text-xl font-extrabold text-base-content">
             {loading ? formatCurrency(0) : incomes}
           </p>
         </div>
@@ -79,7 +79,7 @@ const DashboardMobile = ({
           <p className="text-xs font-bold uppercase tracking-wide text-base-content/45">
             Expenses
           </p>
-          <p className="mt-2 text-xl font-extrabold text-base-content">
+          <p className="numeric-text mt-2 text-xl font-extrabold text-base-content">
             {loading ? formatCurrency(0) : expenses}
           </p>
         </div>
@@ -87,7 +87,7 @@ const DashboardMobile = ({
           <p className="text-xs font-bold uppercase tracking-wide text-base-content/45">
             Saved
           </p>
-          <p className="mt-2 text-xl font-extrabold text-base-content">
+          <p className="numeric-text mt-2 text-xl font-extrabold text-base-content">
             {formatCurrency(loading ? 0 : monthlySavings)}
           </p>
         </div>
@@ -95,7 +95,7 @@ const DashboardMobile = ({
           <p className="text-xs font-bold uppercase tracking-wide text-base-content/45">
             Ratio
           </p>
-          <p className="mt-2 text-xl font-extrabold text-base-content">
+          <p className="numeric-text mt-2 text-xl font-extrabold text-base-content">
             {savingsPercent}%
           </p>
         </div>
@@ -151,9 +151,9 @@ const DashboardMobile = ({
                             Limit · {formatCurrency(goal.maxLimit)}
                           </p>
                         </div>
-                        <p className={isOverBudget ? "shrink-0 text-sm font-bold text-error" : "shrink-0 text-sm font-semibold text-base-content/60"}>
-                          {formatCurrency(goal.spent)}
-                        </p>
+                          <p className={isOverBudget ? "numeric-text shrink-0 text-sm font-bold text-error" : "numeric-text shrink-0 text-sm font-semibold text-base-content/60"}>
+                            {formatCurrency(goal.spent)}
+                          </p>
                       </div>
                       <div className="mt-3 h-2 overflow-hidden rounded-full bg-base-300">
                         <div

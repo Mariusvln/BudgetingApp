@@ -75,7 +75,7 @@ const Transaction = ({
           {categoryName}
         </span>
       </td>
-      <td className="text-right font-medium text-success">
+      <td className="numeric-text text-right font-medium text-success">
         +{formatCurrency(amount, user?.currency)}
       </td>
       <td>

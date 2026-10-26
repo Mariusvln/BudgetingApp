@@ -89,7 +89,7 @@ const MonthlyGrowth = ({ incomes = [], expenses = [], formatCurrency }) => {
     labels: ["Days 1-6", "7-12", "13-18", "19-24", `25-${daysInThisMonth()}`],
     datasets: [
       {
-        label: "Money saved this month",
+        label: "This month",
         data: tsMonthSavings,
         backgroundColor: tsMonthSavings.map((value) =>
           value >= 0 ? positiveBarColor : negativeBarColor,
@@ -100,7 +100,7 @@ const MonthlyGrowth = ({ incomes = [], expenses = [], formatCurrency }) => {
         maxBarThickness: 31,
       },
       {
-        label: "Money saved last month",
+        label: "Last month",
         data: prevMonthSavings,
         backgroundColor: ["#B2BEB5"],
         barPercentage: 0.62,
@@ -123,6 +123,17 @@ const MonthlyGrowth = ({ incomes = [], expenses = [], formatCurrency }) => {
         backgroundColor: "rgba(15, 23, 42, 0.92)",
         padding: 12,
         cornerRadius: 12,
+         callbacks: {
+            label: (context) => {
+              const value = context.parsed.y;
+              const verb = value < 0 ? "spent" : "saved";
+              const amount = formatCurrency
+                ? formatCurrency(Math.abs(value))
+                : Math.abs(value).toFixed(2);
+
+              return `Money ${verb} ${context.dataset.label.toLowerCase()}: ${amount}`;
+            },
+          },
       },
     },
     scales: {
@@ -149,18 +160,18 @@ const MonthlyGrowth = ({ incomes = [], expenses = [], formatCurrency }) => {
   return (
     <div className="min-h-[260px] basis-[100px] grow rounded-3xl border border-base-300 bg-base-100 p-6 shadow-sm">
       <div className="flex justify-between">
-        <p className="text-sm font-bold text-base-content/60">Monthly Growth</p>
+        <p className="numeric-text text-[1.15rem] font-bold text-base-content/60">Monthly Growth</p>
         <p className="font-bold text-base-content/35">...</p>
       </div>
-      <h3 className={`mt-2 text-3xl font-extrabold tracking-tight ${totalTone}`}>
+      <h3 className={`numeric-text mt-2 text-center text-3xl font-extrabold tracking-tight ${totalTone}`}>
         {formatCurrency
           ? formatCurrency(totalSavings)
           : `EUR ${totalSavings.toLocaleString("en-US", { minimumFractionDigits: 2 })}`}
       </h3>
-      <div className="flex gap-1">
+      <div className="flex justify-center gap-1">
         {growthPercentage > 0 && <img src={profitIcon} alt="Profit Icon" className="pt-1" />}
         {growthPercentage < 0 && <img src={lossIcon} alt="Loss Icon" className="pt-1"/>}
-        <p className={`font-bold ${growthTone}`}>
+        <p className={`numeric-text font-bold ${growthTone}`}>
           {growthPrefix}
           {growthPercentage}% this month
         </p>

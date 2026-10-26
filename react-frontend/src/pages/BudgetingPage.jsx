@@ -258,13 +258,13 @@ const BudgetSummary = ({ totalEarned, totalSpent, totalLimit, currency }) => {
               Monthly Balance
             </p>
             <h2
-              className={`mt-3 text-4xl font-black tracking-tight sm:text-5xl ${
+              className={`numeric-text mt-3 text-4xl font-black tracking-tight sm:text-5xl ${
                 remainingBalance < 0 ? "text-error-content" : "text-primary-content"
               }`}
             >
               {formatCurrency(remainingBalance, currency)}
             </h2>
-            <p className="mt-3 max-w-xl text-sm font-semibold text-primary-content/70">
+            <p className="mt-3 ml-0.5 max-w-xl text-sm font-semibold text-primary-content/70">
               {formatCurrency(totalSpent, currency)} spent from {formatCurrency(totalEarned, currency)} earned this month.
             </p>
           </div>
@@ -274,7 +274,7 @@ const BudgetSummary = ({ totalEarned, totalSpent, totalLimit, currency }) => {
             }`}
           >
             <p className="text-xs font-bold uppercase tracking-wide">Usage</p>
-            <p className="mt-1 text-2xl font-black">{usedPercent.toFixed(0)}%</p>
+            <p className="numeric-text mt-1 text-2xl font-black">{usedPercent.toFixed(0)}%</p>
             <p className="mt-1 text-xs font-bold opacity-75">{healthLabel}</p>
           </div>
         </div>
@@ -282,7 +282,7 @@ const BudgetSummary = ({ totalEarned, totalSpent, totalLimit, currency }) => {
         <div className="relative mt-7 rounded-2xl bg-primary-content/14 p-4 backdrop-blur">
           <div className="mb-3 flex items-center justify-between gap-4 text-sm">
             <span className="font-bold text-primary-content">Budget usage</span>
-            <span className="font-semibold text-primary-content/75">
+            <span className="numeric-text font-semibold text-primary-content/75">
               {formatCurrency(totalSpent, currency)} / {formatCurrency(totalLimit, currency)}
             </span>
           </div>
@@ -295,8 +295,8 @@ const BudgetSummary = ({ totalEarned, totalSpent, totalLimit, currency }) => {
             />
           </div>
           <div className="mt-3 flex justify-between text-xs font-semibold text-primary-content/65">
-            <span>{formatCurrency(0, currency)}</span>
-            <span>{formatCurrency(totalLimit, currency)}</span>
+            <span className="numeric-text">{formatCurrency(0, currency)}</span>
+            <span className="numeric-text">{formatCurrency(totalLimit, currency)}</span>
           </div>
         </div>
       </div>
@@ -314,7 +314,7 @@ const BudgetSummary = ({ totalEarned, totalSpent, totalLimit, currency }) => {
               <p className="text-xs font-bold uppercase tracking-wide text-base-content/45">
                 {card.label}
               </p>
-              <p className={`mt-1 break-words text-xl font-black leading-tight sm:text-2xl ${card.tone}`}>
+              <p className={`numeric-text mt-0.5 break-words text-xl font-black leading-tight sm:text-2xl ${card.tone}`}>
                 {card.value}
               </p>
             </div>
@@ -563,7 +563,7 @@ const CategoryCard = ({ category, onEdit, onDelete, expenses, currency }) => {
             <BudgetIcon />
           </div>
           <div className="min-w-0">
-            <p className={`truncate text-lg font-black ${over ? "text-error" : "text-base-content"}`}>
+            <p className={`numeric-text truncate text-lg font-black ${over ? "text-error" : "text-base-content"}`}>
               {categoryName}
             </p>
             <p className="mt-1 text-xs font-semibold text-base-content/45">
@@ -574,7 +574,7 @@ const CategoryCard = ({ category, onEdit, onDelete, expenses, currency }) => {
 
         <div className="sm:text-right">
           <p
-            className={`text-xl font-black ${
+            className={`numeric-text text-xl font-black ${
               over ? "text-error" : "text-base-content"
             }`}
           >
@@ -607,14 +607,14 @@ const CategoryCard = ({ category, onEdit, onDelete, expenses, currency }) => {
       </div>
 
       <div className="mt-3 flex justify-between text-xs font-semibold">
-        <span className={over ? "text-error" : "text-base-content/60"}>
+        <span className={`numeric-text ${over ? "text-error" : "text-base-content/60"}`}>
           Spent: {formatCurrency(spent, currency)}
         </span>
-        <span className="text-base-content/60">Limit: {formatCurrency(limit, currency)}</span>
+        <span className="numeric-text text-base-content/60">Limit: {formatCurrency(limit, currency)}</span>
       </div>
 
       {over && (
-        <p className="mt-3 rounded-xl bg-error/10 px-3 py-2 text-right text-xs font-bold text-error">
+        <p className="numeric-text mt-3 rounded-xl bg-error/10 px-3 py-2 text-right text-xs font-bold text-error">
           Over budget by {formatCurrency(spent - limit, currency)}
         </p>
       )}
@@ -649,7 +649,7 @@ const CategoryCard = ({ category, onEdit, onDelete, expenses, currency }) => {
                         {formatItemDate(item.date)}
                       </p>
                     </div>
-                    <p className="shrink-0 text-sm font-black text-base-content">
+                    <p className="numeric-text shrink-0 text-sm font-black text-base-content">
                       {formatCurrency(item.amount, currency)}
                     </p>
                   </li>
@@ -947,18 +947,18 @@ const BudgetingPage = () => {
                 <button
                   type="button"
                   onClick={() => handleMonthChange(-1)}
-                  className="grid h-10 w-10 place-items-center rounded-xl bg-base-100 text-lg font-black text-base-content transition hover:bg-base-300"
+                  className="numeric-text grid h-10 w-10 place-items-center rounded-xl bg-base-100 text-lg font-black text-base-content transition hover:bg-base-300"
                   aria-label="Previous month"
                 >
                   {"<"}
                 </button>
-                <p className="min-w-44 text-center text-base font-black text-base-content sm:min-w-52 sm:text-lg">
+                <p className="numeric-text min-w-44 text-center text-base font-black text-base-content sm:min-w-52 sm:text-lg">
                   {formatMonthLabel(selectedMonth)}
                 </p>
                 <button
                   type="button"
                   onClick={() => handleMonthChange(1)}
-                  className="grid h-10 w-10 place-items-center rounded-xl bg-base-100 text-lg font-black text-base-content transition hover:bg-base-300 disabled:opacity-45"
+                  className="numeric-text grid h-10 w-10 place-items-center rounded-xl bg-base-100 text-lg font-black text-base-content transition hover:bg-base-300 disabled:opacity-45"
                   disabled={addMonths(selectedMonth, 1) > currentMonth}
                   aria-label="Next month"
                 >

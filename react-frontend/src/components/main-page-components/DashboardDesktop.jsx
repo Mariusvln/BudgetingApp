@@ -44,21 +44,21 @@ const DashboardDesktop = (props) => {
               money={props.formatCurrency(props.monthlySavings)}
               percentage={percentage}
             />
-            <div className="flex items-center justify-between gap-8 rounded-3xl border border-base-300 bg-base-100 px-4 py-4 shadow-[0_16px_36px_color-mix(in_oklch,var(--color-base-content)_7%,transparent)]">
-              <div className="flex flex-col">
-                <p className="text-sm font-semibold text-base-content/55">Savings Ratio</p>
-                <h3 className="my-1 text-3xl font-extrabold tracking-tight text-base-content">
+            <div className="flex items-center justify-between gap-8 rounded-3xl border border-base-300 bg-[linear-gradient(180deg,color-mix(in_oklch,var(--color-base-100)_94%,var(--color-primary)),var(--color-base-100))] p-4 shadow-[0_16px_36px_color-mix(in_oklch,var(--color-base-content)_7%,transparent)]">
+              <div className="flex flex-1 min-w-0 -translate-y-[8px] flex-col justify-center gap-3">
+                <p className="-translate-y-[5px] text-lg font-semibold text-base-content/55">Savings Ratio</p>
+                <h3 className="-translate-y-[5px] numeric-text mb-2 text-3xl font-extrabold tracking-tight text-base-content">
                   {percentage}%
                 </h3>
                 <p className="text-xs font-semibold text-base-content/40">Income kept after spending</p>
               </div>
               <div
-                className="grid h-24 w-24 shrink-0 place-items-center rounded-full"
+                className="grid h-[5.1rem] w-[5.1rem] shrink-0 place-items-center rounded-full"
                 style={{
                   background: `conic-gradient(var(--color-primary) ${percentage}%, var(--color-base-300) 0)`,
                 }}
               >
-                <div className="grid h-16 w-16 place-items-center rounded-full bg-base-100 text-sm font-extrabold text-base-content">
+                <div className="numeric-text grid h-[3.4rem] w-[3.4rem] place-items-center rounded-full bg-base-100 text-sm font-extrabold text-base-content">
                   {percentage}%
                 </div>
               </div>
@@ -66,7 +66,7 @@ const DashboardDesktop = (props) => {
           </section>
           <section className="flex max-h-[430px] flex-col gap-4 rounded-3xl border border-base-300 bg-base-100 p-4 shadow-[0_16px_36px_color-mix(in_oklch,var(--color-base-content)_7%,transparent)]">
             <div className="flex shrink-0 justify-between">
-              <h4 className="text-lg font-bold text-base-content">Budget Limits</h4>
+              <h4 className="text-lg font-semibold text-base-content/60 translate-x-[6px]">Budget Limits</h4>
               <a
                 href="/budgeting"
                 aria-label="Add budget limit"
@@ -106,10 +106,10 @@ const DashboardDesktop = (props) => {
                               Limit · {props.formatCurrency(goal.maxLimit)}
                             </p>
                           </div>
-                          <p className={`shrink-0 text-sm font-bold ${
-                            isOverBudget ? "text-error" : "text-base-content/65"
-                          }`}>
-                            {props.formatCurrency(goal.spent)}
+                            <p className={`numeric-text shrink-0 text-sm font-bold ${
+                              isOverBudget ? "text-error" : "text-base-content/65"
+                            }`}>
+                              {props.formatCurrency(goal.spent)}
                           </p>
                         </div>
                         <div className="mt-3 h-2 overflow-hidden rounded-full bg-base-300">

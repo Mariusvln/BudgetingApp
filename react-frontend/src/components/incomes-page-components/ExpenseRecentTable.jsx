@@ -196,7 +196,7 @@ function ExpenseRecentTable({
                       </p>
                     </div>
 
-                    <p className="transactions-mobile__amount">
+                    <p className="transactions-mobile__amount numeric-text">
                       {formatAmount(transaction.amount)}
                     </p>
 
@@ -255,12 +255,12 @@ function ExpenseRecentTable({
                 : `Showing ${transactions.length} of ${totalCount ?? transactions.length} entries`}
             </p>
             {!loading && (
-              <p className="mt-1 text-sm font-semibold text-error">
+              <p className="numeric-text mt-1 text-sm font-semibold text-error">
                 Total: {formatCurrency(totalAmount, user?.currency)}
               </p>
             )}
           </div>
-            <div className="rounded-full bg-error/10 px-4 py-2 text-sm font-bold text-error">
+            <div className="numeric-text rounded-full bg-error/10 px-4 py-2 text-sm font-bold text-error">
               Expenses
             </div>
           </div>

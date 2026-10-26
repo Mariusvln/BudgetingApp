@@ -508,17 +508,17 @@ function AnalyticChart({ dateStart, dateEnd, setDateStart, setDateEnd }) {
               <div class="analytics-tooltip__row">
                 <span class="analytics-tooltip__dot" style="background:#f97316"></span>
                 <span>Total balance</span>
-                <strong>${formatCurrency(series[0]?.[dataPointIndex] ?? 0)}</strong>
+                <strong class="analytics-tooltip__amount">${formatCurrency(series[0]?.[dataPointIndex] ?? 0)}</strong>
               </div>
               <div class="analytics-tooltip__row">
                 <span class="analytics-tooltip__dot" style="background:${themeColors.success}"></span>
                 <span>Income</span>
-                <strong>${formatCurrency(dayFlow?.income ?? 0)}</strong>
+                <strong class="analytics-tooltip__amount">${formatCurrency(dayFlow?.income ?? 0)}</strong>
               </div>
               <div class="analytics-tooltip__row">
                 <span class="analytics-tooltip__dot" style="background:${themeColors.error}"></span>
                 <span>Expenses</span>
-                <strong>${formatCurrency(dayFlow?.expenses ?? 0)}</strong>
+                <strong class="analytics-tooltip__amount">${formatCurrency(dayFlow?.expenses ?? 0)}</strong>
               </div>
             </div>
           `;
@@ -704,7 +704,7 @@ function AnalyticChart({ dateStart, dateEnd, setDateStart, setDateEnd }) {
                 <p className="text-sm font-semibold text-base-content/60">
                   {card.label}
                 </p>
-                <p className={`mt-2 text-2xl font-black ${card.tone}`}>
+                <p className={`numeric-text mt-2 text-2xl font-black ${card.tone}`}>
                   {formatCurrency(card.value)}
                 </p>
               </div>
@@ -814,13 +814,14 @@ function AnalyticChart({ dateStart, dateEnd, setDateStart, setDateEnd }) {
             </div>
           </section>
 
-          <section className="analytics-activity-card mt-5 rounded-2xl border border-base-300 bg-base-100 p-4 shadow-sm">
+          <section className="mt-5 grid gap-5 xl:grid-cols-3">
+            <div className="analytics-activity-card rounded-2xl border border-base-300 bg-base-100 p-4 shadow-sm">
             <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
               <div>
                 <h2 className="text-base font-bold text-base-content">
                   Monthly Activity
                 </h2>
-                <p className="mt-1 text-sm font-medium text-base-content/60">
+                <p className="numeric-text mt-1 text-sm font-medium text-base-content/60">
                   {activityHeatmap.monthLabel} · Income {formatCurrency(activityHeatmap.income.total)} · Expenses {formatCurrency(activityHeatmap.expenses.total)}
                 </p>
               </div>
@@ -861,10 +862,10 @@ function AnalyticChart({ dateStart, dateEnd, setDateStart, setDateEnd }) {
                   <div className="expense-heatmap-panel__header">
                     <div>
                       <h3>{panel.title}</h3>
-                      <p>{panel.data.activeDays} active days · {formatCurrency(panel.data.total)}</p>
+                      <p className="numeric-text">{panel.data.activeDays} active days · {formatCurrency(panel.data.total)}</p>
                     </div>
                     {selectedActivity?.type === panel.tone && (
-                      <div className="expense-heatmap-panel__selected">
+                      <div className="expense-heatmap-panel__selected numeric-text">
                         {formatReadableDate(selectedActivity.date)} · {formatCurrency(selectedActivity.total)}
                       </div>
                     )}
@@ -912,10 +913,11 @@ function AnalyticChart({ dateStart, dateEnd, setDateStart, setDateEnd }) {
             {selectedActivity && (
               <div className="expense-heatmap-detail">
                 <span>{selectedActivity.type === "income" ? "Income" : "Expenses"}</span>
-                <strong>{formatCurrency(selectedActivity.total)}</strong>
+                <strong className="analytics-tooltip__amount">{formatCurrency(selectedActivity.total)}</strong>
                 <span>{formatReadableDate(selectedActivity.date)}</span>
               </div>
             )}
+            </div>
           </section>
         </>
       )}

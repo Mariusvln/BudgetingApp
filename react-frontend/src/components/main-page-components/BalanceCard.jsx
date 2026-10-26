@@ -51,7 +51,7 @@ const BalanceCard = ({formatCurrency, balance, monthlySpending}) => {
       </div>
       <div className="relative z-10 mt-8">
         <p className="text-sm font-semibold uppercase tracking-[0.2em] text-primary-content/70">Total Balance</p>
-        <h1 className="mt-3 tabular-nums text-5xl font-black tracking-tight text-primary-content transition-transform duration-300 xl:text-6xl">
+        <h1 className="numeric-text mt-3 tabular-nums text-5xl font-black tracking-tight text-primary-content transition-transform duration-300 xl:text-6xl">
           {formattedBalance}
         </h1>
       </div>
@@ -59,7 +59,7 @@ const BalanceCard = ({formatCurrency, balance, monthlySpending}) => {
         <h5 className="text-xs font-bold uppercase tracking-[0.18em] text-primary-content/65">
           MONTHLY SPENDING
         </h5>
-        <h4 className="mt-2 text-2xl font-extrabold">
+        <h4 className="numeric-text mt-2 text-2xl font-extrabold">
           {formatCurrency(monthlySpending)}
         </h4>
       </div>

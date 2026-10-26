@@ -199,7 +199,7 @@ function TransactionRecentTable() {
             className="rounded-lg border border-base-300 bg-base-100 p-4 shadow-sm"
           >
             <p className="text-sm font-semibold text-base-content/55">{item.label}</p>
-            <p className={`mt-2 text-2xl font-black ${item.tone}`}>{item.value}</p>
+            <p className={`numeric-text mt-2 text-2xl font-black ${item.tone}`}>{item.value}</p>
           </div>
         ))}
       </section>
@@ -279,9 +279,9 @@ function TransactionRecentTable() {
                         </span>
                       </td>
                       <td
-                        className={`px-5 py-4 text-right font-black ${
-                          isIncome ? "text-success" : "text-error"
-                        }`}
+                      className={`numeric-text px-5 py-4 text-right font-black ${
+                        isIncome ? "text-success" : "text-error"
+                      }`}
                       >
                         {formatAmount(transaction.amount, transaction.transactionType)}
                       </td>
@@ -321,7 +321,7 @@ function TransactionRecentTable() {
                       </p>
                     </div>
                     <p
-                      className={`shrink-0 font-black ${
+                      className={`numeric-text shrink-0 font-black ${
                         isIncome ? "text-success" : "text-error"
                       }`}
                     >
