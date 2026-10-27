@@ -28,14 +28,9 @@ public class Income extends Categories{
     @JoinColumn(name = "user_id")
     private User user;
 
-//    @ManyToOne
-//    @JoinColumn(name = "category_id")
-//    private Category category;
     private int category;
 
     private PROCESS_TYPE processType;
-
-    // private userid userid;
 
     // Constructors
     public Income() {}
@@ -84,7 +79,6 @@ public class Income extends Categories{
 
     public void setAmount(BigDecimal amount) {
         this.amount = amount;
-        System.out.println("Now after called setAmount it's a " + this.amount);
     }
 
     public void setDate(LocalDate date) {
@@ -93,7 +87,6 @@ public class Income extends Categories{
 
     public void setUser(User user) {
         this.user = user;
-        System.out.println("Now after called setUser it's a " + this.user);
     }
 
     public void setCategory(int category) {

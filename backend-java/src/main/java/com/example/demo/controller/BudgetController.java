@@ -56,16 +56,7 @@ public class BudgetController {
         categoryLimitService.deleteCategoryLimit(authentication.getName(), id);
         return new RegisterResponse("OK");
     }
-    /// get
-    // get all between the date by user email
-    // count total
-    // then use total as spent, and take like income=2000, total limit 1000, == result > 1000, if yes then response ok
 
-//    @PostMapping("/")
-//    public RegisterResponse addBudgetLimit(@Valid @RequestBody BudgetLimit budgetLimit, Authentication authentication) {
-//        expenses.addExpense(authentication.getName(), expense);
-//        return new RegisterResponse("OK");
-//    }
 
     @GetMapping("/fetchAllCategoryLimits")
     @PreAuthorize("hasRole('ADMIN')")
@@ -82,16 +73,4 @@ public class BudgetController {
         return mapToDTOs(categoryLimitList);
     }
 
-//    @PutMapping("/{id}")
-//    public Category update(@PathVariable Long id, @Valid @RequestBody Category updated) {
-//        Category cat = categoryRepository.findById(id).orElseThrow();
-//        cat.setName(updated.getName());
-//        cat.setType(updated.getType());
-//        return categoryRepository.save(cat);
-//    }
-//
-//    @DeleteMapping("/{id}")
-//    public void delete(@PathVariable Long id) {
-//        categoryRepository.deleteById(id);
-//    }
 }

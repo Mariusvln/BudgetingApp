@@ -56,10 +56,6 @@ public class ExpenseService {
         return expense;
     }
 
-//    public Expense addIncome(ExpenseRequest givenExpenseRequest){
-//        Expense expense = fromDTO(givenExpenseRequest);
-//        return expenseRepository.save(expense);
-//    }
     public Expense updateExpense(String email, ExpenseRequest updated) {
         User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
         Expense existing = expenseRepository.findById(updated.getId())
@@ -127,12 +123,9 @@ public class ExpenseService {
         User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
         List<Expense> expenses = expenseRepository.findByUser(user);
 
-
-//        BigDecimal total = expenses.stream().map(Expense::getAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
         return expenses;
     }
 
-    // fetchExpensesByUserFromDateStartToDateEnd
     public List<Expense> fetchExpensesByUserFromDateStartToDateEnd(String email, LocalDate dateStart, LocalDate dateEnd){
         User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
         if (dateStart.isAfter(dateEnd)) {
