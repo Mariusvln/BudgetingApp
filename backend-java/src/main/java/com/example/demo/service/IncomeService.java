@@ -128,8 +128,6 @@ public class IncomeService {
         User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
         List<Income> incomes = incomeRepository.findByUser(user);
 
-
-//        BigDecimal total = expenses.stream().map(Expense::getAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
         return incomes;
     }
 

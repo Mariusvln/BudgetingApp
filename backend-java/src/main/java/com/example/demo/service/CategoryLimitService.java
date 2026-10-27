@@ -93,8 +93,6 @@ public class CategoryLimitService {
         User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
         List<CategoryLimit> listOfCategoryLimits = categoryLimitRepository.findByUser(user);
 
-
-//        BigDecimal total = expenses.stream().map(Expense::getAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
         return listOfCategoryLimits;
     }
 
@@ -106,16 +104,4 @@ public class CategoryLimitService {
         );
     }
 
-//    public List<CategoryLimit> fetchAllGivenCategorieLimitsFromDateStartToDateEnd(LocalDate dateStart, LocalDate dateEnd){
-//        List<CategoryLimit> incomes = showAllCategoryLimits();
-//
-//        List<CategoryLimit> filtered = new ArrayList<>();
-//        for (CategoryLimit r : incomes) {
-//            if (!r.getDate().isBefore(dateStart) && !r.getDate().isAfter(dateEnd)) {
-//                filtered.add(r);
-//            }
-//        }
-//
-//        return filtered;
-//    }
 }

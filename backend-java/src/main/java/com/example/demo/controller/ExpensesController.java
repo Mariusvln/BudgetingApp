@@ -97,6 +97,7 @@ public class ExpensesController {
         return mapUsersToDTOs(resultExpenses);
     }
 
+    // Fetches incomes for the authenticated user within the date range
     @GetMapping("/fromDateStartToDateFinish")
     public List<Expense> fetchExpensesByUserFromDateStartToDateFinish(@RequestParam LocalDate dateStart, @RequestParam LocalDate dateEnd, Authentication authentication) {
         List<Expense> total = expenses.fetchExpensesByUserFromDateStartToDateEnd(authentication.getName(), dateStart, dateEnd);
@@ -130,6 +131,7 @@ public class ExpensesController {
         }
     }
 
+    // Exports income data as CSV file
     private void exportCSV(List<Expense> expensesList, Map<Integer, String> categoryNames, HttpServletResponse response) throws IOException {
         response.setContentType("text/csv");
         response.setHeader("Content-Disposition", "attachment; filename=expenses.csv");

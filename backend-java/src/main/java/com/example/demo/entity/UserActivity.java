@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 @Table(name = "user_activity")
 public class UserActivity {
 
-    // getters / setters
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
