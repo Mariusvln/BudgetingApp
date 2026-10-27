@@ -1,3 +1,7 @@
+![Main Page](https://i.imgur.com/tfnRjMF.png)
+![Budgeting Plan](https://i.imgur.com/JByB5AR.png)
+![Statistics](https://i.imgur.com/KDkJXgT.png)
+
 # Personal Budget Analysis Application
 
 Personal Budget Analysis Application is a full-stack system for managing personal finances. It lets users record income and expenses, organize transactions by categories, monitor current balances, analyze monthly financial data with charts, set category budget limits, and export financial records.
@@ -25,27 +29,7 @@ BudgetingApp/
 - Monthly budget limits for selected categories with graphical progress indicators.
 - CSV and Excel export for incomes and expenses.
 - Profile management, preferred currency selection, theme selection, and account deletion.
-
-## Requirement Coverage
-
-| Requirement | Status | Implementation notes |
-| --- | --- | --- |
-| FR0: Administrator manages users and expense categories | Implemented | Admin users are handled by `/api/admin/users`; categories are handled by `/api/categories`; admin UI is available at `/admin`. |
-| FR0: Administrator views event log | Implemented | Activity log exists at `/api/activity` and in the admin UI. It records authentication, profile, user-management, category, income, expense, budget-limit, and account-deletion actions. |
-| FR1: User registration, login, logout | Implemented | `/api/auth/register`, `/api/auth/login`, `/api/auth/logout`, and `/api/auth/me`. |
-| FR2: User manages income | Implemented | `/api/app/incomes/` supports create, update, delete, list, date filtering, and export. |
-| FR3: User manages expenses | Implemented | `/api/app/expenses/` supports create, update, delete, list, search, date filtering, and export. |
-| FR4: Income and expense summaries with charts | Implemented | Dashboard and Analytics pages aggregate current and monthly income/expense data. |
-| FR5: Expense summary by category and dates | Implemented | Expense pages and analytics support category/date-based analysis and searching. |
-| FR6: Category budget limits and graphical progress | Implemented | `/api/app/budget/` and the Budgeting page support monthly limits per category. |
-| FR7: Export expenses as CSV | Implemented | Expenses can be exported as CSV from the profile page and `/api/app/expenses/export?type=csv`. |
-| NFR1: Java 8+ and Spring 5+ | Implemented with newer versions | Backend uses Java 21 and Spring Boot 4.0.0. |
-| NFR2: React frontend | Implemented with newer version | Frontend uses React 19 instead of the originally specified React 17. |
-| NFR3: Relational database | Implemented | Development uses file-based H2; production profile is configured for MySQL. |
-| NFR4: All actions logged | Implemented | User/admin account actions, category changes, income/expense changes, and budget-limit changes are written to the activity log. |
-| NFR5: Installation and usage documentation | Implemented | This README contains setup, run, and usage instructions. |
-| NFR6: Responses under 2 seconds for up to 1000 expenses | Not automatically verified | The implementation uses simple database queries and in-memory filtering; no performance test is included. |
-
+- 
 ## Technology Stack
 
 Backend:
@@ -314,28 +298,3 @@ Activity log:
 | GET | `/api/activity` | List activity records. |
 | GET | `/api/activity/search?query={text}` | Search activity records. |
 
-## Data Validation and Security
-
-- Passwords are stored using BCrypt.
-- Authentication uses JWT tokens stored in an HTTP-only cookie named `access_token`.
-- User financial endpoints require authentication.
-- Admin endpoints require the `ROLE_ADMIN` role.
-- Income and expense updates/deletes verify ownership before modifying data.
-- Amount values must be at least `0.01` and must not exceed `4,000,000,000`.
-- Invalid date ranges are rejected by backend services.
-
-## Known Limitations
-
-- The frontend is implemented with React 19, while the original assignment mentions React 17.
-- Category and activity endpoints are currently permitted in the security configuration, even though they are mainly used by admin screens.
-- Activity logging does not yet cover every system action, especially income, expense, and category CRUD operations.
-- Some filtering and aggregation is performed in application memory, which is acceptable for small datasets but should be optimized for larger production datasets.
-- There are no automated performance tests proving the 2-second response requirement for 1000 expense records.
-
-## Suggested Final Improvements
-
-- Restrict category and activity endpoints to administrator access where appropriate.
-- Add activity logging for income, expense, category, and budget limit operations.
-- Add backend and frontend automated tests.
-- Move frontend API base URL to an environment variable.
-- Add production database migration scripts.
